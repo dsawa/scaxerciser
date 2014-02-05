@@ -7,3 +7,10 @@ GET     /                           controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Groups
+GET      /api/groups            controllers.Groups.index
+GET      /api/groups/:id        controllers.Groups.show(id: String)
+POST     /api/groups            controllers.Groups.create
+PUT      /api/groups/:id        controllers.Groups.update(id: String)
+DELETE   /api/groups/:id        controllers.Groups.delete(id: String)
