@@ -33,11 +33,16 @@ object Groups extends Controller {
     }
   }
 
-  //
-  //  def update(id: String) =  {
-  //
-  //  }
-  //
+  def update(id: String) = Action(parse.json) {
+    request =>
+      (request.body \ "name").asOpt[String].map {
+        name =>
+          Group.update_attributes(id, name)
+          Ok(Json.obj("success" -> true, "message" -> ("Group with id: " + id + " updated.")))
+      }.getOrElse {
+        BadRequest("Missing parameter [name]")
+      }
+  }
 
   def delete(id: String) = Action(parse.json) {
     request =>
