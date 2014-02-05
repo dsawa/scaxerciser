@@ -1,9 +1,8 @@
 package models
 
-import org.bson.types.ObjectId
-import com.novus.salat.global._
-import com.novus.salat.annotations._
+import scaxerciser.context._
 import com.mongodb.casbah.Imports._
+import com.novus.salat.annotations._
 import com.novus.salat.dao.{ SalatDAO, ModelCompanion }
 
 case class Group(@Key("_id") id: ObjectId, name: String)
@@ -14,15 +13,10 @@ object Group extends ModelCompanion[Group, ObjectId] {
 
     def all(): List[Group] = Group.findAll().toList
 
-    def create(name: String): Option[ObjectId] = {
+    def create(name: String) = {
       val newGroup = new Group(new ObjectId, name)
-      Group.insert(newGroup)
-    }
-
-    def show(id: String) = {
-      val objectId = new ObjectId(id)
-      Group.findOneById(objectId) match {
-        case Some(group) => group
+      Group.insert(newGroup) match {
+        case Some(id) => newGroup
         case None => null
       }
     }
