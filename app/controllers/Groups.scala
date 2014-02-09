@@ -11,7 +11,7 @@ object Groups extends Controller {
 
   def index = Action {
     val groups = Group.all().map(g => Json.parse(Group.toCompactJson(g)))
-    Ok(Json.obj("groups" -> groups))
+    Ok(Json.toJson(groups))
   }
 
   def create() = Action(parse.json) {

@@ -1,12 +1,13 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
+
+import models.Group
 
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index())
+    Ok(views.html.index(Group.all().toList))
   }
 
 }

@@ -1,7 +1,7 @@
 @(title: String)(content: Html)
 
 <!DOCTYPE html>
-<html>
+<html ng-app="scaxerciserApp">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,148 +28,7 @@
 </div>
 <!-- /.navbar-header -->
 
-<ul class="nav navbar-top-links navbar-right">
-<li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
-    </a>
-    <ul class="dropdown-menu dropdown-tasks">
-        <li>
-            <a href="#">
-                <div>
-                    <p>
-                        <strong>Task 1</strong>
-                        <span class="pull-right text-muted">10/10</span>
-                    </p>
-
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="divider"></li>
-        <li>
-            <a href="#">
-                <div>
-                    <p>
-                        <strong>Task 2</strong>
-                        <span class="pull-right text-muted">8/10</span>
-                    </p>
-
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="divider"></li>
-        <li>
-            <a href="#">
-                <div>
-                    <p>
-                        <strong>Task 3</strong>
-                        <span class="pull-right text-muted">6/10</span>
-                    </p>
-
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="divider"></li>
-        <li>
-            <a href="#">
-                <div>
-                    <p>
-                        <strong>Task 4</strong>
-                        <span class="pull-right text-muted">4/10</span>
-                    </p>
-
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="divider"></li>
-        <li>
-            <a class="text-center" href="#">
-                <strong>Pokaż wszystkie zadania</strong>
-                <i class="fa fa-angle-right"></i>
-            </a>
-        </li>
-    </ul>
-    <!-- /.dropdown-tasks -->
-</li>
-<!-- /.dropdown -->
-
-<li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-    </a>
-    <ul class="dropdown-menu dropdown-user">
-        <li><a href="#"><i class="fa fa-user fa-fw"></i> Profil użytkownika</a>
-        </li>
-        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Ustawienia</a>
-        </li>
-        <li class="divider"></li>
-        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Wyloguj</a>
-        </li>
-    </ul>
-    <!-- /.dropdown-user -->
-</li>
-<!-- /.dropdown -->
-</ul>
-<!-- /.navbar-top-links -->
-
-</nav>
-<!-- /.navbar-static-top -->
-
-<nav class="navbar-default navbar-static-side" role="navigation">
-    <div class="sidebar-collapse">
-        <ul class="nav" id="side-menu">
-            <li class="sidebar-search">
-                <div class="input-group custom-search-form">
-                    <input type="text" class="form-control" placeholder="Szukaj...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                </div>
-                <!-- /input-group -->
-            </li>
-            <li>
-                <a href="/"><i class="fa fa-dashboard fa-fw"></i> Kokpit</a>
-            </li>
-            <li>
-                <a href="#"><i class="fa fa-group fa-fw"></i> Grupy<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="#">Grupa 1</a>
-                    </li>
-                    <li>
-                        <a href="#">Grupa 2</a>
-                    </li>
-                </ul>
-                <!-- /.nav-second-level -->
-            </li>
-        </ul>
-        <!-- /#side-menu -->
-    </div>
-    <!-- /.sidebar-collapse -->
-</nav>
-<!-- /.navbar-static-side -->
+@content
 
 <div id="page-wrapper">
 <div class="row">
@@ -182,6 +41,36 @@
 <div class="row">
 <div class="col-lg-8">
 <!-- place for panels -->
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-group fa-fw"></i> Członkowie grupy
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                    Akcje
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href="#">Dodaj członka</a>
+                    </li>
+                    <li><a href="#">Edytuj grupę</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#">Usuń wszystkich z grupy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div ng-view class="view-frame"></div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+    <!-- /.panel -->
+
 </div>
 <!-- /.col-lg-8 -->
 <div class="col-lg-4">
@@ -227,6 +116,17 @@
 <script src="@routes.Assets.at("javascripts/jquery-1.11.0.min.js")"></script>
 <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
 <script src="@routes.Assets.at("javascripts/plugins/metisMenu/jquery.metisMenu.js")"></script>
-<script src="@routes.Assets.at("javascripts/sb-admin.js")"></script>
+
+<script src="@routes.Assets.at("javascripts/angular/angular.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/angular-animate.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/angular-resource.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/angular-route.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/angular-ui-router.min.js")"></script>
+
+<script src="@routes.Assets.at("javascripts/angular/app/app.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/app/controllers.js")"></script>
+<script src="@routes.Assets.at("javascripts/angular/app/services.js")"></script>
+
+<script src="@routes.Assets.at("javascripts/scaxerciser.js")"></script>
 </body>
 </html>
