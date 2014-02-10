@@ -1,0 +1,63 @@
+@(form: Form[Option[Account]])(implicit flash: Flash)
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+    <link href="@routes.Assets.at("stylesheets/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("stylesheets/sb-admin.css")" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Proszę się zalogować</h3>
+                </div>
+                <div class="panel-body">
+                    @form.globalError.map { error =>
+                    <p class="error">
+                        @error.message
+                    </p>
+                    }
+
+                    @flash.get("success").map { message =>
+                    <p class="success">
+                        @message
+                    </p>
+                    }
+                    <form role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="E-mail" name="email" type="email" value="@form("email").value" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Hasło" name="password" type="password" value="">
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="remember" type="checkbox" value="Remember Me">Zapamiętaj mnie
+                                </label>
+                            </div>
+                            <a href="toBeButton" class="btn btn-lg btn-success btn-block">Zaloguj</a>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@routes.Assets.at("javascripts/jquery-1.11.0.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/plugins/metisMenu/jquery.metisMenu.js")"></script>
+
+<script src="@routes.Assets.at("javascripts/scaxerciser.js")"></script>
+</body>
+
+</html>
