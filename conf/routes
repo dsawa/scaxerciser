@@ -17,3 +17,5 @@ DELETE   /api/groups/:id            controllers.Groups.delete(id: String)
 
 # Authentication
 GET     /login                      controllers.Application.login
+POST    /login                      controllers.Application.authenticate
+GET     /logout                     controllers.Application.logout

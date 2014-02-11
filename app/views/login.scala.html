@@ -31,7 +31,7 @@
                         @message
                     </p>
                     }
-                    <form role="form">
+                    <form role="form" method="post" action="/login">
                         <fieldset>
                             <div class="form-group">
                                 <input class="form-control" placeholder="E-mail" name="email" type="email" value="@form("email").value" autofocus>
@@ -44,7 +44,7 @@
                                     <input name="remember" type="checkbox" value="Remember Me">Zapamiętaj mnie
                                 </label>
                             </div>
-                            <a href="toBeButton" class="btn btn-lg btn-success btn-block">Zaloguj</a>
+                            <button class="btn btn-lg btn-success btn-block">Zaloguj</button>
                         </fieldset>
                     </form>
                 </div>
