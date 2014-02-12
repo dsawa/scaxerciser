@@ -1,0 +1,5 @@
+div#groups-table_paginate > ul.pagination {
+  position: relative;
+  width: 220px;
+  left: -200px;
+}
