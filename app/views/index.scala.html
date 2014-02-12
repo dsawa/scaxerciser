@@ -1,6 +1,6 @@
-@(user: Account, groups: List[Group])
+@(currentUser: Account, groups: List[Group])
 
-@dashboard("Kokpit") {
+@main(currentUser) {
 
 <ul class="nav navbar-top-links navbar-right">
     <li class="dropdown">
