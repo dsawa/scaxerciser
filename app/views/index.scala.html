@@ -1,4 +1,4 @@
-@(groups: List[Group])
+@(user: Account, groups: List[Group])
 
 @dashboard("Kokpit") {
 
@@ -97,7 +97,7 @@
             <li><a href="#"><i class="fa fa-gear fa-fw"></i> Ustawienia</a>
             </li>
             <li class="divider"></li>
-            <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Wyloguj</a>
+            <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Wyloguj</a>
             </li>
         </ul>
         <!-- /.dropdown-user -->
