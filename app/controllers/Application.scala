@@ -13,7 +13,7 @@ import jp.t2v.lab.play2.auth._
 
 import com.mongodb.casbah.Imports.ObjectId
 
-import models.{Group, Account, Permission, Administrator, NormalUser}
+import models.{Account, Permission, Administrator, NormalUser}
 
 object Application extends Controller with AuthenticationElement with LoginLogout with AuthConfigImpl {
 
@@ -39,7 +39,7 @@ object Application extends Controller with AuthenticationElement with LoginLogou
 
   def index = StackAction { implicit request =>
     val user: User = loggedIn
-    Ok(views.html.index(user, Group.all()))
+    Ok(views.html.index(user))
   }
 }
 

@@ -1,1 +1,32 @@
-Group list
+<div class="col-lg-5">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-group fa-fw"></i> Grupy
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" id="groups-table">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Liczba członków</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="group in groups" >
+                        <td>{{group.name}}</td>
+                        <td>0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.table-responsive -->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel-default -->
+</div>
+<!-- /.col-lg-5 -->

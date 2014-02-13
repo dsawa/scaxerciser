@@ -1,4 +1,4 @@
-@(currentUser: Account, groups: List[Group])
+@(currentUser: Account)
 
 @layout(currentUser) {
 
@@ -10,67 +10,24 @@
 </div>
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-7">
-        <!-- place for panels -->
+    <div ui-view="main" autoscroll="false"></div>
+    <div ui-view="right" autoscroll="false"></div>
+    <!--<div class="col-lg-7">-->
+        <!--&lt;!&ndash; place for panels &ndash;&gt;-->
+        <!--<div class="panel panel-default">-->
+            <!--<div class="panel-body">-->
+                <!--&lt;!&ndash;<div ui-view autoscroll="false"></div>&ndash;&gt;-->
+                <!--&lt;!&ndash; We'll also add some navigation: &ndash;&gt;-->
+                <!--&lt;!&ndash;<a ui-sref="state1">State 1</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;<a ui-sref="state2">State 2</a>&ndash;&gt;-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /.panel-body &ndash;&gt;-->
+        <!--</div>-->
+        <!--&lt;!&ndash; /.panel &ndash;&gt;-->
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div ng-view class="view-frame"></div>
-            </div>
-            <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
+    <!--</div>-->
+    <!--&lt;!&ndash; /.col-lg-7 &ndash;&gt;-->
 
-    </div>
-    <!-- /.col-lg-7 -->
-    <div class="col-lg-5">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-group fa-fw"></i> Grupy
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                data-toggle="dropdown">
-                            Akcje
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#">Dodaj grupę</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="#">Zarządzaj grupą</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
-            <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover" id="groups-table">
-            <thead>
-            <tr>
-                <th>Nazwa</th>
-                <th>Liczba członków</th>
-            </tr>
-            </thead>
-            <tbody>
-            @groups.map { group =>
-            <tr >
-                <td>@group.name</td>
-                <td>0</td>
-            </tr>
-            }
-            </tbody>
-            </table>
-            </div>
-            <!-- /.table-responsive -->
-            </div>
-            <!-- /.panel-body -->
-        </div>
-        <!-- /.panel-default -->
-    </div>
-    <!-- /.col-lg-5 -->
 </div>
 <!-- /.row -->
 
