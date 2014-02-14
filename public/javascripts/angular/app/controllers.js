@@ -9,18 +9,17 @@ groupControllers.controller('GroupListCtrl', ['$scope', 'Group',
   }
 ]);
 
-groupControllers.controller('GroupDetailCtrl', ['$scope', '$routeParams', 'Group',
-  function ($scope, $routeParams, Group) {
+groupControllers.controller('GroupDetailCtrl', ['$stateParams', '$scope', 'Group',
+  function ($stateParams, $scope, Group) {
     $scope.group = Group.get({
-      groupId: $routeParams.groupId
+      groupId: $stateParams.groupId
     }, function (group) {
-      console.log(group);
     });
   }
 ]);
 
 var groupTable = {
-  tableId: '#groups-table',
+  tableId: 'groups-table',
   tableSettings: {
     sPaging: 'groups_table_pagination',
     oLanguage: {
@@ -36,13 +35,16 @@ var groupTable = {
         sNext: "&#10093;",
         sPrevious: "&#10092;"
       }
-    }
+    },
+    aoColumnDefs: [{ "bSortable": false, "aTargets": [ 1 ] }],
   },
   loadDelay: 300,
   load: function () {
     setTimeout(function () {
-      $(groupTable.tableId).dataTable(groupTable.tableSettings);
-      $(groupTable.tableId + '_filter').find('input').attr("placeholder", "Filtruj..");
+      if (!$.fn.DataTable.fnIsDataTable($('#' + groupTable.tableId))) {
+        $('#' + groupTable.tableId).dataTable(groupTable.tableSettings);
+        $('#' + groupTable.tableId + '_filter').find('input').attr("placeholder", "Filtruj..");
+      }
     }, groupTable.loadDelay);
   }
 };

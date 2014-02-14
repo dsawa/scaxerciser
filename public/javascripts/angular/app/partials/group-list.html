@@ -2,6 +2,11 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-group fa-fw"></i> Grupy
+            <div class="pull-right">
+                <div class="btn-group">
+                    <a ui-sref="groups-list.new" class="btn btn-default btn-xs">Dodaj</a>
+                </div>
+            </div>
         </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
@@ -11,14 +16,13 @@
                     <thead>
                     <tr>
                         <th>Nazwa</th>
-                        <th>Liczba członków</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-
-                    <tr ng-repeat="group in groups" >
-                        <td>{{group.name}}</td>
-                        <td>0</td>
+                    <tr ng-repeat="group in groups">
+                        <td><a ui-sref="groups-list.edit({groupId: group._id.$oid})">{{group.name}}</a></td>
+                        <td><a ui-sref="groups-groupId-users({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -26,6 +30,7 @@
             <!-- /.table-responsive -->
         </div>
         <!-- /.panel-body -->
+        <div ui-view autoscroll="false"></div>
     </div>
     <!-- /.panel-default -->
 </div>
