@@ -6,7 +6,7 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
   'groupServices'
 ]);
 
-scaxerciserApp.partialsRoot = 'assets/javascripts/angular/app/partials/'
+scaxerciserApp.partialsRoot = 'assets/javascripts/angular/app/partials/';
 
 scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
   function ($stateProvider, $urlRouterProvider) {
@@ -44,7 +44,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
         url: '/groups/:groupId/users',
         views: {
           'main': { template: '=' },
-          'right': {
+          'additional': {
             templateUrl: scaxerciserApp.partialsRoot + 'groups-groupId-users.html',
             controller: function($stateParams) {
               console.log('Getting users for group ' + $stateParams.groupId)
@@ -54,3 +54,22 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
       })
   }
 ]);
+
+scaxerciserApp.dataTables = {};
+scaxerciserApp.dataTables.languageSettings = {
+  "sProcessing": "Proszę czekać...",
+  "sLengthMenu": "Pokaż _MENU_",
+  "sZeroRecords": "Nie znaleziono żadnych pasujących indeksów",
+  "sInfo": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+  "sInfoEmpty": "Pozycji 0 z 0 dostępnych",
+  "sInfoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+  "sInfoPostFix": "",
+  "sSearch": "Szukaj:  ",
+  "sUrl": "",
+  "oPaginate": {
+    "sFirst": "Pierwsza",
+    "sPrevious": "Poprzednia",
+    "sNext": "Następna",
+    "sLast": "Ostatnia"
+  }
+};

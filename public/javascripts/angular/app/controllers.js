@@ -22,20 +22,7 @@ var groupTable = {
   tableId: 'groups-table',
   tableSettings: {
     sPaging: 'groups_table_pagination',
-    oLanguage: {
-      sLengthMenu: "Pokaż _MENU_",
-      sZeroRecords: "",
-      sSearch: "",
-      sInfo: "",
-      sInfoEmpty: "",
-      sInfoFiltered: "",
-      oPaginate: {
-        sFirst: "Pierwsza",
-        sLast: "Ostatnia",
-        sNext: "&#10093;",
-        sPrevious: "&#10092;"
-      }
-    },
+    oLanguage: scaxerciserApp.dataTables.languageSettings,
     aoColumnDefs: [{ "bSortable": false, "aTargets": [ 1 ] }],
   },
   loadDelay: 300,
@@ -43,7 +30,7 @@ var groupTable = {
     setTimeout(function () {
       if (!$.fn.DataTable.fnIsDataTable($('#' + groupTable.tableId))) {
         $('#' + groupTable.tableId).dataTable(groupTable.tableSettings);
-        $('#' + groupTable.tableId + '_filter').find('input').attr("placeholder", "Filtruj..");
+//      $('#' + groupTable.tableId + '_filter').find('input').attr("placeholder", "Filtruj..");
       }
     }, groupTable.loadDelay);
   }
