@@ -20,9 +20,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="group in groups">
+                    <tr ng-repeat="group in groups" id="{{group._id.$oid}}">
                         <td><a ui-sref="groups-list.edit({groupId: group._id.$oid})">{{group.name}}</a></td>
-                        <td><a ui-sref="groups-groupId-users({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a></td>
+                        <td>
+                            <a ui-sref="groups-groupId-users({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
+                            <a ng-click="deleteGroup(group._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

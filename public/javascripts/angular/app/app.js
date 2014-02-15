@@ -12,6 +12,11 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
   function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/groups");
     $stateProvider
+      .state('groups-reload', {
+        controller: function ($state) {
+          $state.go('groups-list');
+        }
+      })
       .state('groups-list', {
         url: "/groups",
         views: {
@@ -26,8 +31,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
               views: {
                 '': {
                   templateUrl: scaxerciserApp.partialsRoot + 'group-list.new.html',
-                  controller: function () {
-                  }
+                  controller: 'GroupCreationCtrl'
                 }
               }
             })
@@ -57,19 +61,19 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
 
 scaxerciserApp.dataTables = {};
 scaxerciserApp.dataTables.languageSettings = {
-  "sProcessing": "Proszę czekać...",
-  "sLengthMenu": "Pokaż _MENU_",
-  "sZeroRecords": "Nie znaleziono żadnych pasujących indeksów",
-  "sInfo": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
-  "sInfoEmpty": "Pozycji 0 z 0 dostępnych",
-  "sInfoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
-  "sInfoPostFix": "",
-  "sSearch": "Szukaj:  ",
-  "sUrl": "",
-  "oPaginate": {
-    "sFirst": "Pierwsza",
-    "sPrevious": "Poprzednia",
-    "sNext": "Następna",
-    "sLast": "Ostatnia"
+  sProcessing: "Proszę czekać...",
+  sLengthMenu: "Pokaż _MENU_",
+  sZeroRecords: "Brak danych.",
+  sInfo: "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+  sInfoEmpty: "Pozycji 0 z 0 dostępnych",
+  sInfoFiltered: "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+  sInfoPostFix: "",
+  sSearch: "Szukaj:  ",
+  sUrl: "",
+  oPaginate: {
+    sFirst: "Pierwsza",
+    sPrevious: "Poprzednia",
+    sNext: "Następna",
+    sLast: "Ostatnia"
   }
 };

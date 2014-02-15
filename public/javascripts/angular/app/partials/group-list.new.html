@@ -1,11 +1,11 @@
 <div class="panel-footer">
-    <form role="form">
+    <form ng-submit="createGroup()" role="form">
         <p class="help-block">Tworzenie nowej grupy</p>
         <div class="form-group">
             <label>Nazwa</label>
-            <input class="form-control" value="" required="true">
+            <input ng-model="group.name" class="form-control" required="true">
         </div>
+        <button class="btn btn-success btn-sm">Dodaj grupę</button>
     </form>
-    <a href="#" class="btn btn-success btn-sm">Dodaj</a>
 </div>
 <!-- /.panel-footer -->

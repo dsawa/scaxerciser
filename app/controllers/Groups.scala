@@ -44,14 +44,9 @@ object Groups extends Controller {
       }
   }
 
-  def delete(id: String) = Action(parse.json) {
-    request =>
-      (request.body \ "id").asOpt[String].map {
-        id =>
-          Group.delete(id)
-          Ok(Json.obj("success" -> true, "message" -> ("Group with id: " + id + " deleted.")))
-      }.getOrElse {
-        BadRequest("Missing parameter [id]")
-      }
+  def delete(id: String) = Action {
+    implicit request =>
+      Group.delete(id)
+      Ok(Json.obj("success" -> true, "message" -> ("Group with id: " + id + " deleted.")))
   }
 }
