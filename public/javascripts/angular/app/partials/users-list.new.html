@@ -1,0 +1,25 @@
+<div class="panel-footer">
+    <form ng-submit="createUser()" role="form">
+        <p class="help-block">Utwórz nowego użytkownika</p>
+
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" ng-model="user.email" class="form-control" required="true">
+            <label>Hasło</label>
+            <input type="password" pattern=".{6,}" title="Minimalna długość: 6" ng-model="user.password" class="form-control" required="true">
+            <label>Powtórz hasło</label>
+            <input type="password" pattern=".{6,}" title="Minimalna długość: 6" ng-model="user.passwordRepeat" class="form-control" required="true">
+            <br>
+            <label>Rola</label>
+            <br>
+            <label class="radio-inline">
+                <input type="radio" ng-model="user.permission" name="user-permission" required="true" value="NormalUser" checked>Uczestnik
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="user.permission" name="user-permission" value="Administrator">Administrator
+            </label>
+        </div>
+        <button class="btn btn-success btn-sm">Dodaj użytkownika</button>
+    </form>
+</div>
+<!-- /.panel-footer -->

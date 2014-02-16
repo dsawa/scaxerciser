@@ -19,3 +19,9 @@ DELETE   /api/groups/:id            controllers.Groups.delete(id: String)
 GET     /login                      controllers.Application.login
 POST    /login                      controllers.Application.authenticate
 GET     /logout                     controllers.Application.logout
+
+# Users
+GET      /api/users                 controllers.Users.index
+GET      /api/users/:id             controllers.Users.show(id: String)
+POST     /api/users                 controllers.Users.create
+DELETE   /api/users/:id             controllers.Users.delete(id: String)

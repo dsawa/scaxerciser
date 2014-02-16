@@ -3,7 +3,9 @@
 var scaxerciserApp = angular.module('scaxerciserApp', [
   'ui.router',
   'groupControllers',
-  'groupServices'
+  'groupServices',
+  'userControllers',
+  'userServices'
 ]);
 
 scaxerciserApp.partialsRoot = 'assets/javascripts/angular/app/partials/';
@@ -27,14 +29,14 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
         }
       })
       .state('groups-list.new', {
-              url: '/new',
-              views: {
-                '': {
-                  templateUrl: scaxerciserApp.partialsRoot + 'group-list.new.html',
-                  controller: 'GroupCreationCtrl'
-                }
-              }
-            })
+        url: '/new',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-list.new.html',
+            controller: 'GroupCreationCtrl'
+          }
+        }
+      })
       .state('groups-list.edit', {
         url: '/:groupId/edit',
         views: {
@@ -47,12 +49,46 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
       .state('groups-groupId-users', {
         url: '/groups/:groupId/users',
         views: {
-          'main': { template: '=' },
+          'main': {
+            template: '='
+          },
           'additional': {
             templateUrl: scaxerciserApp.partialsRoot + 'groups-groupId-users.html',
-            controller: function($stateParams) {
+            controller: function ($stateParams) {
               console.log('Getting users for group ' + $stateParams.groupId)
             }
+          }
+        }
+      })
+      .state('users-reload', {
+        controller: function ($state) {
+          $state.go('users-list');
+        }
+      })
+      .state('users-list', {
+        url: "/users",
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'users-list.html',
+            controller: 'UserListCtrl'
+          }
+        }
+      })
+      .state('users-list.new', {
+        url: '/new',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'users-list.new.html',
+            controller: 'UserCreationCtrl'
+          }
+        }
+      })
+      .state('users-list.edit', {
+        url: '/:id/edit',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'users-list.edit.html',
+            controller: 'UserShortDetailCtrl'
           }
         }
       })
