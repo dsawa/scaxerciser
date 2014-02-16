@@ -16,6 +16,8 @@ object Account extends ModelCompanion[Account, ObjectId] {
 
   def all(): List[Account] = Account.findAll().toList
 
+  def create(newAccount: Account): Option[ObjectId] = Account.insert(newAccount)
+
   def findByEmail(email: String): Option[Account] = {
     Account.findOne(MongoDBObject("email" -> email))
   }
@@ -23,14 +25,6 @@ object Account extends ModelCompanion[Account, ObjectId] {
   def authenticate(email: String, password: String): Option[Account] = {
     Account.findByEmail(email) match {
       case Some(account) => if (password.isBcrypted(account.password)) Some(account) else None
-      case None => None
-    }
-  }
-
-  def create(email: String, password: String, permission: Permission): Option[Account] = {
-    val newAccount = new Account(new ObjectId, email, password.bcrypt(generateSalt), permission.toString)
-    Account.insert(newAccount) match {
-      case Some(id) => Some(newAccount)
       case None => None
     }
   }

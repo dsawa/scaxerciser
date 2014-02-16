@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc.Controller
 import play.api.mvc.Action
 import play.api.libs.json._
-import org.bson.types.ObjectId
+import com.mongodb.casbah.Imports.ObjectId
 
 import models.Group
 
@@ -15,11 +15,16 @@ object Groups extends Controller {
   }
 
   def create() = Action(parse.json) {
-    request =>
+    implicit request =>
       (request.body \ "name").asOpt[String].map {
         name =>
-          val createdGroup = Group.create(name)
-          Ok(Json.parse(Group.toCompactJson(createdGroup)))
+          val newGroup = new Group(new ObjectId, name)
+          Group.create(newGroup) match {
+            case Some(id) =>
+              val createdGroup = new Group(id, newGroup.name)
+              Ok(Json.parse(Group.toCompactJson(createdGroup)))
+            case None => UnprocessableEntity(Json.obj("error" -> "Group could not be created."))
+          }
       }.getOrElse {
         BadRequest("Missing parameter [name]")
       }
@@ -34,11 +39,16 @@ object Groups extends Controller {
   }
 
   def update(id: String) = Action(parse.json) {
-    request =>
+    implicit request =>
       (request.body \ "name").asOpt[String].map {
-        name =>
-          Group.update_attributes(id, name)
-          Ok(Json.obj("success" -> true, "message" -> ("Group with id: " + id + " updated.")))
+        newName =>
+          val groupWithNewAttributes = new Group(new ObjectId(id), newName)
+          val writeResult = Group.update_attributes(groupWithNewAttributes)
+          if (writeResult.getN > 0) {
+            Ok(Json.parse(Group.toCompactJson(groupWithNewAttributes)))
+          } else {
+            UnprocessableEntity(Json.obj("error" -> ("Group " + id + "could not be updated.")))
+          }
       }.getOrElse {
         BadRequest("Missing parameter [name]")
       }
@@ -46,7 +56,16 @@ object Groups extends Controller {
 
   def delete(id: String) = Action {
     implicit request =>
-      Group.delete(id)
-      Ok(Json.obj("success" -> true, "message" -> ("Group with id: " + id + " deleted.")))
+      val objectId = new ObjectId(id)
+      Group.findOneById(objectId) match {
+        case Some(group) =>
+          val writeResult = Group.remove(group)
+          if (writeResult.getN > 0) {
+            Ok(Json.obj("message" -> ("Group " + id + " deleted.")))
+          } else {
+            UnprocessableEntity(Json.obj("error" -> ("Group " + id + "could not be deleted.")))
+          }
+        case None => NotFound(Json.obj("error" -> ("Not found group with id: " + id)))
+      }
   }
 }

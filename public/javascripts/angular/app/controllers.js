@@ -50,7 +50,7 @@ var groupTable = {
       "aTargets": [1]
     }],
   },
-  loadDelay: 300,
+  loadDelay: 500,
   load: function () {
     setTimeout(function () {
       if (!$.fn.DataTable.fnIsDataTable($('#' + groupTable.tableId))) {
