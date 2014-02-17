@@ -24,4 +24,5 @@ GET     /logout                     controllers.Application.logout
 GET      /api/users                 controllers.Users.index
 GET      /api/users/:id             controllers.Users.show(id: String)
 POST     /api/users                 controllers.Users.create
+PUT      /api/users/:id             controllers.Users.update(id: String)
 DELETE   /api/users/:id             controllers.Users.delete(id: String)

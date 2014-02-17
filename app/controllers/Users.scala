@@ -40,6 +40,30 @@ object Users extends Controller {
     }
   }
 
+  def update(id: String) = Action(parse.json) {
+    implicit request =>
+      val objectId = new ObjectId(id)
+      Account.findOneById(objectId) match {
+        case Some(account) =>
+          val newEmail = (request.body \ "email").asOpt[String]
+          val newPassword = (request.body \ "password").asOpt[String]
+          val newPermission = (request.body \ "permission").asOpt[String]
+          if (newEmail.isDefined && newPermission.isDefined) {
+            val password = if (newPassword.isDefined) newPassword.get.bcrypt(generateSalt) else account.password
+            val userWithNewAttributes = new Account(objectId, newEmail.get, password, newPermission.get)
+            val writeResult = Account.update_attributes(userWithNewAttributes)
+            if (writeResult.getN > 0) {
+              Ok(Json.parse(Account.toCompactJson(userWithNewAttributes)))
+            } else {
+              UnprocessableEntity(Json.obj("error" -> ("User " + id + "could not be updated.")))
+            }
+          } else {
+            BadRequest("Missing parameter. Required parameters [email, permission]")
+          }
+        case None => NotFound(Json.obj("error" -> ("Not found user with id: " + id)))
+      }
+  }
+
   def delete(id: String) = Action {
     implicit request =>
       val objectId = new ObjectId(id)

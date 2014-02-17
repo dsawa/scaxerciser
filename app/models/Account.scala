@@ -18,6 +18,17 @@ object Account extends ModelCompanion[Account, ObjectId] {
 
   def create(newAccount: Account): Option[ObjectId] = Account.insert(newAccount)
 
+  def update_attributes(account: Account): WriteResult = {
+    Permission.valueOf(account.permission)
+    Account.update(
+      q = MongoDBObject("_id" -> account.id),
+      o = MongoDBObject("$set" -> MongoDBObject(
+        "email" -> account.email, "password" -> account.password, "permission" -> account.permission
+      )),
+      upsert = false, multi = false, wc = Account.dao.collection.writeConcern
+    )
+  }
+
   def findByEmail(email: String): Option[Account] = {
     Account.findOne(MongoDBObject("email" -> email))
   }
