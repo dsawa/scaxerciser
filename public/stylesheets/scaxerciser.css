@@ -9,3 +9,9 @@ div#groups-table_paginate > ul.pagination {
 h1.page-header {
   margin: 15px 0px 15px 0px;
 }
+
+.alert-tooltip {
+  position: relative;
+  left: 35%;
+  bottom: 25px;
+}

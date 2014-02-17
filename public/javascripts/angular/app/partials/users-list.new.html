@@ -1,25 +1,35 @@
 <div class="panel-footer">
-    <form ng-submit="createUser()" role="form">
+    <form name="newUserForm" ng-submit="createUser()">
         <p class="help-block">Utwórz nowego użytkownika</p>
 
         <div class="form-group">
             <label>E-mail</label>
-            <input type="email" ng-model="user.email" class="form-control" required="true">
+            <input type="email" name="email" ng-model="user.email" class="form-control" required="true">
+
             <label>Hasło</label>
-            <input type="password" pattern=".{6,}" title="Minimalna długość: 6" ng-model="user.password" class="form-control" required="true">
+            <input type="password" name="password" ng-model="user.password" pass-check="passRepeated" class="form-control"
+                   pattern=".{6,}" title="Minimalna długość: 6" required="true">
+
             <label>Powtórz hasło</label>
-            <input type="password" pattern=".{6,}" title="Minimalna długość: 6" ng-model="user.passwordRepeat" class="form-control" required="true">
+            <input type="password" name="passwordRepeated" ng-model="passRepeated" class="form-control" pattern=".{6,}"
+                   title="Minimalna długość: 6" required="true">
+            <span class="alert alert-danger alert-tooltip" ng-show="newUserForm.password.$error.passMatch">
+                Powtórzone hasło nie jest takie same. </span>
+
             <br>
             <label>Rola</label>
             <br>
             <label class="radio-inline">
-                <input type="radio" ng-model="user.permission" name="user-permission" required="true" value="NormalUser" checked>Uczestnik
+                <input type="radio" ng-model="user.permission" name="permission" required="true" value="NormalUser"
+                       checked>Uczestnik
             </label>
             <label class="radio-inline">
-                <input type="radio" ng-model="user.permission" name="user-permission" value="Administrator">Administrator
+                <input type="radio" ng-model="user.permission" name="permission" value="Administrator">Administrator
             </label>
         </div>
         <button class="btn btn-success btn-sm">Dodaj użytkownika</button>
+
     </form>
+
 </div>
 <!-- /.panel-footer -->
