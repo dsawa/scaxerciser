@@ -99,6 +99,7 @@ userControllers.controller('UserShortDetailCtrl', ['$stateParams', '$scope', '$s
     $scope.updateUser = function () {
       var params = $scope.user;
       params.id = $stateParams.id;
+      if (params.password.length < 6) delete params.password
       User.update(params, function () {
         $state.transitionTo('users-reload');
         $location.path('users');

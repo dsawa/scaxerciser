@@ -1,20 +1,20 @@
 package controllers
 
 import play.api.mvc.Controller
-import play.api.mvc.Action
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
+import jp.t2v.lab.play2.auth.AuthElement
+import models.{Group, NormalUser, Administrator}
 
-import models.Group
+object Groups extends Controller with AuthElement with AuthConfigImpl {
 
-object Groups extends Controller {
-
-  def index = Action {
-    val groups = Group.all().map(g => Json.parse(Group.toCompactJson(g)))
-    Ok(Json.toJson(groups))
+  def index = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val groups = Group.all().map(g => Json.parse(Group.toCompactJson(g)))
+      Ok(Json.toJson(groups))
   }
 
-  def create() = Action(parse.json) {
+  def create() = StackAction(parse.json, AuthorityKey -> Administrator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {
         name =>
@@ -30,15 +30,16 @@ object Groups extends Controller {
       }
   }
 
-  def show(id: String) = Action {
-    val objectId = new ObjectId(id)
-    Group.findOneById(objectId) match {
-      case Some(group) => Ok(Json.parse(Group.toCompactJson(group)))
-      case None => NotFound(Json.obj("error" -> ("Not found group with id: " + id)))
-    }
+  def show(id: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val objectId = new ObjectId(id)
+      Group.findOneById(objectId) match {
+        case Some(group) => Ok(Json.parse(Group.toCompactJson(group)))
+        case None => NotFound(Json.obj("error" -> ("Not found group with id: " + id)))
+      }
   }
 
-  def update(id: String) = Action(parse.json) {
+  def update(id: String) = StackAction(parse.json, AuthorityKey -> Administrator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {
         newName =>
@@ -54,7 +55,7 @@ object Groups extends Controller {
       }
   }
 
-  def delete(id: String) = Action {
+  def delete(id: String) = StackAction(AuthorityKey -> Administrator) {
     implicit request =>
       val objectId = new ObjectId(id)
       Group.findOneById(objectId) match {
