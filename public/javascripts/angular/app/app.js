@@ -3,18 +3,39 @@
 var scaxerciserApp = angular.module('scaxerciserApp', [
   'ui.router',
   'customDirectives',
+  'authServices',
   'groupControllers',
   'groupServices',
   'userControllers',
   'userServices'
-]);
+]),
+  permission;
+
+angular.element(document).ready(function () {
+  $.get('/api/users/detectPermission', function (data) {
+    permission = data;
+    angular.bootstrap(document, ['scaxerciserApp']);
+  });
+});
 
 scaxerciserApp.partialsRoot = 'assets/javascripts/angular/app/partials/';
 
-scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
-  function ($stateProvider, $urlRouterProvider) {
+scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
+  function ($stateProvider, $urlRouterProvider, $httpProvider) {
+    $httpProvider.responseInterceptors.push('securityInterceptor');
     $urlRouterProvider.otherwise("/groups");
     $stateProvider
+      .state('unauthorized', {
+        url: '/unauthorized',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'unauthorized.html'
+          },
+          'additional': {
+            template: ''
+          }
+        }
+      })
       .state('groups-reload', {
         controller: function ($state) {
           $state.go('groups-list');
@@ -30,6 +51,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
         }
       })
       .state('groups-list.new', {
+        permission: 'Administrator',
         url: '/new',
         views: {
           '': {
@@ -96,21 +118,47 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider',
   }
 ]);
 
-scaxerciserApp.dataTables = {};
-scaxerciserApp.dataTables.languageSettings = {
-  sProcessing: "Proszę czekać...",
-  sLengthMenu: "Pokaż _MENU_",
-  sZeroRecords: "Brak danych.",
-  sInfo: "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
-  sInfoEmpty: "Pozycji 0 z 0 dostępnych",
-  sInfoFiltered: "(filtrowanie spośród _MAX_ dostępnych pozycji)",
-  sInfoPostFix: "",
-  sSearch: "Szukaj:  ",
-  sUrl: "",
-  oPaginate: {
-    sFirst: "Pierwsza",
-    sPrevious: "Poprzednia",
-    sNext: "Następna",
-    sLast: "Ostatnia"
+scaxerciserApp.provider('securityInterceptor', function () {
+  this.$get = function ($location, $q) {
+    return function (promise) {
+      return promise.then(null, function (response) {
+        if (response.status === 403 || response.status === 401) {
+          $location.path('/unauthorized');
+        }
+        return $q.reject(response);
+      });
+    };
+  };
+});
+
+scaxerciserApp.run(['$rootScope', '$state', 'Auth',
+  function ($rootScope, $state, Auth) {
+    Auth.setPermission(permission)
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+      if (typeof toState.permission !== "undefined" && !Auth.hasPermission(toState.permission)) {
+        event.preventDefault();
+        $state.transitionTo('unauthorized');
+      }
+    });
+}]);
+
+scaxerciserApp.dataTables = {
+  languageSettings: {
+    sProcessing: "Proszę czekać...",
+    sLengthMenu: "Pokaż _MENU_",
+    sZeroRecords: "Brak danych.",
+    sInfo: "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+    sInfoEmpty: "Pozycji 0 z 0 dostępnych",
+    sInfoFiltered: "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+    sInfoPostFix: "",
+    sSearch: "Szukaj:  ",
+    sUrl: "",
+    oPaginate: {
+      sFirst: "Pierwsza",
+      sPrevious: "Poprzednia",
+      sNext: "Następna",
+      sLast: "Ostatnia"
+    }
   }
 };

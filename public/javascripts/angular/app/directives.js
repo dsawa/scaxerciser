@@ -11,4 +11,20 @@ customDirectives.directive('passCheck', [
         });
       }
     }
-}]);
+  }])
+  .directive('hasPermission', ['Auth',
+    function (Auth) {
+      return {
+        link: function (scope, element, attrs, ctrl) {
+          var value = attrs.hasPermission.trim();
+
+          if (typeof value !== "string") throw "hasPermission value must be String";
+
+          function toggleVisibilityBasedOnPermission() {
+            var hasPermission = Auth.hasPermission(value);
+            hasPermission ? element.show() : element.hide();
+          }
+          toggleVisibilityBasedOnPermission();
+        }
+      };
+    }]);

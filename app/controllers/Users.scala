@@ -91,4 +91,10 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def detectPermission = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val currentUser: User = loggedIn
+      Ok(Json.obj("name" -> currentUser.permission))
+  }
+
 }

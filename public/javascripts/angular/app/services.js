@@ -73,3 +73,18 @@ userServices.factory('User', ['$resource',
     });
   }
 ]);
+
+// ------ Authorization Service
+var authServices = angular.module('authServices', []);
+
+authServices.factory('Auth', function ($rootScope) {
+  var permission;
+  return {
+    setPermission: function (perm) {
+      permission = perm;
+    },
+    hasPermission: function (perm) {
+      return perm.trim() === permission.name;
+    }
+  };
+});
