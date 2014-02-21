@@ -152,9 +152,11 @@
                 <li>
                     <a ui-sref="groups-list"><i class="fa fa-group fa-fw"></i> Grupy</a>
                 </li>
+                @if(Account.isAdmin(currentUser)) {
                 <li>
                     <a ui-sref="users-list"><i class="fa fa-user fa-fw"></i> Użytkownicy</a>
                 </li>
+                }
                 <li>
                     <a ui-sref="tasks"><i class="fa fa-tasks fa-fw"></i> Zadania</a>
                 </li>

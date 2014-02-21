@@ -45,7 +45,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         url: "/groups",
         views: {
           'main': {
-            templateUrl: scaxerciserApp.partialsRoot + 'group-list.html',
+            templateUrl: scaxerciserApp.partialsRoot + 'groups-list.html',
             controller: 'GroupListCtrl'
           }
         }
@@ -55,21 +55,23 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         url: '/new',
         views: {
           '': {
-            templateUrl: scaxerciserApp.partialsRoot + 'group-list.new.html',
+            templateUrl: scaxerciserApp.partialsRoot + 'groups-list.new.html',
             controller: 'GroupCreationCtrl'
           }
         }
       })
       .state('groups-list.edit', {
+        permission: 'Administrator',
         url: '/:groupId/edit',
         views: {
           '': {
-            templateUrl: scaxerciserApp.partialsRoot + 'group-list.edit.html',
+            templateUrl: scaxerciserApp.partialsRoot + 'groups-list.edit.html',
             controller: 'GroupDetailCtrl'
           }
         }
       })
       .state('groups-groupId-users', {
+        permission: 'Administrator',
         url: '/groups/:groupId/users',
         views: {
           'main': {
@@ -89,6 +91,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list', {
+        permission: 'Administrator',
         url: "/users",
         views: {
           'main': {
@@ -98,6 +101,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.new', {
+        permission: 'Administrator',
         url: '/new',
         views: {
           '': {
@@ -107,6 +111,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.edit', {
+        permission: 'Administrator',
         url: '/:id/edit',
         views: {
           '': {

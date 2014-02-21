@@ -21,10 +21,13 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in users" id="{{user._id.$oid}}">
-                        <td><a ui-sref="users-list.edit({id: user._id.$oid})">{{user.email}}</a></td>
+                        <td>{{user.email}}</td>
                         <td>{{user.permission}}</td>
                         <td>
-                            <a ng-click="deleteUser(user._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
+                            <a has-permission="Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
+                               class="btn btn-warning btn-xs">Edytuj</a>
+                            <a has-permission="Administrator" ng-click="deleteUser(user._id.$oid)"
+                               class="btn btn-danger btn-xs">Usuń</a>
                         </td>
                     </tr>
                     </tbody>
