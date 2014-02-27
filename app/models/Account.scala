@@ -1,14 +1,26 @@
 package models
 
-//import com.novus.salat.global._
+import com.novus.salat.global._
 
-import scaxerciser.context._
+//import scaxerciser.context._
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
+import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
+import models.relations._
 
-case class Account(@Key("_id") id: ObjectId, email: String, password: String, permission: String)
+case class Account(@Key("_id") id: ObjectId, email: String, password: String, permission: String, groupsIds: Set[ObjectId] = Set())
+  extends RelationalDocument {
+
+  val db = "scaxerciser"
+  val collection = "users"
+  val foreignIdsPropertyName = "groupsIds"
+
+  lazy val groups = new ManyToMany[Account, Group](this, Map("toDb" -> "scaxerciser", "toCollection" -> "groups"))
+
+  def toDBObject = grater[Account].asDBObject(this)
+}
 
 object Account extends ModelCompanion[Account, ObjectId] {
   val accountsCollection = MongoConnection()("scaxerciser")("users")
