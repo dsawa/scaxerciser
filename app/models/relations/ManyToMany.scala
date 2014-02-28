@@ -13,11 +13,30 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
   def create(obj: U): WriteResult = {
     val toDbo = obj.toDBObject
     val currObjForeignIds = objForeignIds(obj)
-    val currFromForeignIds = objForeignIds(from)
 
     toDbo(toForeignIdsFieldName) = currObjForeignIds + from.id
     toCollection.insert(toDbo)
-    fromCollection.update(MongoDBObject("_id" -> from.id), $set(from.foreignIdsPropertyName -> (currFromForeignIds + obj.id)))
+    fromCollection.update(MongoDBObject("_id" -> from.id), $push(from.foreignIdsPropertyName -> obj.id))
+  }
+
+  def all: List[DBObject] = {
+    toCollection.find(MongoDBObject(toForeignIdsFieldName -> from.id)).toList
+  }
+
+  def count: Long = {
+    toCollection.count(MongoDBObject(toForeignIdsFieldName -> from.id))
+  }
+
+  def remove(obj: U): WriteResult = {
+    toCollection.update(MongoDBObject(toForeignIdsFieldName -> from.id), $pull(toForeignIdsFieldName -> from.id))
+    fromCollection.update(MongoDBObject(from.foreignIdsPropertyName -> obj.id), $pull(from.foreignIdsPropertyName -> obj.id))
+  }
+
+  def destroy(obj: U): WriteResult = {
+    val query = MongoDBObject(from.foreignIdsPropertyName -> obj.id)
+    val pull = $pull(from.foreignIdsPropertyName -> obj.id)
+    toCollection.remove(obj.toDBObject)
+    fromCollection.update(query, pull, upsert = false, multi = true)
   }
 
   private def lowerize(string: String): String = string(0).toLower + string.substring(1, string.length)
