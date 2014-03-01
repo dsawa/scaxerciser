@@ -27,10 +27,10 @@ object Group extends ModelCompanion[Group, ObjectId] {
 
   def create(newGroup: Group): Option[ObjectId] = Group.insert(newGroup)
 
-  def update_attributes(group: Group): WriteResult = {
+  def updateAttributes(group: Group): WriteResult = {
     Group.update(
       q = MongoDBObject("_id" -> group.id),
-      o = MongoDBObject("$set" -> MongoDBObject("name" -> group.name)),
+      o = MongoDBObject("$set" -> MongoDBObject("name" -> group.name, "accountIds" -> group.accountIds)),
       upsert = false, multi = false, wc = Group.dao.collection.writeConcern
     )
   }

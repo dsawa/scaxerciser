@@ -40,8 +40,11 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
   def destroy(obj: U): WriteResult = {
     val query = MongoDBObject(from.foreignIdsPropertyName -> obj.id)
     val pull = $pull(from.foreignIdsPropertyName -> obj.id)
-    toCollection.remove(obj.toDBObject)
-    fromCollection.update(query, pull, upsert = false, multi = true)
+    val writeResult = toCollection.remove(obj.toDBObject)
+    if (writeResult.getN > 0)
+      fromCollection.update(query, pull, upsert = false, multi = true)
+    else
+      writeResult
   }
 
   private def lowerize(string: String): String = string(0).toLower + string.substring(1, string.length)
