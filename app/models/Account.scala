@@ -1,8 +1,8 @@
 package models
 
-import com.novus.salat.global._
+//import com.novus.salat.global._
 
-//import scaxerciser.context._
+import scaxerciser.context._
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
 import com.novus.salat._

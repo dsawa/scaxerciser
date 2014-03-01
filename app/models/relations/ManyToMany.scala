@@ -10,6 +10,11 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
   private val toCollection = toDb(config("toCollection"))
   private lazy val toForeignIdsFieldName = lowerize(fromClassName + "Ids")
 
+  def add(obj: U): WriteResult = {
+    toCollection.update(MongoDBObject("_id" -> obj.id), $push(toForeignIdsFieldName -> from.id))
+    fromCollection.update(MongoDBObject("_id" -> from.id), $push(from.foreignIdsPropertyName -> obj.id))
+  }
+
   def create(obj: U): WriteResult = {
     val toDbo = obj.toDBObject
     val currObjForeignIds = objForeignIds(obj)
