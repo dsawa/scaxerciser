@@ -5,7 +5,7 @@ import play.api.libs.json._
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Account, Permission, NormalUser, Administrator}
+import models._
 
 object Users extends Controller with AuthElement with AuthConfigImpl {
 
@@ -18,7 +18,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       Ok(Json.toJson(users))
   }
 
-  def create() = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def create = StackAction(parse.json, AuthorityKey -> Administrator) {
     implicit request =>
       val email = (request.body \ "email").asOpt[String]
       val password = (request.body \ "password").asOpt[String]
@@ -28,7 +28,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
         val newAccount = new Account(new ObjectId, email.get, password.get.bcrypt(generateSalt), permission.get)
         Account.create(newAccount) match {
           case Some(id) => Ok(Json.obj("id" -> id.toString))
-          case None => UnprocessableEntity(Json.obj("error" -> "Group could not be created."))
+          case None => UnprocessableEntity("Group could not be created.")
         }
       } else {
         BadRequest("Missing parameter. Required parameters [email, password, permission]")
@@ -38,10 +38,9 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def show(id: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       if (currentUserHasAccess(loggedIn, id)) {
-        val objectId = new ObjectId(id)
-        Account.findOneById(objectId) match {
+        Account.findOneById(new ObjectId(id)) match {
           case Some(account) => Ok(Json.parse(Account.toCompactJson(account)))
-          case None => NotFound(Json.obj("error" -> ("Not found user with id: " + id)))
+          case None => NotFound("User " + id + " not found")
         }
       } else {
         Forbidden("Brak dostępu")
@@ -51,25 +50,23 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def update(id: String) = StackAction(parse.json, AuthorityKey -> NormalUser) {
     implicit request =>
       if (currentUserHasAccess(loggedIn, id)) {
-        val objectId = new ObjectId(id)
-        Account.findOneById(objectId) match {
+        Account.findOneById(new ObjectId(id)) match {
           case Some(account) =>
             val newEmail = (request.body \ "email").asOpt[String]
             val newPassword = (request.body \ "password").asOpt[String]
             val newPermission = (request.body \ "permission").asOpt[String]
             if (newEmail.isDefined && newPermission.isDefined) {
               val password = if (newPassword.isDefined) newPassword.get.bcrypt(generateSalt) else account.password
-              val userWithNewAttributes = new Account(objectId, newEmail.get, password, newPermission.get)
-              val writeResult = Account.update_attributes(userWithNewAttributes)
-              if (writeResult.getN > 0) {
-                Ok(Json.parse(Account.toCompactJson(userWithNewAttributes)))
-              } else {
-                UnprocessableEntity(Json.obj("error" -> ("User " + id + "could not be updated.")))
-              }
+              val toUpdate = account.copy(email = newEmail.get, password = password, permission = newPermission.get)
+              val writeResult = Account.updateAttributes(toUpdate)
+              if (writeResult.getN > 0)
+                Ok(Json.parse(Account.toCompactJson(toUpdate)))
+              else
+                UnprocessableEntity("User " + id + "could not be updated.")
             } else {
               BadRequest("Missing parameter. Required parameters [email, permission]")
             }
-          case None => NotFound(Json.obj("error" -> ("Not found user with id: " + id)))
+          case None => NotFound("User " + id + " not found")
         }
       } else {
         Forbidden("Brak dostępu")
@@ -78,16 +75,14 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
 
   def delete(id: String) = StackAction(AuthorityKey -> Administrator) {
     implicit request =>
-      val objectId = new ObjectId(id)
-      Account.findOneById(objectId) match {
+      Account.findOneById(new ObjectId(id)) match {
         case Some(account) =>
-          val writeResult = Account.remove(account)
-          if (writeResult.getN > 0) {
+          val writeResult = Account.destroy(account)
+          if (writeResult.getN > 0)
             Ok(Json.obj("message" -> ("User " + id + " deleted.")))
-          } else {
-            UnprocessableEntity(Json.obj("error" -> ("User " + id + "could not be deleted.")))
-          }
-        case None => NotFound(Json.obj("error" -> ("Not found user with id: " + id)))
+          else
+            UnprocessableEntity("User " + id + " could not be deleted.")
+        case None => NotFound("User " + id + " not found")
       }
   }
 

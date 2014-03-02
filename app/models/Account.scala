@@ -1,7 +1,6 @@
 package models
 
 //import com.novus.salat.global._
-
 import scaxerciser.context._
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
@@ -30,15 +29,20 @@ object Account extends ModelCompanion[Account, ObjectId] {
 
   def create(newAccount: Account): Option[ObjectId] = Account.insert(newAccount)
 
-  def update_attributes(account: Account): WriteResult = {
+  def updateAttributes(account: Account): WriteResult = {
     Permission.valueOf(account.permission)
     Account.update(
       q = MongoDBObject("_id" -> account.id),
       o = MongoDBObject("$set" -> MongoDBObject(
-        "email" -> account.email, "password" -> account.password, "permission" -> account.permission
+        "email" -> account.email, "password" -> account.password, "permission" -> account.permission, "groupIds" -> account.groupIds
       )),
       upsert = false, multi = false, wc = Account.dao.collection.writeConcern
     )
+  }
+
+  def destroy(account: Account): WriteResult = {
+    val writeResult = account.groups.removeAll(account.groupIds)
+    if (writeResult.getN > 0) Account.remove(account.copy(groupIds = Set())) else writeResult
   }
 
   def findByEmail(email: String): Option[Account] = {

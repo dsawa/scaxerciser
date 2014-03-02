@@ -33,8 +33,18 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
   }
 
   def remove(obj: U): WriteResult = {
-    toCollection.update(MongoDBObject(toForeignIdsFieldName -> from.id), $pull(toForeignIdsFieldName -> from.id))
-    fromCollection.update(MongoDBObject(from.foreignIdsPropertyName -> obj.id), $pull(from.foreignIdsPropertyName -> obj.id))
+    toCollection.update(MongoDBObject("_id" -> obj.id), $pull(toForeignIdsFieldName -> from.id))
+    fromCollection.update(MongoDBObject("_id" -> from.id), $pull(from.foreignIdsPropertyName -> obj.id))
+  }
+
+  def removeAll(ids: Set[ObjectId]): WriteResult = {
+    val newFromForeignIds = objForeignIds(from) -- ids
+    val writeResult = toCollection.update(MongoDBObject("_id" -> MongoDBObject("$in" -> ids)), $pull(toForeignIdsFieldName -> from.id),
+      upsert = false, multi = true)
+    if (writeResult.getN > 0)
+      fromCollection.update(MongoDBObject("_id" -> from.id), $set(from.foreignIdsPropertyName -> newFromForeignIds))
+    else
+      writeResult
   }
 
   def destroy(obj: U): WriteResult = {
