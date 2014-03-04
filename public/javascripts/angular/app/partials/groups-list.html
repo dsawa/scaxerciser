@@ -23,7 +23,7 @@
                     <tr ng-repeat="group in groups" id="{{group._id.$oid}}">
                         <td>{{group.name}}</td>
                         <td>
-                            <a has-permission="Administrator" ui-sref="groups-groupId-users({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
+                            <a has-permission="Administrator" ui-sref="group-members-list({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
                             <a has-permission="Administrator" ui-sref="groups-list.edit({groupId: group._id.$oid})" class="btn btn-warning btn-xs">Edytuj</a>
                             <a has-permission="Administrator" ng-click="deleteGroup(group._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
                         </td>

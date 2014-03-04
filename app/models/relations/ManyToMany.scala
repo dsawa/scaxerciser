@@ -28,6 +28,10 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
     toCollection.find(MongoDBObject(toForeignIdsFieldName -> from.id)).toList
   }
 
+  def find(query: MongoDBObject): List[DBObject] = {
+    toCollection.find(query ++ MongoDBObject(toForeignIdsFieldName -> from.id)).toList
+  }
+
   def count: Long = {
     toCollection.count(MongoDBObject(toForeignIdsFieldName -> from.id))
   }

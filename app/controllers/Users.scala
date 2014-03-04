@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc.Controller
 import play.api.libs.json._
 import com.github.t3hnar.bcrypt._
-import com.mongodb.casbah.Imports.ObjectId
+import com.mongodb.casbah.Imports._
 import jp.t2v.lab.play2.auth.AuthElement
 import models._
 
@@ -92,4 +92,13 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       Ok(Json.obj("name" -> currentUser.permission))
   }
 
+  def groupMembers(groupId: String) = StackAction(AuthorityKey -> Administrator) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          val members = group.members.find(MongoDBObject("permission" -> NormalUser.toString)).map(dbo => Account.toObject(dbo))
+          Ok(Account.toCompactJSONArray(members)).withHeaders("content-type" -> "application/json")
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
 }

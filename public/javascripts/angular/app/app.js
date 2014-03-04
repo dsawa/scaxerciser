@@ -6,6 +6,8 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
   'authServices',
   'groupControllers',
   'groupServices',
+  'groupMemberControllers',
+  'groupMemberServices',
   'userControllers',
   'userServices'
 ]),
@@ -70,18 +72,26 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
-      .state('groups-groupId-users', {
+      .state('group-members-list', {
         permission: 'Administrator',
-        url: '/groups/:groupId/users',
+        url: '/groups/:groupId/members',
         views: {
           'main': {
             template: '='
           },
           'additional': {
-            templateUrl: scaxerciserApp.partialsRoot + 'groups-groupId-users.html',
-            controller: function ($stateParams) {
-              console.log('Getting users for group ' + $stateParams.groupId)
-            }
+            templateUrl: scaxerciserApp.partialsRoot + 'group-members-list.html',
+            controller: 'GroupMembersListCtrl'
+          }
+        }
+      })
+      .state('group-members-list.add', {
+        permission: 'Administrator',
+        url: '/add',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-members-list.add.html',
+            controller: 'GroupMembersAddingCtrl'
           }
         }
       })

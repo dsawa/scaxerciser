@@ -2,19 +2,24 @@
     <!-- place for panels -->
     <div class="panel panel-info">
         <div class="panel-heading">
-            <i class="fa fa-user fa-fw"></i> Użytkownicy wybranej grupy
+            <i class="fa fa-user fa-fw"></i> Członkowie grupy: {{group.name}}
+            <div has-permission="Administrator" class="pull-right">
+                <div class="btn-group">
+                    <a ui-sref="group-members-list.add" class="btn btn-default btn-xs">Dodaj</a>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover" id="groups-table">
+                <table class="table table-striped table-bordered table-hover" id="members-table">
                     <thead>
                     <tr>
                         <th>E-mail</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Zaślepka</td>
+                    <tr ng-repeat="member in members" id="{{member._id.$oid}}">
+                        <td>{{member.email}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -22,6 +27,7 @@
             <!-- /.table-responsive -->
         </div>
         <!-- /.panel-body -->
+        <div ui-view autoscroll="false"></div>
     </div>
     <!-- /.panel -->
 
