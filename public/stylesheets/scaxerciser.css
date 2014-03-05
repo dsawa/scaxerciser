@@ -23,3 +23,7 @@ p.error {
 div#editUserFormPasswords {
   display: none;
 }
+
+#members-table thead > tr > th.sorting_asc::after, #members-adding-table thead > tr > th.sorting_asc::after {
+  display: none;
+}

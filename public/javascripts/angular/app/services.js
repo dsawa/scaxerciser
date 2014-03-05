@@ -94,13 +94,29 @@ var groupMemberServices = angular.module('groupMemberServices', ['ngResource']);
 
 groupMemberServices.factory('GroupMember', ['$resource',
   function ($resource) {
-    return $resource('api/groups/:groupId/members/:id', {}, {
+    return $resource('api/groups/:groupId/members/:id/:customAction', {}, {
       query: {
         method: 'GET',
         params: {
           groupId: '@groupId'
         },
         isArray: true
+      },
+      assignToGroup: {
+        method: 'PUT',
+        params: {
+          customAction: 'add',
+          groupId: '@groupId',
+          id: '@id'
+        }
+      },
+      removeFromGroup: {
+        method: 'DELETE',
+        params: {
+          customAction: 'remove',
+          groupId: '@groupId',
+          id: '@id'
+        }
       }
     });
   }

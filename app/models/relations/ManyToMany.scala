@@ -11,8 +11,8 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
   private lazy val toForeignIdsFieldName = lowerize(fromClassName + "Ids")
 
   def add(obj: U): WriteResult = {
-    toCollection.update(MongoDBObject("_id" -> obj.id), $push(toForeignIdsFieldName -> from.id))
-    fromCollection.update(MongoDBObject("_id" -> from.id), $push(from.foreignIdsPropertyName -> obj.id))
+    toCollection.update(MongoDBObject("_id" -> obj.id), $addToSet(toForeignIdsFieldName -> from.id))
+    fromCollection.update(MongoDBObject("_id" -> from.id), $addToSet(from.foreignIdsPropertyName -> obj.id))
   }
 
   def create(obj: U): WriteResult = {
@@ -21,7 +21,7 @@ class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, conf
 
     toDbo(toForeignIdsFieldName) = currObjForeignIds + from.id
     toCollection.insert(toDbo)
-    fromCollection.update(MongoDBObject("_id" -> from.id), $push(from.foreignIdsPropertyName -> obj.id))
+    fromCollection.update(MongoDBObject("_id" -> from.id), $addToSet(from.foreignIdsPropertyName -> obj.id))
   }
 
   def all: List[DBObject] = {

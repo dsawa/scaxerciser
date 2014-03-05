@@ -101,4 +101,34 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
         case None => NotFound("Group " + groupId + " not found.")
       }
   }
+
+  def addUserToGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          Account.findOneById(new ObjectId(id)) match {
+            case Some(user) =>
+              val writeResult = group.members.add(user)
+              if (writeResult.getN > 0) Ok(Json.parse(Account.toCompactJson(user)))
+              else UnprocessableEntity("User " + id + " could not be added to group " + groupId)
+            case None => NotFound("User " + id + " not found.")
+          }
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
+
+  def removeUserFromGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          Account.findOneById(new ObjectId(id)) match {
+            case Some(user) =>
+              val writeResult = group.members.remove(user)
+              if (writeResult.getN > 0) Ok(Json.parse(Account.toCompactJson(user)))
+              else UnprocessableEntity("User " + id + " could not be removed to group " + groupId)
+            case None => NotFound("User " + id + " not found.")
+          }
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
 }
