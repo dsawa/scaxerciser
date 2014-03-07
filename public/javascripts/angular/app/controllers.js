@@ -140,15 +140,18 @@ var groupMemberControllers = angular.module('groupMemberControllers', []);
 
 groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$scope', '$state', 'Group', 'GroupMember',
   function ($stateParams, $scope, $state, Group, GroupMember) {
-    var $membersTable = $('#' + membersTable.tableId);
-
     $scope.group = Group.show({id: $stateParams.groupId});
     $scope.members = GroupMember.query({groupId: $stateParams.groupId}, membersTable.load);
 
     $scope.removeUserFromGroup = function (groupId, userId) {
       GroupMember.removeFromGroup({groupId: groupId, id: userId}, function (user) {
-        var row = $membersTable.find('tr#' + userId)[0];
-        $membersTable.dataTable().fnDeleteRow(row);
+        var row = $('#' + membersTable.tableId).find('tr#' + userId)[0];
+        membersAddingTable.showLoader();
+        membersTable.getDataTable().fnDeleteRow(row);
+        membersAddingTable.getDataTable().fnDestroy();
+//        $scope.users.push(user); TODO , undefined
+        membersAddingTable.load();
+        membersAddingTable.hideLoader();
       });
     }
   }
@@ -156,16 +159,18 @@ groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$sco
 
 groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$scope', '$state', 'Group', 'GroupMember', 'User',
   function ($stateParams, $scope, $state, Group, GroupMember, User) {
-    var $usersTable = $('#' + membersAddingTable.tableId), $membersTable = $('#' + membersTable.tableId);
-
     $scope.group = Group.show({id: $stateParams.groupId});
     $scope.users = User.query({}, membersAddingTable.load);
 
     $scope.addUserToGroup = function (groupId, userId) {
+      membersTable.showLoader();
       GroupMember.assignToGroup({groupId: groupId, id: userId}, function (user) {
-        var row = $usersTable.find('tr#' + userId)[0];
-        $usersTable.dataTable().fnDeleteRow(row);
-        $membersTable.dataTable().fnAddTr(membersTable.produceTr(user));
+        var row = $('#' + membersAddingTable.tableId).find('tr#' + userId)[0];
+        membersAddingTable.getDataTable().fnDeleteRow(row);
+        membersTable.getDataTable().fnDestroy();
+        $scope.members.push(user);
+        membersTable.load();
+        membersTable.hideLoader();
       });
     };
   }
@@ -192,12 +197,14 @@ var membersTable = {
       }
     }, membersTable.loadDelay);
   },
-  produceTr: function (object) {
-    var tr = document.createElement('tr');
-    tr.setAttribute('id', object._id.$oid);
-    tr.innerHTML = '<td><a ng-click="removeUserFromGroup(group._id.$oid, member._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>' +
-      '</td><td>' + object.email + '</td>';
-    return tr;
+  getDataTable: function () {
+    return $('#' + membersTable.tableId).dataTable();
+  },
+  showLoader: function () {
+    $('#' + membersTable.tableId).parents('.table-responsive').find('.loader').fadeIn('fast');
+  },
+  hideLoader: function () {
+    $('#' + membersTable.tableId).parents('.table-responsive').find('.loader').fadeOut('fast');
   }
 };
 
@@ -222,11 +229,13 @@ var membersAddingTable = {
       }
     }, membersAddingTable.loadDelay);
   },
-  produceTr: function (object) {
-    var tr = document.createElement('tr');
-    tr.setAttribute('id', object._id.$oid);
-    tr.innerHTML = '<td><a ng-click="addUserToGroup(group._id.$oid, user._id.$oid)" class="btn btn-success btn-xs">Dodaj</a>' +
-      '</td><td>' + object.email + '</td>';
-    return tr;
+  getDataTable: function () {
+    return $('#' + membersAddingTable.tableId).dataTable();
+  },
+  showLoader: function () {
+    $('#' + membersAddingTable.tableId).parents('.table-responsive').find('.loader').fadeIn('fast');
+  },
+  hideLoader: function () {
+    $('#' + membersAddingTable.tableId).parents('.table-responsive').find('.loader').fadeOut('fast');
   }
 };
