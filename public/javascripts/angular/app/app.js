@@ -2,6 +2,7 @@
 
 var scaxerciserApp = angular.module('scaxerciserApp', [
   'ui.router',
+  'ngTable',
   'customDirectives',
   'authServices',
   'groupControllers',

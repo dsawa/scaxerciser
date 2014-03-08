@@ -138,104 +138,75 @@ var userTable = {
 
 var groupMemberControllers = angular.module('groupMemberControllers', []);
 
-groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$scope', '$state', 'Group', 'GroupMember',
-  function ($stateParams, $scope, $state, Group, GroupMember) {
+groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
+  'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
     $scope.group = Group.show({id: $stateParams.groupId});
-    $scope.members = GroupMember.query({groupId: $stateParams.groupId}, membersTable.load);
+    $scope.membersTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        email: ''
+      },
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        GroupMember.query({groupId: $stateParams.groupId}, function (data) {
+          var members = data;
+
+          if (params.sorting()) members = $filter('orderBy')(members, params.orderBy());
+          if (params.filter()) members = $filter('filter')(members, params.filter());
+
+          params.total(members.length);
+          $defer.resolve(members.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
 
     $scope.removeUserFromGroup = function (groupId, userId) {
-      GroupMember.removeFromGroup({groupId: groupId, id: userId}, function (user) {
-        var row = $('#' + membersTable.tableId).find('tr#' + userId)[0];
-        membersAddingTable.showLoader();
-        membersTable.getDataTable().fnDeleteRow(row);
-        membersAddingTable.getDataTable().fnDestroy();
-//        $scope.users.push(user); TODO , undefined
-        membersAddingTable.load();
-        membersAddingTable.hideLoader();
+      GroupMember.removeFromGroup({groupId: groupId, id: userId}, function () {
+        $scope.membersTable.reload();
+        $rootScope.usersTable.reload();
       });
     }
   }
 ]);
 
-groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$scope', '$state', 'Group', 'GroupMember', 'User',
-  function ($stateParams, $scope, $state, Group, GroupMember, User) {
+groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'Group', 'GroupMember',
+  'User', 'ngTableParams', function ($stateParams, $scope, $rootScope, $filter, Group, GroupMember, User, ngTableParams) {
     $scope.group = Group.show({id: $stateParams.groupId});
-    $scope.users = User.query({}, membersAddingTable.load);
+    $scope.usersTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        email: ''
+      },
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        User.query({}, function (data) {
+          var users = data;
+
+          if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
+          if (params.filter()) users = $filter('filter')(users, params.filter());
+
+          params.total(users.length);
+          $defer.resolve(users.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+    $rootScope.usersTable = $scope.usersTable;
 
     $scope.addUserToGroup = function (groupId, userId) {
-      membersTable.showLoader();
-      GroupMember.assignToGroup({groupId: groupId, id: userId}, function (user) {
-        var row = $('#' + membersAddingTable.tableId).find('tr#' + userId)[0];
-        membersAddingTable.getDataTable().fnDeleteRow(row);
-        membersTable.getDataTable().fnDestroy();
-        $scope.members.push(user);
-        membersTable.load();
-        membersTable.hideLoader();
+      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+        $scope.membersTable.reload();
+        $scope.usersTable.reload();
       });
     };
   }
 ]);
-
-var membersTable = {
-  tableId: 'members-table',
-  tableSettings: {
-    oLanguage: scaxerciserApp.dataTables.languageSettings,
-    aoColumnDefs: [
-      {
-        "bSortable": false,
-        "sWidth": "45px",
-        "aTargets": [0]
-      }
-    ]
-  },
-  loadDelay: 300,
-  load: function () {
-    setTimeout(function () {
-      var $table = $('#' + membersTable.tableId);
-      if (!$.fn.DataTable.fnIsDataTable($table)) {
-        $table.dataTable(membersTable.tableSettings);
-      }
-    }, membersTable.loadDelay);
-  },
-  getDataTable: function () {
-    return $('#' + membersTable.tableId).dataTable();
-  },
-  showLoader: function () {
-    $('#' + membersTable.tableId).parents('.table-responsive').find('.loader').fadeIn('fast');
-  },
-  hideLoader: function () {
-    $('#' + membersTable.tableId).parents('.table-responsive').find('.loader').fadeOut('fast');
-  }
-};
-
-var membersAddingTable = {
-  tableId: 'members-adding-table',
-  tableSettings: {
-    oLanguage: scaxerciserApp.dataTables.languageSettings,
-    aoColumnDefs: [
-      {
-        "bSortable": false,
-        "sWidth": "45px",
-        "aTargets": [0]
-      }
-    ]
-  },
-  loadDelay: 300,
-  load: function () {
-    setTimeout(function () {
-      var $table = $('#' + membersAddingTable.tableId);
-      if (!$.fn.DataTable.fnIsDataTable($table)) {
-        $table.dataTable(membersAddingTable.tableSettings);
-      }
-    }, membersAddingTable.loadDelay);
-  },
-  getDataTable: function () {
-    return $('#' + membersAddingTable.tableId).dataTable();
-  },
-  showLoader: function () {
-    $('#' + membersAddingTable.tableId).parents('.table-responsive').find('.loader').fadeIn('fast');
-  },
-  hideLoader: function () {
-    $('#' + membersAddingTable.tableId).parents('.table-responsive').find('.loader').fadeOut('fast');
-  }
-};
