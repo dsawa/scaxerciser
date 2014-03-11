@@ -1,7 +1,7 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <i class="fa fa-group fa-fw"></i> Wszystkie grupy w systemie
+            <i class="fa fa-group fa-fw"></i> Twoje grupy
             <div has-permission="Administrator" class="pull-right">
                 <div class="btn-group">
                     <a ui-sref="groups-list.new" class="btn btn-default btn-xs">Dodaj</a>
@@ -12,23 +12,15 @@
         <div class="panel-body">
 
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover" id="groups-table">
-                    <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="group in groups" id="{{group._id.$oid}}">
-                        <td>{{group.name}}</td>
+                <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="groupsTable">
+                    <tr ng-repeat="group in $data" id="{{group._id.$oid}}">
+                        <td data-title="'Nazwa'" sortable="'name'" filter="{ 'name': 'text' }">{{group.name}}</td>
                         <td>
-                            <a has-permission="Administrator" ui-sref="groups-groupId-users({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
+                            <a has-permission="Administrator" ui-sref="group-members-list({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
                             <a has-permission="Administrator" ui-sref="groups-list.edit({groupId: group._id.$oid})" class="btn btn-warning btn-xs">Edytuj</a>
                             <a has-permission="Administrator" ng-click="deleteGroup(group._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
                         </td>
                     </tr>
-                    </tbody>
                 </table>
             </div>
             <!-- /.table-responsive -->

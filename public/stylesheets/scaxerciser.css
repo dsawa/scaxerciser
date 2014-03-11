@@ -1,17 +1,5 @@
-/*
-div#groups-table_paginate > ul.pagination {
-  position: relative;
-  width: 220px;
-  left: -200px;
-}
-*/
-
 h1.page-header {
   margin: 15px 0px 15px 0px;
-}
-
-p.error {
-
 }
 
 .alert-tooltip {
@@ -22,4 +10,8 @@ p.error {
 
 div#editUserFormPasswords {
   display: none;
+}
+
+table.table-bright {
+  background: #ffffff;
 }

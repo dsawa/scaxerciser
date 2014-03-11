@@ -5,7 +5,7 @@ var groupServices = angular.module('groupServices', ['ngResource']);
 
 groupServices.factory('Group', ['$resource',
   function ($resource) {
-    return $resource('api/groups/:groupId', {}, {
+    return $resource('api/groups/:id', {}, {
       query: {
         method: 'GET',
         params: {},
@@ -18,19 +18,19 @@ groupServices.factory('Group', ['$resource',
       show: {
         method: 'GET',
         params: {
-          groupId: '@groupId'
+          id: '@id'
         }
       },
       update: {
         method: 'PUT',
         params: {
-          groupId: '@groupId'
+          id: '@id'
         }
       },
       delete: {
         method: 'DELETE',
         params: {
-          groupId: '@groupId'
+          id: '@id'
         }
       }
     });
@@ -88,3 +88,36 @@ authServices.factory('Auth', function ($rootScope) {
     }
   };
 });
+
+// ----- GroupMember services
+var groupMemberServices = angular.module('groupMemberServices', ['ngResource']);
+
+groupMemberServices.factory('GroupMember', ['$resource',
+  function ($resource) {
+    return $resource('api/groups/:groupId/members/:id/:customAction', {}, {
+      query: {
+        method: 'GET',
+        params: {
+          groupId: '@groupId'
+        },
+        isArray: true
+      },
+      assignToGroup: {
+        method: 'PUT',
+        params: {
+          customAction: 'add',
+          groupId: '@groupId',
+          id: '@id'
+        }
+      },
+      removeFromGroup: {
+        method: 'DELETE',
+        params: {
+          customAction: 'remove',
+          groupId: '@groupId',
+          id: '@id'
+        }
+      }
+    });
+  }
+]);
