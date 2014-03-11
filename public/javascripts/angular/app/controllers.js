@@ -189,7 +189,9 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     }, {
       total: 0,
       getData: function ($defer, params) {
-        User.query({}, function (data) {
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'NormalUser' };
+
+        User.query({filter: (function () { return JSON.stringify(filter); })()}, function (data) {
           var users = data;
 
           if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
@@ -197,10 +199,11 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
 
           params.total(users.length);
           $defer.resolve(users.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+
+          $rootScope.usersTable = $scope.usersTable;
         });
       }
     });
-    $rootScope.usersTable = $scope.usersTable;
 
     $scope.addUserToGroup = function (groupId, userId) {
       GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {

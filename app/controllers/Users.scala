@@ -14,8 +14,15 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
 
   def index = StackAction(AuthorityKey -> Administrator) {
     implicit request =>
-      val users = Account.all().map(u => Json.parse(Account.toCompactJson(u)))
-      Ok(Json.toJson(users))
+      val params = request.queryString.map { case (k, v) => k -> v.mkString }
+      if (params.contains("filter")) {
+        val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
+        val users = Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
+        Ok(Json.toJson(users))
+      } else {
+        val users = Account.all().map(u => Json.parse(Account.toCompactJson(u)))
+        Ok(Json.toJson(users))
+      }
   }
 
   def create = StackAction(parse.json, AuthorityKey -> Administrator) {
