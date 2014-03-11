@@ -149,7 +149,7 @@ scaxerciserApp.provider('securityInterceptor', function () {
 
 scaxerciserApp.run(['$rootScope', '$state', 'Auth',
   function ($rootScope, $state, Auth) {
-    Auth.setPermission(permission)
+    Auth.setPermission(permission);
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
       if (typeof toState.permission !== "undefined" && !Auth.hasPermission(toState.permission)) {
@@ -158,23 +158,3 @@ scaxerciserApp.run(['$rootScope', '$state', 'Auth',
       }
     });
 }]);
-
-scaxerciserApp.dataTables = {
-  languageSettings: {
-    sProcessing: "Proszę czekać...",
-    sLengthMenu: "Pokaż _MENU_",
-    sZeroRecords: "Brak danych.",
-    sInfo: "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
-    sInfoEmpty: "Pozycji 0 z 0 dostępnych",
-    sInfoFiltered: "(filtrowanie spośród _MAX_ dostępnych pozycji)",
-    sInfoPostFix: "",
-    sSearch: "Szukaj:  ",
-    sUrl: "",
-    oPaginate: {
-      sFirst: "Pierwsza",
-      sPrevious: "Poprzednia",
-      sNext: "Następna",
-      sLast: "Ostatnia"
-    }
-  }
-};

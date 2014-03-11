@@ -3,14 +3,32 @@
 // ----- Group Controllers
 var groupControllers = angular.module('groupControllers', []);
 
-groupControllers.controller('GroupListCtrl', ['$scope', 'Group',
-  function ($scope, Group) {
-    $scope.groups = Group.query({}, groupTable.load);
+groupControllers.controller('GroupListCtrl', ['$scope', '$filter', 'ngTableParams', 'Group',
+  function ($scope, $filter, ngTableParams, Group) {
+    $scope.groupsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        Group.query({}, function (data) {
+          var groups = data;
+
+          if (params.sorting()) groups = $filter('orderBy')(groups, params.orderBy());
+          if (params.filter()) groups = $filter('filter')(groups, params.filter());
+
+          params.total(groups.length);
+          $defer.resolve(groups.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
 
     $scope.deleteGroup = function (groupId) {
-      var row = $('#' + groupTable.tableId).find('tr#' + groupId)[0];
       Group.delete({id: groupId}, function () {
-        $('#' + groupTable.tableId).dataTable().fnDeleteRow(row);
+        $scope.groupsTable.reload();
       });
     };
   }
@@ -43,40 +61,45 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
-var groupTable = {
-  tableId: 'groups-table',
-  tableSettings: {
-    oLanguage: scaxerciserApp.dataTables.languageSettings,
-    aoColumnDefs: [
-      {
-        "bSortable": false,
-        "aTargets": [1]
-      }
-    ]
-  },
-  loadDelay: 300,
-  load: function () {
-    setTimeout(function () {
-      var $table = $('#' + groupTable.tableId);
-      if (!$.fn.DataTable.fnIsDataTable($table)) {
-        $table.dataTable(groupTable.tableSettings);
-      }
-    }, groupTable.loadDelay);
-  }
-};
-
 // ----- User Controllers
 
 var userControllers = angular.module('userControllers', []);
 
-userControllers.controller('UserListCtrl', ['$scope', 'User',
-  function ($scope, User) {
-    $scope.users = User.query({}, userTable.load);
+userControllers.controller('UserListCtrl', ['$scope', '$filter', '$q', 'ngTableParams', 'User',
+  function ($scope, $filter, $q, ngTableParams, User) {
+    $scope.usersTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        User.query({}, function (data) {
+          var users = data;
+
+          if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
+          if (params.filter()) users = $filter('filter')(users, params.filter());
+
+          params.total(users.length);
+          $defer.resolve(users.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+
+    $scope.permissions = function (column) {
+      var def = $q.defer();
+      def.resolve([
+        { id: 'NormalUser', title: 'NormalUser' },
+        { id: 'Administrator', title: 'Administrator' }
+      ]);
+      return def;
+    };
 
     $scope.deleteUser = function (userId) {
-      var row = $('#' + userTable.tableId).find('tr#' + userId)[0];
       User.delete({id: userId}, function () {
-        $('#' + userTable.tableId).dataTable().fnDeleteRow(row);
+        $scope.usersTable.reload();
       });
     };
   }
@@ -98,7 +121,7 @@ userControllers.controller('UserShortDetailCtrl', ['$stateParams', '$scope', '$s
     $scope.updateUser = function () {
       var params = $scope.user;
       params.id = $stateParams.id;
-      if (params.password.length < 6) delete params.password
+      if (params.password.length < 6) delete params.password;
       User.update(params, function () {
         $state.transitionTo('users-reload');
         $location.path('users');
@@ -112,28 +135,6 @@ userControllers.controller('UserShortDetailCtrl', ['$stateParams', '$scope', '$s
   }
 ]);
 
-var userTable = {
-  tableId: 'users-table',
-  tableSettings: {
-    oLanguage: scaxerciserApp.dataTables.languageSettings,
-    aoColumnDefs: [
-      {
-        "bSortable": false,
-        "aTargets": [2]
-      }
-    ]
-  },
-  loadDelay: 300,
-  load: function () {
-    setTimeout(function () {
-      var $table = $('#' + userTable.tableId);
-      if (!$.fn.DataTable.fnIsDataTable($table)) {
-        $table.dataTable(userTable.tableSettings);
-      }
-    }, userTable.loadDelay);
-  }
-};
-
 // ----- GroupMember Controllers
 
 var groupMemberControllers = angular.module('groupMemberControllers', []);
@@ -144,9 +145,6 @@ groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$sco
     $scope.membersTable = new ngTableParams({
       page: 1,
       count: 10,
-      filter: {
-        email: ''
-      },
       sorting: {
         email: 'asc'
       }
@@ -180,9 +178,6 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     $scope.usersTable = new ngTableParams({
       page: 1,
       count: 10,
-      filter: {
-        email: ''
-      },
       sorting: {
         email: 'asc'
       }
@@ -191,7 +186,9 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
       getData: function ($defer, params) {
         var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'NormalUser' };
 
-        User.query({filter: (function () { return JSON.stringify(filter); })()}, function (data) {
+        User.query({filter: (function () {
+          return JSON.stringify(filter);
+        })()}, function (data) {
           var users = data;
 
           if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());

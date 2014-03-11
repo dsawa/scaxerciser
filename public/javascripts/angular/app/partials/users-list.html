@@ -11,18 +11,11 @@
         <!-- /.panel-heading -->
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover" id="users-table">
-                    <thead>
-                    <tr>
-                        <th>E-mail</th>
-                        <th>Uprawnienia</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="user in users" id="{{user._id.$oid}}">
-                        <td>{{user.email}}</td>
-                        <td>{{user.permission}}</td>
+                <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="usersTable">
+                    <tr ng-repeat="user in $data" id="{{user._id.$oid}}">
+                        <td data-title="'E-mail'" sortable="'email'" filter="{ 'email': 'text' }">{{user.email}}</td>
+                        <td width="170" data-title="'Uprawnienia'" sortable="'permission'" filter="{ 'permission': 'select' }"
+                            filter-data="permissions($column)">{{user.permission}}</td>
                         <td>
                             <a has-permission="Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
                                class="btn btn-warning btn-xs">Edytuj</a>
