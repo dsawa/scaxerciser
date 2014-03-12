@@ -1,9 +1,10 @@
 package models.relations
 
+import models.DBConfig
 import com.mongodb.casbah.Imports._
 
 class ManyToMany[T <: RelationalDocument, U <: RelationalDocument](from: T, config: Map[String, String]) {
-  private val mongoClient = MongoClient("localhost", 27017)
+  private val mongoClient = MongoClient(DBConfig.defaultHost, DBConfig.defaultPort)
   private val fromDb = mongoClient(from.db)
   private val fromCollection = fromDb(from.collection)
   private val toDb = mongoClient(config("toDb"))

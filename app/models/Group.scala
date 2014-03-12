@@ -10,17 +10,17 @@ import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
 case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends RelationalDocument {
-  val db = "scaxerciser"
-  val collection = "groups"
+  val db = DBConfig.groups("db")
+  val collection = DBConfig.groups("collection")
   val foreignIdsPropertyName = "accountIds"
 
-  lazy val members = new ManyToMany[Group, Account](this, Map("toDb" -> "scaxerciser", "toCollection" -> "users"))
+  lazy val members = new ManyToMany[Group, Account](this, Map("toDb" -> DBConfig.accounts("db"), "toCollection" -> DBConfig.accounts("collection")))
 
   def toDBObject = grater[Group].asDBObject(this)
 }
 
 object Group extends ModelCompanion[Group, ObjectId] {
-  val groupsCollection = MongoConnection()("scaxerciser")("groups")
+  val groupsCollection = MongoConnection()(DBConfig.groups("db"))(DBConfig.groups("collection"))
   val dao = new SalatDAO[Group, ObjectId](collection = groupsCollection) {}
 
   def all(): List[Group] = Group.findAll().toList

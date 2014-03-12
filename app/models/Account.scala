@@ -12,17 +12,17 @@ import models.relations._
 case class Account(@Key("_id") id: ObjectId, email: String, password: String, permission: String, groupIds: Set[ObjectId] = Set())
   extends RelationalDocument {
 
-  val db = "scaxerciser"
-  val collection = "users"
+  val db = DBConfig.accounts("db")
+  val collection = DBConfig.accounts("collection")
   val foreignIdsPropertyName = "groupIds"
 
-  lazy val groups = new ManyToMany[Account, Group](this, Map("toDb" -> "scaxerciser", "toCollection" -> "groups"))
+  lazy val groups = new ManyToMany[Account, Group](this, Map("toDb" -> DBConfig.groups("db"), "toCollection" -> DBConfig.groups("collection")))
 
   def toDBObject = grater[Account].asDBObject(this)
 }
 
 object Account extends ModelCompanion[Account, ObjectId] {
-  val accountsCollection = MongoConnection()("scaxerciser")("users")
+  val accountsCollection = MongoConnection()(DBConfig.accounts("db"))(DBConfig.accounts("collection"))
   val dao = new SalatDAO[Account, ObjectId](collection = accountsCollection) {}
 
   def all(): List[Account] = Account.findAll().toList
