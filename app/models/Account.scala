@@ -41,8 +41,12 @@ object Account extends ModelCompanion[Account, ObjectId] {
   }
 
   def destroy(account: Account): WriteResult = {
-    val writeResult = account.groups.removeAll(account.groupIds)
-    if (writeResult.getN > 0) Account.remove(account.copy(groupIds = Set())) else writeResult
+    if (account.groupIds.isEmpty) {
+      Account.remove(account)
+    } else {
+      val writeResult = account.groups.removeAll(account.groupIds)
+      if (writeResult.getN > 0) Account.remove(account.copy(groupIds = Set())) else writeResult
+    }
   }
 
   def findByEmail(email: String): Option[Account] = {

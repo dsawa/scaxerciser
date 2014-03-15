@@ -8,7 +8,7 @@ import models.{Administrator, Account}
 object Global extends GlobalSettings {
 
   override def onStart(app: Application) {
-    if (Account.all().isEmpty) {
+    if (app.mode.toString.toLowerCase != "test" && Account.all().isEmpty) {
       val adminEmail = "admin@example.com"
       val adminPassword = "admin".bcrypt(generateSalt)
       val adminPermission = Administrator.toString
