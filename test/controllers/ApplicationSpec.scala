@@ -5,17 +5,15 @@ import play.api.test._
 import play.api.test.Helpers._
 import jp.t2v.lab.play2.auth.test.Helpers._
 import org.scalatest.{FunSpec, Matchers, BeforeAndAfter}
-import org.scalatest.selenium.HtmlUnit
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports.ObjectId
 import models.Account
 
-class ApplicationSpec extends FunSpec with Matchers with BeforeAndAfter with HtmlUnit {
+class ApplicationSpec extends FunSpec with Matchers with BeforeAndAfter {
 
   object config extends AuthConfigImpl
 
   lazy val usersCollection = Account.accountsCollection
-  val host = "http://localhost:9000/"
   val adminId = new ObjectId
 
   before {
