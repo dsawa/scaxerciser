@@ -25,6 +25,7 @@ class AccountSpec extends FunSpec with BeforeAndAfter with GivenWhenThen with Ma
 
   after {
     collection.dropCollection()
+    Group.groupsCollection.dropCollection()
     Play.stop()
   }
 
