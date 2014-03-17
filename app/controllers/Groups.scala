@@ -12,7 +12,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
     implicit request =>
       val currentUser: User = loggedIn
       val groups = currentUser.groups.all.map(dbo => Group.toObject(dbo))
-      Ok(Group.toCompactJSONArray(groups)).withHeaders("content-type" -> "application/json")
+      Ok(Group.toCompactJSONArray(groups)).withHeaders("Content-Type" -> "application/json")
   }
 
   def create() = StackAction(parse.json, AuthorityKey -> Administrator) {
@@ -36,7 +36,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       val objectId = new ObjectId(id)
       Group.findOneById(objectId) match {
         case Some(group) => Ok(Json.parse(Group.toCompactJson(group)))
-        case None => NotFound(Json.obj("error" -> ("Not found group with id: " + id)))
+        case None => NotFound("Group " + id + " not found")
       }
   }
 
