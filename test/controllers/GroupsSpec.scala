@@ -142,6 +142,7 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
 //    }
 
     it("should respond with json and status OK after removing group") {
+      val beforeCount = groupsCollection.count()
       val req = FakeRequest(DELETE, "/groups/" + groupId_1.toString).withLoggedIn(config)(adminId)
       val result = Groups.delete(groupId_1.toString)(req)
 
@@ -149,8 +150,9 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
       contentType(result) shouldEqual Some("application/json")
 
       val content = contentAsJson(result).asInstanceOf[JsObject]
-
       (content \ "message").as[String] should include (groupId_1.toString)
+
+      groupsCollection.count() shouldEqual (beforeCount - 1)
     }
 
     it("should respond with forbidden when user is not an admin") {
@@ -159,6 +161,128 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
 
       status(result) shouldEqual FORBIDDEN
       contentType(result) shouldEqual Some("text/plain")
+    }
+  }
+
+  describe("Groups.create") {
+    it("should redirect to login page when user not logged in") {
+      val json = Json.obj(
+        "name" -> JsString("wontEvenTryToCreateMe")
+      )
+      val req = FakeRequest(POST, routes.Groups.create().url).withHeaders(CONTENT_TYPE -> "application/json")
+      val result = Groups.create()(req.withBody(json))
+
+      status(result) shouldEqual SEE_OTHER
+      redirectLocation(result) shouldEqual Some("/login")
+    }
+
+    it("should respond with forbidden when user is not an admin") {
+      val json = Json.obj(
+        "name" -> JsString("wontEvenTryToCreateMe")
+      )
+      val req = FakeRequest(POST, routes.Groups.create().url).withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(userId)
+      val result = Groups.create()(req.withBody(json))
+
+      status(result) shouldEqual FORBIDDEN
+      contentType(result) shouldEqual Some("text/plain")
+    }
+
+    it("should respond with bad request when there are missing important parameters") {
+      val json = Json.obj(
+        "iWontThisToNameThat" -> JsString("wontEvenTryToCreateMe")
+      )
+      val req = FakeRequest(POST, routes.Groups.create().url).withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(adminId)
+      val result = Groups.create()(req.withBody(json))
+
+      status(result) shouldEqual BAD_REQUEST
+      contentType(result) shouldEqual Some("text/plain")
+    }
+
+    it("should create group and respond with ok") {
+      val beforeCount = groupsCollection.count()
+      val json = Json.obj(
+        "name" -> JsString("New created group")
+      )
+      val req = FakeRequest(POST, routes.Groups.create().url).withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(adminId)
+      val result = Groups.create()(req.withBody(json))
+
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+
+      val content = contentAsJson(result)
+      (content \ "name").as[String] shouldEqual "New created group"
+
+      groupsCollection.count() shouldEqual (beforeCount + 1)
+    }
+  }
+
+  describe("Groups.update") {
+    it("should redirect to login page when user not logged in") {
+      val json = Json.obj(
+        "name" -> JsString("wontEvenTryToUpdateMe")
+      )
+      val req = FakeRequest(PUT, routes.Groups.update(groupId_1.toString).url).withHeaders(CONTENT_TYPE -> "application/json")
+      val result = Groups.update(groupId_1.toString)(req.withBody(json))
+
+      status(result) shouldEqual SEE_OTHER
+      redirectLocation(result) shouldEqual Some("/login")
+    }
+
+    it("should respond with forbidden when user is not an admin") {
+      val json = Json.obj(
+        "name" -> JsString("wontEvenTryToUpdateMe")
+      )
+      val req = FakeRequest(PUT, routes.Groups.update(groupId_1.toString).url).
+        withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(userId)
+      val result = Groups.update(groupId_1.toString)(req.withBody(json))
+
+      status(result) shouldEqual FORBIDDEN
+      contentType(result) shouldEqual Some("text/plain")
+    }
+
+    it("should respond with bad request when there are missing important parameters") {
+      val json = Json.obj(
+        "iWontThisToNameThat" -> JsString("wontEvenTryToUpdateMe")
+      )
+      val req = FakeRequest(PUT, routes.Groups.update(groupId_1.toString).url).
+        withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(adminId)
+      val result = Groups.update(groupId_1.toString)(req.withBody(json))
+
+      status(result) shouldEqual BAD_REQUEST
+      contentType(result) shouldEqual Some("text/plain")
+    }
+
+    it("should respond with 404 when group is not found") {
+      val notFoundId = new ObjectId
+      val json = Json.obj(
+        "name" -> JsString("wontEvenTryToUpdateMe")
+      )
+      val req = FakeRequest(PUT, routes.Groups.update(notFoundId.toString).url).
+        withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(adminId)
+      val result = Groups.update(notFoundId.toString)(req.withBody(json))
+
+      status(result) shouldEqual NOT_FOUND
+      contentType(result) shouldEqual Some("text/plain")
+      contentAsString(result) should include (notFoundId.toString)
+    }
+
+    it("should update group and respond with ok") {
+      val json = Json.obj(
+        "name" -> JsString("Update me !")
+      )
+      val req = FakeRequest(PUT, routes.Groups.update(groupId_1.toString).url).
+        withHeaders(CONTENT_TYPE -> "application/json").withLoggedIn(config)(adminId)
+      val result = Groups.update(groupId_1.toString)(req.withBody(json))
+
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+
+      val content = contentAsJson(result)
+      (content \ "name").as[String] shouldEqual "Update me !"
+
+      val thatGroup = Group.findOneById(groupId_1).get
+      thatGroup.name should not be groupName_1
+      thatGroup.name shouldEqual "Update me !"
     }
   }
 

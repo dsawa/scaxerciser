@@ -15,7 +15,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       Ok(Group.toCompactJSONArray(groups)).withHeaders("Content-Type" -> "application/json")
   }
 
-  def create() = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def create = StackAction(parse.json, AuthorityKey -> Administrator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {
         name =>
