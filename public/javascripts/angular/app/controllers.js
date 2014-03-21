@@ -27,6 +27,7 @@ groupControllers.controller('GroupListCtrl', ['$scope', '$filter', 'ngTableParam
     });
 
     $scope.deleteGroup = function (groupId) {
+      groupsBloodhound.clearRemoteCache();
       Group.delete({id: groupId}, function () {
         $scope.groupsTable.reload();
       });
@@ -40,6 +41,7 @@ groupControllers.controller('GroupDetailCtrl', ['$stateParams', '$scope', '$stat
       var params = $scope.group;
       params.id = $stateParams.groupId;
       Group.update(params, function () {
+        groupsBloodhound.clearRemoteCache();
         $state.transitionTo('groups-reload');
         $location.path('groups');
       });
@@ -54,6 +56,7 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   function ($scope, $state, $location, Group) {
     $scope.createGroup = function () {
       Group.create($scope.group, function () {
+        groupsBloodhound.clearRemoteCache();
         $state.transitionTo('groups-reload');
         $location.path('groups');
       });

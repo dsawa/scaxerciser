@@ -15,3 +15,7 @@ div#editUserFormPasswords {
 table.table-bright {
   background: #ffffff;
 }
+
+div#groupSelectModal {
+  top: 20%;
+}
