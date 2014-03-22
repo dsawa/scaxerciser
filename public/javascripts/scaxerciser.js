@@ -1,8 +1,7 @@
 var groupsBloodhound;
 
 $(document).ready(function () {
-  var $groupSelectModal = $('#groupSelectModal'), $groupsSelect,
-    goToAddNewAssignmentForm;
+  var $groupSelectModal = $('#groupSelectModal'), $groupsSelect, goToAddNewAssignmentForm;
 
   $groupsSelect = $groupSelectModal.find('.typeahead');
 
@@ -36,6 +35,10 @@ $(document).ready(function () {
     name: 'groups',
     displayKey: 'name',
     source: groupsBloodhound.ttAdapter()
+  });
+
+  $groupSelectModal.on('shown.bs.modal', function () {
+    $(this).find('input').focus();
   });
 
   $groupsSelect.on('typeahead:selected', function (e, data) {
