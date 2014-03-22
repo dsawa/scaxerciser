@@ -76,7 +76,15 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
 
     $scope.assignment = {
       groupId: $stateParams.groupId,
-      exercises: [ { description: '', hint: ''} ]
+      exercises: [
+        { description: '', hint: ''}
+      ]
+    };
+
+    $scope.createAssignment = function () {
+      Assignment.create($scope.assignment, function () {
+        console.log("assignment created")
+      });
     };
 
     $scope.newExercise = function ($event) {
@@ -84,11 +92,19 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
       $scope.assignment.exercises.push({ description: '', hint: ''});
     };
 
-    $scope.createAssignment = function () {
-      Assignment.create($scope.assignment, function () {
+    $scope.addPreTagToExercise = function ($event, $index) {
+      $event.preventDefault();
+      var description = $scope.assignment.exercises[$index].description || '';
+      description += '<pre></pre>';
+      $scope.assignment.exercises[$index].description = description;
+    };
 
-      });
-    }
+    $scope.addCodeTagToExercise = function ($event, $index) {
+      $event.preventDefault();
+      var description = $scope.assignment.exercises[$index].description || '';
+      description += '<code></code>';
+      $scope.assignment.exercises[$index].description = description;
+    };
   }
 ]);
 

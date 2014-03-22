@@ -19,3 +19,9 @@ table.table-bright {
 div#groupSelectModal {
   top: 20%;
 }
+
+.exercise-description-helpers {
+  position: relative;
+  margin-top: -20px;
+  margin-left: 150px;
+}
