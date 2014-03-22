@@ -1,7 +1,18 @@
 var groupsBloodhound;
 
 $(document).ready(function () {
-  var $groupsSelect = $('#groupSelectModal').find('.typeahead');
+  var $groupSelectModal = $('#groupSelectModal'), $groupsSelect,
+    goToAddNewAssignmentForm;
+
+  $groupsSelect = $groupSelectModal.find('.typeahead');
+
+  goToAddNewAssignmentForm = function (groupId) {
+    if (typeof groupId !== 'undefined' && groupId !== '') {
+      $groupSelectModal.modal('hide');
+      $groupsSelect.typeahead('val', '');
+      window.location.hash = '#/groups/' + groupId + '/assignments/new'
+    }
+  };
 
   groupsBloodhound = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -28,7 +39,7 @@ $(document).ready(function () {
   });
 
   $groupsSelect.on('typeahead:selected', function (e, data) {
-    console.log(data);
+    goToAddNewAssignmentForm(data['_id']['$oid']);
   });
 
   $('#wrapper').on('click', 'a#shortEditChangePass', function (e) {

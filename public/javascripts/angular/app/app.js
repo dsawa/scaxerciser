@@ -1,17 +1,19 @@
 'use strict';
 
 var scaxerciserApp = angular.module('scaxerciserApp', [
-  'ui.router',
-  'ngTable',
-  'customDirectives',
-  'authServices',
-  'groupControllers',
-  'groupServices',
-  'groupMemberControllers',
-  'groupMemberServices',
-  'userControllers',
-  'userServices'
-]),
+    'ui.router',
+    'ngTable',
+    'customDirectives',
+    'authServices',
+    'groupControllers',
+    'groupServices',
+    'groupMemberControllers',
+    'groupMemberServices',
+    'userControllers',
+    'userServices',
+    'assignmentsControllers',
+    'assignmentServices'
+  ]),
   permission;
 
 angular.element(document).ready(function () {
@@ -96,6 +98,16 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('group-assignments-new', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/new',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-new.html',
+            controller: 'AssignmentCreationCtrl'
+          }
+        }
+      })
       .state('users-reload', {
         controller: function ($state) {
           $state.go('users-list');
@@ -157,4 +169,4 @@ scaxerciserApp.run(['$rootScope', '$state', 'Auth',
         $state.transitionTo('unauthorized');
       }
     });
-}]);
+  }]);

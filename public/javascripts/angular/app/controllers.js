@@ -64,6 +64,34 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
+// ----- Assignments Controllers
+
+var assignmentsControllers = angular.module('assignmentsControllers', []);
+
+assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
+  'Assignment', function ($stateParams, $scope, $state, $location, Group, Assignment) {
+    $scope.group = Group.show({
+      id: $stateParams.groupId
+    });
+
+    $scope.assignment = {
+      groupId: $stateParams.groupId,
+      exercises: [ { description: '', hint: ''} ]
+    };
+
+    $scope.newExercise = function ($event) {
+      $event.preventDefault();
+      $scope.assignment.exercises.push({ description: '', hint: ''});
+    };
+
+    $scope.createAssignment = function () {
+      Assignment.create($scope.assignment, function () {
+
+      });
+    }
+  }
+]);
+
 // ----- User Controllers
 
 var userControllers = angular.module('userControllers', []);
