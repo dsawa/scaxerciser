@@ -9,12 +9,17 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
-case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends RelationalDocument {
+case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set())
+  extends MongoDBDocument with OneToMany with ManyToMany {
+
   val db = DBConfig.groups("db")
   val collection = DBConfig.groups("collection")
   val foreignIdsPropertyName = "accountIds"
 
-  lazy val members = new ManyToMany[Group, Account](this, Map("toDb" -> DBConfig.accounts("db"), "toCollection" -> DBConfig.accounts("collection")))
+  lazy val members = new ManyToManyRelation[Group, Account](this,
+    Map("toDb" -> DBConfig.accounts("db"), "toCollection" -> DBConfig.accounts("collection")))
+  lazy val assignments = new OneToManyRelation[Group, Assignment](this,
+    Map("toDb" -> DBConfig.assignments("db"), "toCollection" -> DBConfig.assignments("collection")))
 
   def toDBObject = grater[Group].asDBObject(this)
 }
