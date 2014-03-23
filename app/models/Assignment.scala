@@ -9,8 +9,6 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
-case class Exercise(description: String, hint: String = "")
-
 case class Assignment(@Key("_id") id: ObjectId, title: String, exercises: List[Exercise], groupId: ObjectId)
   extends ManyToOne {
 
@@ -26,4 +24,6 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
   val dao = new SalatDAO[Assignment, ObjectId](collection = assignmentsCollection) {}
 
   def all(): List[Assignment] = Assignment.findAll().toList
+
+  def create(assignment: Assignment): Option[ObjectId] = Assignment.insert(assignment)
 }

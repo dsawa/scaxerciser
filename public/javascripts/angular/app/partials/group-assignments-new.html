@@ -18,12 +18,12 @@
                         <label>Opis ćwiczenia</label>
 
                         <div class="exercise-description-helpers">
-                            <button ng-click="addPreTagToExercise($event, $index)"
+                            <a ng-click="addPreTagToExercise($event, $index)"
                                     class="btn btn-default btn-xs btn-pre">
-                                &lt;pre&gt;</button>
-                            <button ng-click="addCodeTagToExercise($event, $index)"
+                                &lt;pre&gt;</a>
+                            <a ng-click="addCodeTagToExercise($event, $index)"
                                     class="btn btn-default btn-xs btn-code">
-                                &lt;code&gt;</button>
+                                &lt;code&gt;</a>
                         </div>
                         <textarea ng-model="exercise.description" class="form-control" rows="7"
                                   required="true"></textarea>
