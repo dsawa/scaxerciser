@@ -8,9 +8,10 @@ import models._
 
 object Assignments extends Controller with AuthElement with AuthConfigImpl {
 
-  def index = StackAction(AuthorityKey -> NormalUser) {
+  def index(groupId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
-      Ok("")
+      val assignments = Assignment.findByGroupId(new ObjectId(groupId)).map(a => Json.parse(Assignment.toCompactJson(a)))
+      Ok(Json.toJson(assignments))
   }
 
   def create(groupId: String) = StackAction(parse.json, AuthorityKey -> Administrator) {

@@ -26,4 +26,8 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
   def all(): List[Assignment] = Assignment.findAll().toList
 
   def create(assignment: Assignment): Option[ObjectId] = Assignment.insert(assignment)
+
+  def findByGroupId(groupId: ObjectId) = {
+    dao.find(MongoDBObject("groupId" -> groupId)).toList
+  }
 }

@@ -16,7 +16,8 @@ PUT       /api/groups/:id               controllers.Groups.update(id: String)
 DELETE    /api/groups/:id               controllers.Groups.delete(id: String)
 
 # Assignments
-POST      /api/groups/:groupId/assignments  controllers.Assignments.create(groupId: String)
+GET      /api/groups/:groupId/assignments  controllers.Assignments.index(groupId: String)
+POST     /api/groups/:groupId/assignments  controllers.Assignments.create(groupId: String)
 
 # Authentication
 GET       /login                        controllers.Application.login
