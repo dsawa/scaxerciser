@@ -108,6 +108,17 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
   }
 ]);
 
+assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '$scope', 'Group', 'Assignment',
+  function ($stateParams, $scope, Group, Assignment) {
+    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.assignments = Assignment.query({groupId: $stateParams.groupId});
+
+    $scope.expandLast = function ($last) {
+      return $last ? "panel-collapse collapse in" : "panel-collapse collapse";
+    }
+  }
+]);
+
 // ----- User Controllers
 
 var userControllers = angular.module('userControllers', []);

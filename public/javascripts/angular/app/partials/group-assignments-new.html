@@ -2,6 +2,11 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             Tworzenie nowego zadania dla grupy: {{group.name}}
+            <div has-permission="Administrator" class="pull-right">
+                <a ui-sref="group-assignments-list({groupId: group._id.$oid})" class="btn btn-default btn-xs">
+                    Wyświetl pozostałe zadania
+                </a>
+            </div>
         </div>
         <div class="panel-body">
             <form ng-submit="createAssignment()" role="form" id="assignmentForm">

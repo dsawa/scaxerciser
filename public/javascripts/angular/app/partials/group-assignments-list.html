@@ -1,0 +1,39 @@
+<div class="col-lg-12">
+    <!-- place for panels -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <i class="fa fa-pencil fa-fw"></i> Zadania z grupy: {{group.name}}
+            <div has-permission="Administrator" class="pull-right">
+                <div class="btn-group">
+                    <a ui-sref="group-assignments-new({groupId: group._id.$oid})" class="btn btn-default btn-xs">Dodaj</a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="panel-group" id="groupAssignmentsAccordion">
+                <div ng-repeat="assignment in assignments" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#groupAssignmentsAccordion" href="#assignment-{{assignment._id.$oid}}">
+                                {{assignment.title}}
+                            </a>
+                        </h4>
+                    </div>
+
+                    <div id="assignment-{{assignment._id.$oid}}" ng-class="expandLast($last)">
+                        <div class="panel-body">
+                            <!-- TODO: Wyświetlenie wyniku, czasu do końca itd. dla usera -->
+                            Jeszcze nie rozwiązałeś tego zadania!
+                            <br>
+                            <a href="#" class="btn btn-outline btn-default btn-block">Pokaż szczegóły</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- .panel-body -->
+        <div ui-view autoscroll="false"></div>
+    </div>
+    <!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->

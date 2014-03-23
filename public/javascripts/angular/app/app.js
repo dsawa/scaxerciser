@@ -108,6 +108,18 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('group-assignments-list', {
+        url: '/groups/:groupId/assignments',
+        views: {
+          'main': {
+            template: '='
+          },
+          'additional': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-list.html',
+            controller: 'GroupAssignmentsListCtrl'
+          }
+        }
+      })
       .state('users-reload', {
         controller: function ($state) {
           $state.go('users-list');

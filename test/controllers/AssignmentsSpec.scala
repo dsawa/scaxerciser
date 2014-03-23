@@ -56,6 +56,31 @@ class AssignmentsSpec extends FunSpec with Matchers with BeforeAndAfter {
     Play.stop()
   }
 
+  describe("Assignments.index") {
+    it("should redirect to login page when user not logged in") {
+      val result = Assignments.index(groupId_1.toString)(FakeRequest())
+
+      status(result) shouldEqual SEE_OTHER
+      redirectLocation(result) shouldEqual Some("/login")
+    }
+
+    it("should return json with assignments connected to group with given id") {
+      val req = FakeRequest(GET, routes.Assignments.index(groupId_1.toString).url).withLoggedIn(config)(adminId)
+      val result = Assignments.index(groupId_1.toString)(req)
+
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+
+      val content = contentAsJson(result).asInstanceOf[JsArray]
+      val list = content.value.toList
+
+      list.size shouldEqual 1
+      ((list.head \ "_id") \ "$oid").as[String] shouldEqual assignmentId.toString
+      ((list.head \ "groupId") \ "$oid").as[String] shouldEqual groupId_1.toString
+      (list.head \ "title").as[String] shouldEqual assignmentTitle
+    }
+  }
+
   describe("Assignments.create") {
     it("should redirect to login page when user not logged in") {
       val json = Json.obj(

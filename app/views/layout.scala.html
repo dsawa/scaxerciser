@@ -164,32 +164,32 @@
                     <a href="#"><i class="fa fa-pencil fa-fw"></i> Zadania<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="#" data-toggle="modal" data-target="#groupSelectModal" data-backdrop="false">
-                                <i class="fa fa-plus fa-fw"></i> Dodaj</a>
-                            <!-- Modal -->
-                            <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog"
-                                 aria-labelledby="groupSelectModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="groupSelectModalLabel">Wybierz grupę</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <input class="typeahead form-control" type="text"
-                                                       placeholder="Szukaj grupy" required="true">
-                                                <input type="hidden" id="groupSelectedId">
-                                            </div>
+                            <!--data-toggle="modal" data-target="#groupSelectModal" data-backdrop="false"-->
+                            <a href="#" id="addNewAssignment"><i class="fa fa-plus fa-fw"></i> Dodaj</a>
+                        </li>
+                        <li>
+                            <a href="#" id="showAssignmentsList"><i class="fa fa-list fa-fw"></i> Pokaż</a>
+                        </li>
+                        <!-- Modal -->
+                        <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog"
+                             aria-labelledby="groupSelectModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="groupSelectModalLabel">Wybierz grupę</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input class="typeahead form-control" type="text"
+                                                   placeholder="Szukaj grupy" required="true">
+                                            <input type="hidden" id="modalNextAction" value="new">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <a ui-sref="assignments-list"><i class="fa fa-tasks fa-fw"></i> Pokaż</a>
-                        </li>
+                        </div>
                     </ul>
                     <!-- /.nav-second-level -->
                     } else {
