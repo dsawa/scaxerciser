@@ -1,8 +1,11 @@
 package controllers
 
+import java.io.File
+import play.api.Play
+import play.api.Play.current
 import play.api.libs.json.Json
 import play.api.mvc.Controller
-import com.mongodb.casbah.Imports.ObjectId
+import com.mongodb.casbah.Imports._
 import jp.t2v.lab.play2.auth.AuthElement
 import models._
 
@@ -31,6 +34,28 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
             BadRequest("Required parameters [title, exercises]")
           }
         case None => NotFound("Group " + groupId + " not found")
+      }
+  }
+
+  def show(groupId: String, id: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+      Assignment.findOne(query) match {
+        case Some(assignment) => Ok(Json.parse(Assignment.toCompactJson(assignment)))
+        case None => NotFound("Assignment " + id + " not found in group " + groupId)
+      }
+  }
+
+  def addProject(groupId: String, id: String) = StackAction(parse.multipartFormData, AuthorityKey -> Administrator) {
+    implicit request =>
+      request.body.file("projectFile").map {
+        projectFile =>
+          val filename = projectFile.filename
+          // TODO: Wrzutka do gridfs i powiazanie z zadaniem
+          projectFile.ref.moveTo(new File(Play.application.path + "/tmp/" + filename), replace = true)
+          Ok("File uploaded")
+      }.getOrElse {
+        BadRequest("No file")
       }
   }
 

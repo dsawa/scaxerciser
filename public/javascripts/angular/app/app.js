@@ -3,6 +3,7 @@
 var scaxerciserApp = angular.module('scaxerciserApp', [
     'ui.router',
     'ngTable',
+    'ngUpload',
     'customDirectives',
     'authServices',
     'groupControllers',
@@ -105,6 +106,16 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           'main': {
             templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-new.html',
             controller: 'AssignmentCreationCtrl'
+          }
+        }
+      })
+      .state('group-assignments-new.project', {
+        permission: 'Administrator',
+        url: '/:id/project',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-new.project.html',
+            controller: 'AssignmentCreationProjectCtrl'
           }
         }
       })

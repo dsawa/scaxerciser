@@ -9,7 +9,7 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
-case class Assignment(@Key("_id") id: ObjectId, title: String, exercises: List[Exercise], groupId: ObjectId)
+case class Assignment(@Key("_id") id: ObjectId, title: String, exercises: List[Exercise], groupId: ObjectId, enabled: Boolean = false)
   extends ManyToOne {
 
   val db = DBConfig.assignments("db")

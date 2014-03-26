@@ -68,8 +68,8 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
 
 var assignmentsControllers = angular.module('assignmentsControllers', []);
 
-assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
-  'Assignment', function ($stateParams, $scope, $state, $location, Group, Assignment) {
+assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, Group, Assignment) {
     $scope.group = Group.show({
       id: $stateParams.groupId
     });
@@ -82,8 +82,9 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
     };
 
     $scope.createAssignment = function () {
-      Assignment.create($scope.assignment, function () {
-        console.log("assignment created")
+      Assignment.create($scope.assignment, function (createdAssignment) {
+        var params = { groupId: createdAssignment['groupId']['$oid'], id: createdAssignment['_id']['$oid'] };
+        $state.go('group-assignments-new.project', params);
       });
     };
 
@@ -104,6 +105,24 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
       var description = $scope.assignment.exercises[$index].description || '';
       description += '<code></code>';
       $scope.assignment.exercises[$index].description = description;
+    };
+  }
+]);
+
+assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParams', '$scope', '$state', 'Assignment',
+  function ($stateParams, $scope, $state, Assignment) {
+    angular.element('#assignmentForm').find('button').attr('disabled', true);
+
+    $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
+
+    $scope.assignment = Assignment.show({
+      groupId: $stateParams.groupId,
+      id: $stateParams.id
+    });
+
+    $scope.uploadComplete = function (response) {
+      // TODO: redirect do widoku edycji zadanka
+      console.log(response);
     };
   }
 ]);

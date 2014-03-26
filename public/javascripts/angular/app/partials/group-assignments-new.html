@@ -12,6 +12,7 @@
             </div>
         </div>
         <div class="panel-body">
+            <div class="alert alert-info"><strong>Krok 1:</strong> Ogólne informacje o zadaniu.</div>
             <form ng-submit="createAssignment()" role="form" id="assignmentForm">
                 <div class="form-group">
                     <label>Tytuł</label>
@@ -51,11 +52,14 @@
                     </div>
                 </div>
                 <button class="btn btn-default" ng-click="newExercise($event)">Dodaj kolejne ćwiczenie</button>
-                <button type="submit" class="btn btn-success" ng-click="createAssignment">Utwórz zadanie</button>
+                <button type="submit" class="btn btn-success" ng-click="createAssignment">
+                    Zapisz i przejdź dalej
+                </button>
             </form>
         </div>
         <!-- /.panel-body -->
     </div>
     <!-- /.panel -->
+    <div ui-view></div>
 </div>
 <!-- /.col-lg-12 -->
