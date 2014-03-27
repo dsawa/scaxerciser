@@ -48,14 +48,25 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
 
   def addProject(groupId: String, id: String) = StackAction(parse.multipartFormData, AuthorityKey -> Administrator) {
     implicit request =>
-      request.body.file("projectFile").map {
-        projectFile =>
-          val filename = projectFile.filename
-          // TODO: Wrzutka do gridfs i powiazanie z zadaniem
-          projectFile.ref.moveTo(new File(Play.application.path + "/tmp/" + filename), replace = true)
-          Ok("File uploaded")
-      }.getOrElse {
-        BadRequest("No file")
+      val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+      Assignment.findOne(query) match {
+        case Some(assignment) =>
+          request.body.file("projectFile").map {
+            projectFile =>
+              val tmpFile = new File(Play.application.path + "/tmp/" + projectFile.filename)
+              projectFile.ref.moveTo(tmpFile, replace = true)
+              Assignment.addProject(assignment.copy(enabled = true), tmpFile, contentType = projectFile.contentType.get) match {
+                case Some(projectId) =>
+                  tmpFile.delete()
+                  Ok(Json.obj("id" -> projectId.toString))
+                case None =>
+                  tmpFile.delete()
+                  UnprocessableEntity("Project could not be added")
+              }
+          }.getOrElse {
+            BadRequest("No file")
+          }
+        case None => NotFound("Assignment " + id + " not found in group " + groupId)
       }
   }
 
