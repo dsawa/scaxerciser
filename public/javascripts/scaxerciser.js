@@ -8,10 +8,17 @@ $(document).ready(function () {
   $groupsSelect = $groupSelectModal.find('.typeahead');
 
   goToAddNewAssignmentForm = function (groupId) {
+    var $assignmentForm;
     if (typeof groupId !== 'undefined' && groupId !== '') {
       $groupSelectModal.modal('hide');
       $groupsSelect.typeahead('val', '');
       window.location.hash = '#/groups/' + groupId + '/assignments/new';
+      setTimeout(function () {
+        $assignmentForm = $('#assignmentForm');
+        $assignmentForm.find('input').val('');
+        $assignmentForm.find('textarea').val('');
+        $assignmentForm.find('button').attr('disabled', false);
+      }, 100);
     }
   };
 

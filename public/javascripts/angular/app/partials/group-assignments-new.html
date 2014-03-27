@@ -28,10 +28,10 @@
 
                         <div class="exercise-description-helpers">
                             <a ng-click="addPreTagToExercise($event, $index)"
-                                    class="btn btn-default btn-xs btn-pre">
+                               class="btn btn-default btn-xs btn-pre">
                                 &lt;pre&gt;</a>
                             <a ng-click="addCodeTagToExercise($event, $index)"
-                                    class="btn btn-default btn-xs btn-code">
+                               class="btn btn-default btn-xs btn-code">
                                 &lt;code&gt;</a>
                         </div>
                         <textarea ng-model="exercise.description" class="form-control" rows="7"
@@ -52,8 +52,9 @@
                     </div>
                 </div>
                 <button class="btn btn-default" ng-click="newExercise($event)">Dodaj kolejne ćwiczenie</button>
-                <button type="submit" class="btn btn-success" ng-click="createAssignment">
-                    Zapisz i przejdź dalej
+                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="right"
+                        title="Utworzenie zadania pozwoli Ci przejść do drugiego kroku - wgrania projektu sbt" ng-click="createAssignment()">
+                    Utwórz zadanie
                 </button>
             </form>
         </div>

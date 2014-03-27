@@ -1,5 +1,5 @@
 h1.page-header {
-  margin: 15px 0px 15px 0px;
+  margin: 15px 0 15px 0;
 }
 
 .alert-tooltip {
@@ -36,4 +36,8 @@ div#groupSelectModal {
   left: 135px;
   top: -25px;
   margin-bottom: -20px;
+}
+
+form#assignmentForm .tooltip-inner {
+  max-width: 350px;
 }

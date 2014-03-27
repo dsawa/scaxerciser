@@ -70,6 +70,8 @@ var assignmentsControllers = angular.module('assignmentsControllers', []);
 
 assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
   function ($stateParams, $scope, $state, Group, Assignment) {
+    angular.element('#assignmentForm').find('button[type=submit]').tooltip();
+
     $scope.group = Group.show({
       id: $stateParams.groupId
     });
