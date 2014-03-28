@@ -119,6 +119,16 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('group-assignments-edit', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/:id/edit',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-edit.html',
+            controller: 'AssignmentEditCtrl'
+          }
+        }
+      })
       .state('group-assignments-list', {
         url: '/groups/:groupId/assignments',
         views: {

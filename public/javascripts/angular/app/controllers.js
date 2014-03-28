@@ -111,8 +111,55 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
   }
 ]);
 
+assignmentsControllers.controller('AssignmentEditCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, Group, Assignment) {
+    $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
+
+    $scope.group = Group.show({
+      id: $stateParams.groupId
+    });
+
+    $scope.assignment = Assignment.show({
+      groupId: $stateParams.groupId,
+      id: $stateParams.id
+    }, function (assignment) {
+      $scope.baseAssignmentTitle = assignment.title;
+    });
+
+    $scope.updateAssignment = function () {
+      var params = $scope.assignment;
+      params.groupId = $stateParams.groupId;
+      params.id = $stateParams.id;
+      Assignment.update(params, function (updatedAssignment) {
+        // TODO: Komunikat o udanej akcji
+      });
+    };
+
+    $scope.newExercise = function ($event) {
+      $event.preventDefault();
+      $scope.assignment.exercises.push({ description: '', hint: ''});
+    };
+
+    $scope.addPreTagToExercise = function ($event, $index) {
+      $event.preventDefault();
+      var description = $scope.assignment.exercises[$index].description || '';
+      description += '<pre></pre>';
+      $scope.assignment.exercises[$index].description = description;
+    };
+
+    $scope.addCodeTagToExercise = function ($event, $index) {
+      $event.preventDefault();
+      var description = $scope.assignment.exercises[$index].description || '';
+      description += '<code></code>';
+      $scope.assignment.exercises[$index].description = description;
+    };
+  }
+]);
+
 assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParams', '$scope', '$state', 'Assignment',
   function ($stateParams, $scope, $state, Assignment) {
+    angular.element('#assignmentForm').find('input').attr('disabled', true);
+    angular.element('#assignmentForm').find('textarea').attr('disabled', true);
     angular.element('#assignmentForm').find('button').attr('disabled', true);
 
     $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
@@ -123,8 +170,12 @@ assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParam
     });
 
     $scope.uploadComplete = function (response) {
-      // TODO: redirect do widoku edycji zadanka
-      console.log(response);
+      if(typeof response['id'] !== 'undefined') {
+        $state.go('group-assignments-edit', {
+          groupId: $stateParams.groupId,
+          id: $stateParams.id
+        })
+      }
     };
   }
 ]);

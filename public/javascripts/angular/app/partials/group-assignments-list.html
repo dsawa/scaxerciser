@@ -5,7 +5,8 @@
             <i class="fa fa-pencil fa-fw"></i> Zadania z grupy: {{group.name}}
             <div has-permission="Administrator" class="pull-right">
                 <div class="btn-group">
-                    <a ui-sref="group-assignments-new({groupId: group._id.$oid})" class="btn btn-default btn-xs">Dodaj</a>
+                    <a ui-sref="group-assignments-new({groupId: group._id.$oid})"
+                       class="btn btn-default btn-xs">Dodaj</a>
                 </div>
             </div>
         </div>
@@ -14,7 +15,8 @@
                 <div ng-repeat="assignment in assignments" class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#groupAssignmentsAccordion" href="#assignment-{{assignment._id.$oid}}">
+                            <a data-toggle="collapse" data-parent="#groupAssignmentsAccordion"
+                               href="#assignment-{{assignment._id.$oid}}">
                                 {{assignment.title}}
                             </a>
                         </h4>
@@ -25,7 +27,16 @@
                             <!-- TODO: Wyświetlenie wyniku, czasu do końca itd. dla usera -->
                             Jeszcze nie rozwiązałeś tego zadania!
                             <br>
+                            <!--<ul class="list-assignment-actions">-->
+                            <!--<li>-->
                             <a href="#" class="btn btn-outline btn-default btn-block">Pokaż szczegóły</a>
+                            <!--</li>-->
+                            <!--<li>-->
+                            <a has-permission="Administrator"
+                               ui-sref="group-assignments-edit({groupId: group._id.$oid, id: assignment._id.$oid})"
+                               class="btn btn-outline btn-warning btn-block">Edytuj</a>
+                            <!--</li>-->
+                            <!--</ul>-->
                         </div>
                     </div>
                 </div>

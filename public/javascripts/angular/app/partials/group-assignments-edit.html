@@ -1,19 +1,15 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Tworzenie nowego zadania dla grupy: {{group.name}}
+            Edycja zadania: {{baseAssignmentTitle}}, z grupy: {{group.name}}
             <div has-permission="Administrator" class="pull-right">
-                <a ui-sref="group-assignments-list({groupId: group._id.$oid})" class="btn btn-default btn-xs">
-                    Wyświetl pozostałe zadania
-                </a>
                 <a href="/assets/project-template.zip" target="_blank" class="btn btn-default btn-xs">
                     Pobierz szablon projektu
                 </a>
             </div>
         </div>
         <div class="panel-body">
-            <div class="alert alert-info"><strong>Krok 1:</strong> Ogólne informacje o zadaniu.</div>
-            <form ng-submit="createAssignment()" role="form" id="assignmentForm">
+            <form ng-submit="updateAssignment()" role="form" id="assignmentForm">
                 <div class="form-group">
                     <label>Tytuł</label>
                     <input ng-model="assignment.title" class="form-control" required="true">
@@ -52,15 +48,26 @@
                     </div>
                 </div>
                 <button class="btn btn-default" ng-click="newExercise($event)">Dodaj kolejne ćwiczenie</button>
-                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="right"
-                        title="Utworzenie zadania pozwoli Ci przejść do drugiego kroku - wgrania projektu sbt">
-                    Utwórz zadanie
-                </button>
+                <button type="submit" class="btn btn-warning">Zapisz zmiany</button>
             </form>
         </div>
         <!-- /.panel-body -->
+        <div class="panel-footer">
+            <p class="help-block">Zarządzanie projektem dołączonym do zadania.</p>
+
+            <form ng-upload="uploadComplete(content)" action="{{formAction}}">
+                <div class="form-group form-group-file-edit">
+                    <label>Nowy plik z projektem</label>
+                    <input type="file" name="projectFile" required="true">
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-warning" ng-disabled="$isLoading">
+                    Wgraj nowy plik
+                </button>
+            </form>
+        </div>
+        <!-- /.panel-footer -->
     </div>
     <!-- /.panel -->
-    <div ui-view></div>
 </div>
 <!-- /.col-lg-12 -->

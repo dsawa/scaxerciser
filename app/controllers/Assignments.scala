@@ -70,4 +70,26 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def update(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> Administrator) {
+    implicit request =>
+      val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+      Assignment.findOne(query) match {
+        case Some(assignment) =>
+          val title = (request.body \ "title").asOpt[String]
+          val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
+
+          if (title.isDefined && exercises.isDefined && exercises.get.size > 0) {
+            val assignmentToUpdate = assignment.copy(title = title.get, exercises = exercises.get)
+            val writeResult = Assignment.save(assignmentToUpdate)
+            if (writeResult.getN > 0)
+              Ok(Json.parse(Assignment.toCompactJson(assignmentToUpdate)))
+            else
+              UnprocessableEntity("Assignment could not be updated")
+          } else {
+            BadRequest("Required parameters [title, exercises]")
+          }
+        case None => NotFound("Assignment " + id + " not found in group " + groupId)
+      }
+  }
+
 }
