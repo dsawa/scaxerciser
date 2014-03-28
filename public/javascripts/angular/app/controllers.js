@@ -111,7 +111,31 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
   }
 ]);
 
-assignmentsControllers.controller('AssignmentEditCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
+assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParams', '$scope', '$state', 'Assignment',
+  function ($stateParams, $scope, $state, Assignment) {
+    angular.element('#assignmentForm').find('input').attr('disabled', true);
+    angular.element('#assignmentForm').find('textarea').attr('disabled', true);
+    angular.element('#assignmentForm').find('button').attr('disabled', true);
+
+    $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
+
+    $scope.assignment = Assignment.show({
+      groupId: $stateParams.groupId,
+      id: $stateParams.id
+    });
+
+    $scope.uploadComplete = function (response) {
+      if (typeof response['id'] !== 'undefined') {
+        $state.transitionTo('group-assignments-show', {
+          groupId: $stateParams.groupId,
+          id: $stateParams.id
+        })
+      }
+    };
+  }
+]);
+
+assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
   function ($stateParams, $scope, $state, Group, Assignment) {
     $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
@@ -156,30 +180,6 @@ assignmentsControllers.controller('AssignmentEditCtrl', ['$stateParams', '$scope
   }
 ]);
 
-assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParams', '$scope', '$state', 'Assignment',
-  function ($stateParams, $scope, $state, Assignment) {
-    angular.element('#assignmentForm').find('input').attr('disabled', true);
-    angular.element('#assignmentForm').find('textarea').attr('disabled', true);
-    angular.element('#assignmentForm').find('button').attr('disabled', true);
-
-    $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
-
-    $scope.assignment = Assignment.show({
-      groupId: $stateParams.groupId,
-      id: $stateParams.id
-    });
-
-    $scope.uploadComplete = function (response) {
-      if (typeof response['id'] !== 'undefined') {
-        $state.go('group-assignments-edit', {
-          groupId: $stateParams.groupId,
-          id: $stateParams.id
-        })
-      }
-    };
-  }
-]);
-
 assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '$scope', 'Group', 'Assignment',
   function ($stateParams, $scope, Group, Assignment) {
     $scope.group = Group.show({id: $stateParams.groupId});
@@ -187,6 +187,27 @@ assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '
 
     $scope.expandLast = function ($last) {
       return $last ? "panel-collapse collapse in" : "panel-collapse collapse";
+    }
+  }
+]);
+
+assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, $location, Group, Assignment) {
+    var params = {
+      groupId: $stateParams.groupId,
+      id: $stateParams.id
+    };
+
+    $scope.projectLink = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
+
+    $scope.group = Group.show({id: $stateParams.groupId});
+
+    $scope.assignment = Assignment.show(params);
+
+    $scope.deleteAssignment = function () {
+      Assignment.delete(params, function () {
+        $state.go('groups-list');
+      })
     }
   }
 ]);

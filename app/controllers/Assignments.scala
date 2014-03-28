@@ -103,11 +103,30 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
           Assignment.getProject(assignment) match {
             case Some(gridfsdbfile) =>
               val dataContent = Enumerator.fromStream(gridfsdbfile.inputStream)
-              val filename = gridfsdbfile.filename.getOrElse { "project" }
-              val contentType = gridfsdbfile.contentType.getOrElse { "text/plain" }
+              val filename = gridfsdbfile.filename.getOrElse {
+                "project"
+              }
+              val contentType = gridfsdbfile.contentType.getOrElse {
+                "text/plain"
+              }
               Ok.chunked(dataContent).withHeaders(CONTENT_DISPOSITION -> ("filename=" + filename)).as(contentType)
             case None => NotFound("Not found project for assignment with id " + id)
           }
+        case None => NotFound("Assignment " + id + " not found in group " + groupId)
+      }
+  }
+
+  def delete(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+    implicit request =>
+      val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+      Assignment.findOne(query) match {
+        case Some(assignment) =>
+          if (assignment.projectId != null) Assignment.removeProject(assignment)
+          val writeResult = Assignment.remove(assignment)
+          if (writeResult.getN > 0)
+            Ok(Json.obj("message" -> ("Assignment " + id + " deleted.")))
+          else
+            UnprocessableEntity("Assignment could not be deleted")
         case None => NotFound("Assignment " + id + " not found in group " + groupId)
       }
   }

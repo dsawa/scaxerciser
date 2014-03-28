@@ -37,7 +37,7 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
   def create(assignment: Assignment): Option[ObjectId] = dao.insert(assignment)
 
   def addProject(assignment: Assignment, file: File, contentType: String = "application/zip"): Option[ObjectId] = {
-    if (assignment.projectId != null) gridfs.remove(assignment.projectId)
+    if (assignment.projectId != null) removeProject(assignment)
 
     gridfs(file) {
       f =>
@@ -58,5 +58,9 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
 
   def getProject(assignment: Assignment): Option[GridFSDBFile] = {
     gridfs.findOne(assignment.projectId)
+  }
+
+  def removeProject(assignment: Assignment) {
+    gridfs.remove(assignment.projectId)
   }
 }

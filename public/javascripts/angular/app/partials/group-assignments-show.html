@@ -1,0 +1,36 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Szczegóły zadania: {{assignment.title}}, z grupy: {{group.name}}
+            <div class="pull-right">
+                <a ui-sref="group-assignments-list({groupId: group._id.$oid})"
+                   class="btn btn-default btn-xs">Pozostałe zadania</a>
+                <a has-permission="Administrator" ng-click="deleteAssignment()" class="btn btn-danger btn-xs">Usuń</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ng-repeat="exercise in assignment.exercises" class="excersise">
+                <h2>Ćwiczenie {{$index + 1}}</h2>
+
+                <p ng-bind-html="exercise.description"></p>
+
+                <div ng-hide="$index == (assignment.exercises.length - 1)">
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-body -->
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <a class="btn btn-default pull" href="{{projectLink}}" target="_blank"><i
+                            class="fa fa-cloud-download fa-fw"></i>
+                        Pobierz projekt</a>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-footer -->
+    </div>
+    <!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->

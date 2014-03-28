@@ -29,7 +29,8 @@
                             <br>
                             <!--<ul class="list-assignment-actions">-->
                             <!--<li>-->
-                            <a href="#" class="btn btn-outline btn-default btn-block">Pokaż szczegóły</a>
+                            <a ui-sref="group-assignments-show({groupId: group._id.$oid, id: assignment._id.$oid})"
+                               class="btn btn-outline btn-default btn-block">Pokaż szczegóły</a>
                             <!--</li>-->
                             <!--<li>-->
                             <a has-permission="Administrator"

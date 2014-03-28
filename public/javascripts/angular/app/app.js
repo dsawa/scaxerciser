@@ -4,6 +4,7 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'ui.router',
     'ngTable',
     'ngUpload',
+    'ngSanitize',
     'customDirectives',
     'authServices',
     'groupControllers',
@@ -125,7 +126,17 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         views: {
           'main': {
             templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-edit.html',
-            controller: 'AssignmentEditCtrl'
+            controller: 'GroupAssignmentsEditCtrl'
+          }
+        }
+      })
+      .state('group-assignments-show', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/:id',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-show.html',
+            controller: 'GroupAssignmentsDetailCtrl'
           }
         }
       })
@@ -139,11 +150,6 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
             templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-list.html',
             controller: 'GroupAssignmentsListCtrl'
           }
-        }
-      })
-      .state('users-reload', {
-        controller: function ($state) {
-          $state.go('users-list');
         }
       })
       .state('users-list', {
