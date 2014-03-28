@@ -53,7 +53,10 @@
         </div>
         <!-- /.panel-body -->
         <div class="panel-footer">
-            <p class="help-block">Zarządzanie projektem dołączonym do zadania.</p>
+            <p class="help-block">Zarządzanie projektem dołączonym do zadania.
+                <a class="btn btn-default pull-right" href="{{formAction}}" target="_blank"><i class="fa fa-cloud-download fa-fw"></i>
+                    Pobierz aktualny plik projektu</a>
+            </p>
 
             <form ng-upload="uploadComplete(content)" action="{{formAction}}">
                 <div class="form-group form-group-file-edit">
@@ -62,6 +65,7 @@
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-warning" ng-disabled="$isLoading">
+                    <i class="fa fa-cloud-upload fa-fw"></i>
                     Wgraj nowy plik
                 </button>
             </form>

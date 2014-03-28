@@ -170,7 +170,7 @@ assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParam
     });
 
     $scope.uploadComplete = function (response) {
-      if(typeof response['id'] !== 'undefined') {
+      if (typeof response['id'] !== 'undefined') {
         $state.go('group-assignments-edit', {
           groupId: $stateParams.groupId,
           id: $stateParams.id

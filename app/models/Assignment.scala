@@ -55,4 +55,8 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
       case None => None
     }
   }
+
+  def getProject(assignment: Assignment): Option[GridFSDBFile] = {
+    gridfs.findOne(assignment.projectId)
+  }
 }
