@@ -63,4 +63,11 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
   def removeProject(assignment: Assignment) {
     gridfs.remove(assignment.projectId)
   }
+
+  def removeAllProjectsFromGroup(groupId: ObjectId) {
+    val projectIds = findByGroupId(groupId).map(assignment => {
+      assignment.projectId
+    })
+    projectIds.foreach(projectId => gridfs.remove(projectId))
+  }
 }
