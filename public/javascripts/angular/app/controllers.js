@@ -202,8 +202,8 @@ assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '
     $scope.deleteAssignment = function (groupId, id) {
       Assignment.delete({ groupId: groupId, id: id}, function () {
         angular.element('div#assignment-panel-' + id).remove();
-      }, function (errorText) {
-        $.notify(errorText, "error")
+      }, function (errorResponse) {
+        $.notify(errorResponse.data, "error")
       });
     }
   }
