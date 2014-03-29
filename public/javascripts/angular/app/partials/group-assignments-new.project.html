@@ -1,0 +1,28 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Dodawanie projektu dla zadania: {{assignment.title}}
+            <div has-permission="Administrator" class="pull-right">
+                <a href="/assets/project-template.zip" target="_blank" class="btn btn-default btn-xs">
+                    Pobierz szablon projektu
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info"><strong>Krok 2:</strong> Wgrywanie projektu.</div>
+            <form ng-upload="uploadComplete(content)" action="{{formAction}}">
+                <div class="form-group form-group-file">
+                    <label>Plik z projektem</label>
+                    <input type="file" name="projectFile" required="true">
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-success" ng-disabled="$isLoading">
+                    Aktywuj zadanie
+                </button>
+            </form>
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->

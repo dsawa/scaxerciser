@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, NormalUser, Administrator}
+import models.{Group, Assignment, NormalUser, Administrator}
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -61,13 +61,16 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
 
   def delete(id: String) = StackAction(AuthorityKey -> Administrator) {
     implicit request =>
-      Group.findOneById(new ObjectId(id)) match {
+      val groupId = new ObjectId(id)
+      Group.findOneById(groupId) match {
         case Some(group) =>
           val currentUser: User = loggedIn
           val writeResult = currentUser.groups.destroy(group)
-          if (writeResult.getN > 0)
+          if (writeResult.getN > 0) {
+            Assignment.removeAllProjectsFromGroup(groupId)
+            group.assignments.destroyAll
             Ok(Json.obj("message" -> ("Group " + id + " deleted.")))
-          else
+          } else
             UnprocessableEntity("Group " + id + "could not be deleted.")
         case None => NotFound("Group " + id + " not found.")
       }

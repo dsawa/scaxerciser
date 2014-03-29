@@ -1,17 +1,21 @@
 'use strict';
 
 var scaxerciserApp = angular.module('scaxerciserApp', [
-  'ui.router',
-  'ngTable',
-  'customDirectives',
-  'authServices',
-  'groupControllers',
-  'groupServices',
-  'groupMemberControllers',
-  'groupMemberServices',
-  'userControllers',
-  'userServices'
-]),
+    'ui.router',
+    'ngTable',
+    'ngUpload',
+    'ngSanitize',
+    'customDirectives',
+    'authServices',
+    'groupControllers',
+    'groupServices',
+    'groupMemberControllers',
+    'groupMemberServices',
+    'userControllers',
+    'userServices',
+    'assignmentsControllers',
+    'assignmentServices'
+  ]),
   permission;
 
 angular.element(document).ready(function () {
@@ -96,9 +100,56 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
-      .state('users-reload', {
-        controller: function ($state) {
-          $state.go('users-list');
+      .state('group-assignments-new', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/new',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-new.html',
+            controller: 'AssignmentCreationCtrl'
+          }
+        }
+      })
+      .state('group-assignments-new.project', {
+        permission: 'Administrator',
+        url: '/:id/project',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-new.project.html',
+            controller: 'AssignmentCreationProjectCtrl'
+          }
+        }
+      })
+      .state('group-assignments-edit', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/:id/edit',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-edit.html',
+            controller: 'GroupAssignmentsEditCtrl'
+          }
+        }
+      })
+      .state('group-assignments-show', {
+        permission: 'Administrator',
+        url: '/groups/:groupId/assignments/:id',
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-show.html',
+            controller: 'GroupAssignmentsDetailCtrl'
+          }
+        }
+      })
+      .state('group-assignments-list', {
+        url: '/groups/:groupId/assignments',
+        views: {
+          'main': {
+            template: '='
+          },
+          'additional': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-assignments-list.html',
+            controller: 'GroupAssignmentsListCtrl'
+          }
         }
       })
       .state('users-list', {
@@ -157,4 +208,4 @@ scaxerciserApp.run(['$rootScope', '$state', 'Auth',
         $state.transitionTo('unauthorized');
       }
     });
-}]);
+  }]);

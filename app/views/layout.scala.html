@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel użytkownika</title>
     <link href='@routes.Assets.at("stylesheets/bootstrap.min.css")' rel="stylesheet">
+    <link href='@routes.Assets.at("stylesheets/typeahead.css")' rel="stylesheet">
     <link href='@routes.Assets.at("font-awesome/css/font-awesome.css")' rel="stylesheet">
     <link href='@routes.Assets.at("stylesheets/sb-admin.css")' rel="stylesheet">
     <link href='@routes.Assets.at("stylesheets/plugins/ng-table/ng-table.min.css")' rel="stylesheet">
@@ -159,7 +160,41 @@
                 </li>
                 }
                 <li>
-                    <a ui-sref="tasks"><i class="fa fa-tasks fa-fw"></i> Zadania</a>
+                    @if(Account.isAdmin(currentUser)) {
+                    <a href="#"><i class="fa fa-pencil fa-fw"></i> Zadania<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <!--data-toggle="modal" data-target="#groupSelectModal" data-backdrop="false"-->
+                            <a href="#" id="addNewAssignment"><i class="fa fa-plus fa-fw"></i> Dodaj</a>
+                        </li>
+                        <li>
+                            <a href="#" id="showAssignmentsList"><i class="fa fa-list fa-fw"></i> Pokaż</a>
+                        </li>
+                        <!-- Modal -->
+                        <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog"
+                             aria-labelledby="groupSelectModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="groupSelectModalLabel">Wybierz grupę</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input class="typeahead form-control" type="text"
+                                                   placeholder="Szukaj grupy" required="true">
+                                            <input type="hidden" id="modalNextAction" value="new">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                    } else {
+                    <a ui-sref="assignments-list"><i class="fa fa-pencil fa-fw"></i> Zadania</a>
+                    }
                 </li>
             </ul>
             <!-- /#side-menu -->
@@ -178,15 +213,19 @@
 
 <script src='@routes.Assets.at("javascripts/jquery-1.11.0.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/bootstrap.min.js")'></script>
+<script src='@routes.Assets.at("javascripts/typeahead.bundle.js")'></script>
 <script src='@routes.Assets.at("javascripts/plugins/metisMenu/jquery.metisMenu.js")'></script>
+<script src='@routes.Assets.at("javascripts/notify.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/sb-admin.js")'></script>
 
 <script src='@routes.Assets.at("javascripts/angular/angular.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/angular-resource.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/angular-route.min.js")'></script>
+<script src='@routes.Assets.at("javascripts/angular/angular-sanitize.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/angular-ui-router.min.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/angular-ui-router.viewDirective.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/ng-table/ng-table.min.js")'></script>
+<script src='@routes.Assets.at("javascripts/angular/ng-upload.min.js")'></script>
 
 <script src='@routes.Assets.at("javascripts/angular/app/app.js")'></script>
 <script src='@routes.Assets.at("javascripts/angular/app/controllers.js")'></script>

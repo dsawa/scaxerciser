@@ -1,0 +1,77 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Edycja zadania: {{baseAssignmentTitle}}, z grupy: {{group.name}}
+            <div has-permission="Administrator" class="pull-right">
+                <a href="/assets/project-template.zip" target="_blank" class="btn btn-default btn-xs">
+                    Pobierz szablon projektu
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form ng-submit="updateAssignment()" role="form" id="assignmentForm">
+                <div class="form-group">
+                    <label>Tytuł</label>
+                    <input ng-model="assignment.title" class="form-control" required="true">
+                </div>
+                <hr>
+                <div ng-repeat="exercise in assignment.exercises" class="excersise">
+                    <h1>Ćwiczenie {{$index + 1}}</h1>
+                    <br>
+
+                    <div class="form-group">
+                        <label>Opis ćwiczenia</label>
+
+                        <div class="exercise-description-helpers">
+                            <a ng-click="addPreTagToExercise($event, $index)"
+                               class="btn btn-default btn-xs btn-pre">
+                                &lt;pre&gt;</a>
+                            <a ng-click="addCodeTagToExercise($event, $index)"
+                               class="btn btn-default btn-xs btn-code">
+                                &lt;code&gt;</a>
+                        </div>
+                        <textarea ng-model="exercise.description" class="form-control" rows="7"
+                                  required="true"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Podpowiedź</label>
+                        <input ng-model="exercise.hint" class="form-control"
+                               placeholder="Pole opcjonalne, w którym możesz coś podpowiedzieć uczestnikom.">
+                    </div>
+                    <div class="form-group">
+                        <span ng-hide="assignment.exercises.length == 1">
+                            <button class="btn btn-default" ng-click="assignment.exercises.splice($index, 1)">Usuń
+                                ćwiczenie
+                            </button>
+                        </span>
+                        <hr>
+                    </div>
+                </div>
+                <button class="btn btn-default" ng-click="newExercise($event)">Dodaj kolejne ćwiczenie</button>
+                <button type="submit" class="btn btn-warning">Zapisz zmiany</button>
+            </form>
+        </div>
+        <!-- /.panel-body -->
+        <div class="panel-footer">
+            <p class="help-block">Zarządzanie projektem dołączonym do zadania.
+                <a class="btn btn-default pull-right" href="{{formAction}}" target="_blank"><i class="fa fa-cloud-download fa-fw"></i>
+                    Pobierz aktualny plik projektu</a>
+            </p>
+
+            <form ng-upload="uploadComplete(content)" action="{{formAction}}">
+                <div class="form-group form-group-file-edit">
+                    <label>Nowy plik z projektem</label>
+                    <input type="file" name="projectFile" required="true">
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-warning" ng-disabled="$isLoading">
+                    <i class="fa fa-cloud-upload fa-fw"></i>
+                    Wgraj nowy plik
+                </button>
+            </form>
+        </div>
+        <!-- /.panel-footer -->
+    </div>
+    <!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->

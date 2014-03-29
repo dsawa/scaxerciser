@@ -2,11 +2,10 @@ package models.relations
 
 import com.mongodb.casbah.Imports.{ObjectId, DBObject}
 
-trait RelationalDocument {
-  val id: ObjectId
-  val foreignIdsPropertyName: String
+trait MongoDBDocument {
   val db: String
   val collection: String
+  val id: ObjectId
 
   def toDBObject: DBObject
 }

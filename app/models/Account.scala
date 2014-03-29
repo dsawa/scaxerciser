@@ -10,13 +10,13 @@ import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
 case class Account(@Key("_id") id: ObjectId, email: String, password: String, permission: String, groupIds: Set[ObjectId] = Set())
-  extends RelationalDocument {
+  extends ManyToMany {
 
   val db = DBConfig.accounts("db")
   val collection = DBConfig.accounts("collection")
   val foreignIdsPropertyName = "groupIds"
 
-  lazy val groups = new ManyToMany[Account, Group](this, Map("toDb" -> DBConfig.groups("db"), "toCollection" -> DBConfig.groups("collection")))
+  lazy val groups = new ManyToManyRelation[Account, Group](this, Map("toDb" -> DBConfig.groups("db"), "toCollection" -> DBConfig.groups("collection")))
 
   def toDBObject = grater[Account].asDBObject(this)
 }

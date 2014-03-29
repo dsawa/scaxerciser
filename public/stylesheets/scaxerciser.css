@@ -1,5 +1,5 @@
 h1.page-header {
-  margin: 15px 0px 15px 0px;
+  margin: 15px 0 15px 0;
 }
 
 .alert-tooltip {
@@ -14,4 +14,60 @@ div#editUserFormPasswords {
 
 table.table-bright {
   background: #ffffff;
+}
+
+div#groupSelectModal {
+  top: 20%;
+}
+
+.exercise-description-helpers {
+  position: relative;
+  margin-top: -20px;
+  margin-left: 150px;
+}
+
+.form-group-file, .form-group-file-edit {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.form-group-file input {
+  position: relative;
+  left: 135px;
+  top: -25px;
+  margin-bottom: -20px;
+}
+
+
+.form-group-file-edit input {
+  position: relative;
+  left: 170px;
+  top: -25px;
+  margin-bottom: -20px;
+}
+
+form#assignmentForm .tooltip-inner {
+  max-width: 350px;
+}
+
+ul.list-assignment-actions {
+  list-style-type: none;
+}
+
+ul.list-assignment-actions li {
+  float: left;
+  margin: 10px 7% 0 0;
+}
+
+ul.list-assignment-actions :first-child {
+  position: relative;
+  left: -15px;
+}
+
+ul.list-assignment-actions li a {
+  width: 150%;
+}
+
+.btn-warning.btn-outline {
+  color: #d58512;
 }
