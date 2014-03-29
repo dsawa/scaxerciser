@@ -78,4 +78,19 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
     }
   }
 
+  describe("Assignment.findByGroupId") {
+    it("should return List that contains assignments") {
+      val result = Assignment.findByGroupId(testGroupId)
+      val resultIds = result.map(assignment => assignment.id)
+
+      result.size should be > 0
+      result.size shouldEqual assignmentsCollection.count(MongoDBObject("groupId" -> testGroupId))
+
+      resultIds should contain only assignmentId
+    }
+
+    it("should return an empty List if not found assignments for given groupId") {
+      Assignment.findByGroupId(new ObjectId) shouldBe empty
+    }
+  }
 }
