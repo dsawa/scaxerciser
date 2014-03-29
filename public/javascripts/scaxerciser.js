@@ -90,4 +90,5 @@ $(document).ready(function () {
     e.preventDefault();
   });
 
+  $.notify.defaults({ position: 'top center' })
 });

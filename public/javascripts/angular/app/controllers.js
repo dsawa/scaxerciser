@@ -135,8 +135,8 @@ assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParam
   }
 ]);
 
-assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
-  function ($stateParams, $scope, $state, Group, Assignment) {
+assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '$scope', '$state', '$sanitize', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, $sanitize, Group, Assignment) {
     $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
     $scope.group = Group.show({
@@ -155,8 +155,18 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
       params.groupId = $stateParams.groupId;
       params.id = $stateParams.id;
       Assignment.update(params, function (updatedAssignment) {
-        // TODO: Komunikat o udanej akcji
+        $.notify('Aktualizacja przebiegła pomyślnie.', "success");
+      }, function (errorText) {
+        $.notify(errorText, "error")
       });
+    };
+
+    $scope.uploadComplete = function (response) {
+      if (typeof response['id'] !== 'undefined') {
+        $.notify('Przesyłanie nowego pliku przebiegło pomyślnie.', 'success');
+      } else {
+        $.notify($sanitize(response).replace(/<(\/)?pre>/g, ''), 'error');
+      }
     };
 
     $scope.newExercise = function ($event) {
@@ -180,13 +190,21 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
   }
 ]);
 
-assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '$scope', 'Group', 'Assignment',
-  function ($stateParams, $scope, Group, Assignment) {
+assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, Group, Assignment) {
     $scope.group = Group.show({id: $stateParams.groupId});
     $scope.assignments = Assignment.query({groupId: $stateParams.groupId});
 
     $scope.expandLast = function ($last) {
       return $last ? "panel-collapse collapse in" : "panel-collapse collapse";
+    };
+
+    $scope.deleteAssignment = function (groupId, id) {
+      Assignment.delete({ groupId: groupId, id: id}, function () {
+        angular.element('div#assignment-panel-' + id).remove();
+      }, function (errorText) {
+        $.notify(errorText, "error")
+      });
     }
   }
 ]);
