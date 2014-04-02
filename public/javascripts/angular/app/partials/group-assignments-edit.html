@@ -14,6 +14,10 @@
                     <label>Tytuł</label>
                     <input ng-model="assignment.title" class="form-control" required="true">
                 </div>
+                <div class="form-group">
+                    <label>Wprowadzenie do zadania</label>
+                    <textarea ng-model="assignment.description" class="form-control" rows="7"></textarea>
+                </div>
                 <hr>
                 <div ng-repeat="exercise in assignment.exercises" class="excersise">
                     <h1>Ćwiczenie {{$index + 1}}</h1>

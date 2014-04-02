@@ -25,10 +25,11 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
           val title = (request.body \ "title").asOpt[String]
+          val description = (request.body \ "description").asOpt[String].getOrElse { "" }
           val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
 
           if (title.isDefined && exercises.isDefined && exercises.get.size > 0) {
-            val newAssignment = Assignment(new ObjectId, title.get, exercises.get, group.id)
+            val newAssignment = Assignment(new ObjectId, title.get, description, exercises.get, group.id)
             Assignment.create(newAssignment) match {
               case Some(id) => Ok(Json.parse(Assignment.toCompactJson(newAssignment)))
               case None => UnprocessableEntity("Assignment could not be created.")

@@ -12,7 +12,8 @@
         </div>
         <div class="panel-body">
             <div class="panel-group" id="groupAssignmentsAccordion">
-                <div ng-repeat="assignment in assignments" class="panel panel-default" id="assignment-panel-{{assignment._id.$oid}}">
+                <div ng-repeat="assignment in assignments" class="panel panel-default"
+                     id="assignment-panel-{{assignment._id.$oid}}">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#groupAssignmentsAccordion"
@@ -24,8 +25,8 @@
 
                     <div id="assignment-{{assignment._id.$oid}}" ng-class="expandLast($last)">
                         <div class="panel-body">
+                            <p>{{assignment.description}}</p>
                             <!-- TODO: Wyświetlenie wyniku, czasu do końca itd. dla usera -->
-                            Jeszcze nie rozwiązałeś tego zadania!
                             <br>
                             <!--<ul class="list-assignment-actions">-->
                             <!--<li>-->
@@ -36,7 +37,8 @@
                             <a has-permission="Administrator"
                                ui-sref="group-assignments-edit({groupId: group._id.$oid, id: assignment._id.$oid})"
                                class="btn btn-outline btn-warning btn-block">Edytuj</a>
-                            <a has-permission="Administrator" ng-click="deleteAssignment(group._id.$oid, assignment._id.$oid)"
+                            <a has-permission="Administrator"
+                               ng-click="deleteAssignment(group._id.$oid, assignment._id.$oid)"
                                class="btn btn-outline btn-danger btn-block">Usuń</a>
                             <!--</li>-->
                             <!--</ul>-->

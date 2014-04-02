@@ -11,8 +11,8 @@ import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import scaxerciser.context._
 import models.relations._
 
-case class Assignment(@Key("_id") id: ObjectId, title: String, exercises: List[Exercise], groupId: ObjectId,
-                      projectId: ObjectId = null, enabled: Boolean = false) extends ManyToOne {
+case class Assignment(@Key("_id") id: ObjectId, title: String = "", description: String, exercises: List[Exercise],
+                      groupId: ObjectId, projectId: ObjectId = null, enabled: Boolean = false) extends ManyToOne {
 
   val db = DBConfig.assignments("db")
   val collection = DBConfig.assignments("collection")

@@ -33,6 +33,7 @@ class AssignmentsSpec extends FunSpec with Matchers with BeforeAndAfter {
   val groupName_2 = "Second test group"
   val assignmentId = new ObjectId
   val assignmentTitle = "Recursion"
+  val assignmentDescription = "You need to understand recursion to do this"
   val assignmentExercises = List(Exercise("Do function with tail recursion"))
 
   before {
@@ -41,7 +42,7 @@ class AssignmentsSpec extends FunSpec with Matchers with BeforeAndAfter {
     val user = Account(userId, userEmail, userPassword, userPermission)
     val testGroup_1 = Group(groupId_1, groupName_1, Set(adminId))
     val testGroup_2 = Group(groupId_2, groupName_2)
-    val assignment = Assignment(assignmentId, assignmentTitle, assignmentExercises, groupId_1)
+    val assignment = Assignment(assignmentId, assignmentTitle, assignmentDescription, assignmentExercises, groupId_1)
     accountsCollection.insert(admin.toDBObject)
     accountsCollection.insert(user.toDBObject)
     assignmentsCollection.insert(assignment.toDBObject)

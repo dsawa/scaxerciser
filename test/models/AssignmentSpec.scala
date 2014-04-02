@@ -13,11 +13,12 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
   val testGroupId = new ObjectId
   val assignmentId = new ObjectId
   val assignmentTitle = "Recursion"
+  val assignmentDescription = "You need to understand recursion to do this"
   val assignmentExercises = List(Exercise("Do function with tail recursion"))
 
   before {
     Play.start(FakeApplication())
-    val assignment = Assignment(assignmentId, assignmentTitle, assignmentExercises, testGroupId)
+    val assignment = Assignment(assignmentId, assignmentTitle, assignmentDescription, assignmentExercises, testGroupId)
     val testGroup = Group(testGroupId, "Test Group")
     assignmentsCollection.insert(Assignment.toDBObject(assignment))
     groupsCollection.insert(Group.toDBObject(testGroup))
@@ -32,7 +33,7 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
   describe("Assignment.create") {
     it("should save new assignment in database") {
       val beforeCount = assignmentsCollection.count()
-      val assignment = Assignment(new ObjectId, assignmentTitle + "2", assignmentExercises, testGroupId)
+      val assignment = Assignment(new ObjectId, assignmentTitle + "2", assignmentDescription, assignmentExercises, testGroupId)
 
       When("Assignment is being inserted in database")
       Assignment.create(assignment)
@@ -48,7 +49,7 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
     }
 
     it("should return Option with new good ObjectId inside") {
-      val assignment = Assignment(new ObjectId, assignmentTitle + "2", assignmentExercises, testGroupId)
+      val assignment = Assignment(new ObjectId, assignmentTitle + "2", assignmentDescription, assignmentExercises, testGroupId)
       val result =  Assignment.create(assignment)
 
       result.isDefined shouldBe true
