@@ -125,7 +125,7 @@ assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParam
     });
 
     $scope.uploadComplete = function (response) {
-      if (typeof response['id'] !== 'undefined') {
+      if (typeof response['projectId'] !== 'undefined' && typeof response['projectTestsId'] !== 'undefined') {
         $state.transitionTo('group-assignments-show', {
           groupId: $stateParams.groupId,
           id: $stateParams.id
@@ -162,8 +162,8 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
     };
 
     $scope.uploadComplete = function (response) {
-      if (typeof response['id'] !== 'undefined') {
-        $.notify('Przesyłanie nowego pliku przebiegło pomyślnie.', 'success');
+      if (typeof response['projectId'] !== 'undefined' && typeof response['projectTestsId'] !== 'undefined') {
+        $.notify('Przesyłanie noweych plików przebiegło pomyślnie.', 'success');
       } else {
         $.notify($sanitize(response).replace(/<(\/)?pre>/g, ''), 'error');
       }
@@ -222,9 +222,23 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
 
     $scope.assignment = Assignment.show(params);
 
+    $scope.activateAssignment = function () {
+      $.extend(true, $scope.assignment, params);
+      $scope.assignment.enabled = true;
+
+      Assignment.update($scope.assignment, function () {
+        $.notify('Aktywowano zadanie', "success");
+      }, function (errorResponse) {
+        $scope.assignment.enabled = false;
+        $.notify(errorResponse.data, "error")
+      })
+    };
+
     $scope.deleteAssignment = function () {
       Assignment.delete(params, function () {
         $state.go('groups-list');
+      }, function (errorResponse) {
+        $.notify(errorResponse.data, "error")
       })
     }
   }

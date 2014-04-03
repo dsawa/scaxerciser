@@ -15,9 +15,14 @@
                     <label>Plik z projektem</label>
                     <input type="file" name="projectFile" required="true">
                 </div>
+                <div class="form-group form-group-file">
+                    <label>Plik z testami</label>
+                    <input type="file" name="testsFile" required="true">
+                </div>
                 <hr>
                 <button type="submit" class="btn btn-success" ng-disabled="$isLoading">
-                    Aktywuj zadanie
+                    <i class="fa fa-cloud-upload fa-fw"></i>
+                    Dodaj pliki do zadania
                 </button>
             </form>
         </div>

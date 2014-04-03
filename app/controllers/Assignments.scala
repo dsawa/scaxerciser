@@ -25,7 +25,9 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
           val title = (request.body \ "title").asOpt[String]
-          val description = (request.body \ "description").asOpt[String].getOrElse { "" }
+          val description = (request.body \ "description").asOpt[String].getOrElse {
+            ""
+          }
           val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
 
           if (title.isDefined && exercises.isDefined && exercises.get.size > 0) {
@@ -56,17 +58,18 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Assignment.findOne(query) match {
         case Some(assignment) =>
           val title = (request.body \ "title").asOpt[String]
+          val enabled = (request.body \ "enabled").asOpt[Boolean]
           val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
 
-          if (title.isDefined && exercises.isDefined && exercises.get.size > 0) {
-            val assignmentToUpdate = assignment.copy(title = title.get, exercises = exercises.get)
+          if (title.isDefined && exercises.isDefined && exercises.get.size > 0 && enabled.isDefined) {
+            val assignmentToUpdate = assignment.copy(title = title.get, exercises = exercises.get, enabled = enabled.get)
             val writeResult = Assignment.save(assignmentToUpdate)
             if (writeResult.getN > 0)
               Ok(Json.parse(Assignment.toCompactJson(assignmentToUpdate)))
             else
               UnprocessableEntity("Assignment could not be updated")
           } else {
-            BadRequest("Required parameters [title, exercises]")
+            BadRequest("Required parameters [title, exercises, enabled]")
           }
         case None => NotFound("Assignment " + id + " not found in group " + groupId)
       }
@@ -77,21 +80,27 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
       Assignment.findOne(query) match {
         case Some(assignment) =>
-          request.body.file("projectFile").map {
-            projectFile =>
-              val tmpFile = new File(Play.application.path + "/tmp/" + projectFile.filename)
-              projectFile.ref.moveTo(tmpFile, replace = true)
-              Assignment.addProject(assignment.copy(enabled = true), tmpFile, contentType = projectFile.contentType.get) match {
-                case Some(projectId) =>
-                  tmpFile.delete()
-                  Ok(Json.obj("id" -> projectId.toString))
-                case None =>
-                  tmpFile.delete()
-                  UnprocessableEntity("Project could not be added")
-              }
-          }.getOrElse {
-            BadRequest("No file")
-          }
+          val projectFileOpt = request.body.file("projectFile")
+          val testsFileOpt = request.body.file("testsFile")
+
+          if (projectFileOpt.isDefined && testsFileOpt.isDefined) {
+            val projectFile = projectFileOpt.get
+            val testsFile = testsFileOpt.get
+            val tmpProjectFile = new File(Play.application.path + "/tmp/" + projectFile.filename)
+            val tmpTestsFile = new File(Play.application.path + "/tmp/" + testsFile.filename)
+
+            projectFile.ref.moveTo(tmpProjectFile, replace = true)
+            testsFile.ref.moveTo(tmpTestsFile, replace = true)
+
+            val projectFileIdOpt = addFile('projectFile, assignment, tmpProjectFile, projectFile.contentType.get)
+            val projectTestsFileIdOpt = addFile('projectTestsFile, assignment, tmpTestsFile, testsFile.contentType.get)
+
+            if (projectFileIdOpt.isDefined && projectTestsFileIdOpt.isDefined)
+              Ok(Json.obj("projectId" -> projectFileIdOpt.get.toString, "projectTestsId" -> projectTestsFileIdOpt.get.toString))
+            else
+              UnprocessableEntity("Project could not be added")
+          } else
+            BadRequest("ProjectFile and ProjectTestFile must be present.")
         case None => NotFound("Assignment " + id + " not found in group " + groupId)
       }
   }
@@ -130,6 +139,21 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
             UnprocessableEntity("Assignment could not be deleted")
         case None => NotFound("Assignment " + id + " not found in group " + groupId)
       }
+  }
+
+  private def addFile(fileType: Symbol, assignment: Assignment, file: File, contentType: String) = {
+    def deleteFileBeforeResult(result: Option[ObjectId]): Option[ObjectId] = result match {
+      case Some(id) => file.delete(); result
+      case None => file.delete(); result
+    }
+
+    fileType match {
+      case 'projectFile =>
+        deleteFileBeforeResult(Assignment.addProject(assignment, file, contentType))
+      case 'projectTestsFile =>
+        deleteFileBeforeResult(Assignment.addProjectTests(assignment, file, contentType))
+      case _ => throw new IllegalArgumentException
+    }
   }
 
 }

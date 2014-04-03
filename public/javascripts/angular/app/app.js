@@ -131,7 +131,6 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-show', {
-        permission: 'Administrator',
         url: '/groups/:groupId/assignments/:id',
         views: {
           'main': {

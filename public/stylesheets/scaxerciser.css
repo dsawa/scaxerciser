@@ -71,3 +71,13 @@ ul.list-assignment-actions li a {
 .btn-warning.btn-outline {
   color: #d58512;
 }
+
+ul.download-files-edit {
+  margin-top: 10px;
+  list-style: none;
+  text-align: right;
+}
+
+ul.download-files-edit li {
+  padding: 7px 0 15px 0;
+}

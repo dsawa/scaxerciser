@@ -58,8 +58,18 @@
         <!-- /.panel-body -->
         <div class="panel-footer">
             <p class="help-block">Zarządzanie projektem dołączonym do zadania.
-                <a class="btn btn-default pull-right" href="{{formAction}}" target="_blank"><i class="fa fa-cloud-download fa-fw"></i>
-                    Pobierz aktualny plik projektu</a>
+            <ul class="pull-right download-files-edit">
+                <li>
+                    <a class="btn btn-default" href="{{formAction}}" target="_blank"><i
+                            class="fa fa-cloud-download fa-fw"></i>
+                        Pobierz aktualny plik projektu</a>
+                </li>
+                <li>
+                    <a class="btn btn-default" href="{{formAction + '/tests'}}" target="_blank"><i
+                            class="fa fa-cloud-download fa-fw"></i>
+                        Pobierz aktualne testy</a>
+                </li>
+            </ul>
             </p>
 
             <form ng-upload="uploadComplete(content)" action="{{formAction}}">
@@ -67,10 +77,14 @@
                     <label>Nowy plik z projektem</label>
                     <input type="file" name="projectFile" required="true">
                 </div>
+                <div class="form-group form-group-file-edit">
+                    <label>Nowy plik z testami</label>
+                    <input type="file" name="testsFile" required="true">
+                </div>
                 <hr>
                 <button type="submit" class="btn btn-warning" ng-disabled="$isLoading">
                     <i class="fa fa-cloud-upload fa-fw"></i>
-                    Wgraj nowy plik
+                    Wgraj nowe pliki
                 </button>
             </form>
         </div>
