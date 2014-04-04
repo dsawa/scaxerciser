@@ -132,6 +132,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Assignment.findOne(query) match {
         case Some(assignment) =>
           if (assignment.projectId != null) Assignment.removeProject(assignment)
+          if (assignment.projectTestsId != null) Assignment.removeProjectTests(assignment)
           val writeResult = Assignment.remove(assignment)
           if (writeResult.getN > 0)
             Ok(Json.obj("message" -> ("Assignment " + id + " deleted.")))
