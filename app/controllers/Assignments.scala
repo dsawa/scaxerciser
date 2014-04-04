@@ -16,7 +16,14 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
 
   def index(groupId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
-      val assignments = Assignment.findByGroupId(new ObjectId(groupId)).map(a => Json.parse(Assignment.toCompactJson(a)))
+      val currentUser: User = loggedIn
+      val query = {
+        if (Permission.valueOf(currentUser.permission) == Administrator)
+          MongoDBObject("groupId" -> new ObjectId(groupId))
+        else
+          MongoDBObject("groupId" -> new ObjectId(groupId), "enabled" -> true)
+      }
+      val assignments = Assignment.find(query).toList.map(a => Json.parse(Assignment.toCompactJson(a)))
       Ok(Json.toJson(assignments))
   }
 

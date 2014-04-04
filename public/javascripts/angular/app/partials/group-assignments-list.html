@@ -20,6 +20,10 @@
                                href="#assignment-{{assignment._id.$oid}}">
                                 {{assignment.title}}
                             </a>
+                            <span has-permission="Administrator" ng-if="assignment.enabled"
+                                  class="label label-success pull-right">Aktywne</span>
+                                <span has-permission="Administrator" ng-if="!assignment.enabled"
+                                      class="label label-danger pull-right">Nieaktywne</span>
                         </h4>
                     </div>
 
