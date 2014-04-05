@@ -70,7 +70,22 @@ var assignmentsControllers = angular.module('assignmentsControllers', []);
 
 assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
   function ($stateParams, $scope, $state, Group, Assignment) {
-    angular.element('#assignmentForm').find('button[type=submit]').tooltip();
+    var markDownEditorOpt = {
+      autofocus: false,
+      savable: false,
+      iconlibrary: "fa",
+      language: {
+        titleBold: "Pogrubienie", titleItalic: 'Kursywa', titleHeading: 'Nagłówek', titleList: 'Lista',
+        titleImage: 'Obrazek', titlePreview: 'Podgląd', btnTextPreview: 'Podgląd'
+      }
+    };
+
+    $scope.$on('$viewContentLoaded', function (event) {
+      setTimeout(function () {
+        angular.element('#assignmentForm').find('button[type=submit]').tooltip();
+        angular.element('#assignmentForm').find('textarea').markdown(markDownEditorOpt);
+      }, 300);
+    });
 
     $scope.group = Group.show({
       id: $stateParams.groupId
@@ -93,20 +108,7 @@ assignmentsControllers.controller('AssignmentCreationCtrl', ['$stateParams', '$s
     $scope.newExercise = function ($event) {
       $event.preventDefault();
       $scope.assignment.exercises.push({ description: '', hint: ''});
-    };
-
-    $scope.addPreTagToExercise = function ($event, $index) {
-      $event.preventDefault();
-      var description = $scope.assignment.exercises[$index].description || '';
-      description += '<pre></pre>';
-      $scope.assignment.exercises[$index].description = description;
-    };
-
-    $scope.addCodeTagToExercise = function ($event, $index) {
-      $event.preventDefault();
-      var description = $scope.assignment.exercises[$index].description || '';
-      description += '<code></code>';
-      $scope.assignment.exercises[$index].description = description;
+      angular.element('#assignmentForm').find('textarea').markdown(markDownEditorOpt);
     };
   }
 ]);
@@ -135,8 +137,24 @@ assignmentsControllers.controller('AssignmentCreationProjectCtrl', ['$stateParam
   }
 ]);
 
-assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '$scope', '$state', '$sanitize', 'Group', 'Assignment',
-  function ($stateParams, $scope, $state, $sanitize, Group, Assignment) {
+assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '$scope', '$state', 'Group', 'Assignment',
+  function ($stateParams, $scope, $state, Group, Assignment) {
+    var markDownEditorOpt = {
+      autofocus: false,
+      savable: false,
+      iconlibrary: "fa",
+      language: {
+        titleBold: "Pogrubienie", titleItalic: 'Kursywa', titleHeading: 'Nagłówek', titleList: 'Lista',
+        titleImage: 'Obrazek', titlePreview: 'Podgląd', btnTextPreview: 'Podgląd'
+      }
+    };
+
+    $scope.$on('$viewContentLoaded', function (event) {
+      setTimeout(function () {
+        angular.element('#assignmentForm').find('textarea').markdown(markDownEditorOpt);
+      }, 300);
+    });
+
     $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
     $scope.group = Group.show({
@@ -151,10 +169,10 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
     });
 
     $scope.updateAssignment = function () {
-      var params = $scope.assignment;
-      params.groupId = $stateParams.groupId;
-      params.id = $stateParams.id;
-      Assignment.update(params, function (updatedAssignment) {
+      $scope.assignment.groupId = $stateParams.groupId;
+      $scope.assignment.id = $stateParams.id;
+      console.log($scope.assignment)
+      Assignment.update($scope.assignment, function (updatedAssignment) {
         $.notify('Aktualizacja przebiegła pomyślnie.', "success");
       }, function (errorText) {
         $.notify(errorText, "error")
@@ -163,29 +181,16 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
 
     $scope.uploadComplete = function (response) {
       if (typeof response['projectId'] !== 'undefined' && typeof response['projectTestsId'] !== 'undefined') {
-        $.notify('Przesyłanie noweych plików przebiegło pomyślnie.', 'success');
+        $.notify('Przesyłanie nowych plików przebiegło pomyślnie.', 'success');
       } else {
-        $.notify($sanitize(response).replace(/<(\/)?pre>/g, ''), 'error');
+        $.notify((response).replace(/<(\/)?pre>/g, ''), 'error');
       }
     };
 
     $scope.newExercise = function ($event) {
       $event.preventDefault();
       $scope.assignment.exercises.push({ description: '', hint: ''});
-    };
-
-    $scope.addPreTagToExercise = function ($event, $index) {
-      $event.preventDefault();
-      var description = $scope.assignment.exercises[$index].description || '';
-      description += '<pre></pre>';
-      $scope.assignment.exercises[$index].description = description;
-    };
-
-    $scope.addCodeTagToExercise = function ($event, $index) {
-      $event.preventDefault();
-      var description = $scope.assignment.exercises[$index].description || '';
-      description += '<code></code>';
-      $scope.assignment.exercises[$index].description = description;
+      angular.element('#assignmentForm').find('textarea').markdown(markDownEditorOpt);
     };
   }
 ]);

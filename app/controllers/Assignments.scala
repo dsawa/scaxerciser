@@ -65,11 +65,15 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Assignment.findOne(query) match {
         case Some(assignment) =>
           val title = (request.body \ "title").asOpt[String]
+          val description = (request.body \ "description").asOpt[String].getOrElse {
+            ""
+          }
           val enabled = (request.body \ "enabled").asOpt[Boolean]
           val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
 
           if (title.isDefined && exercises.isDefined && exercises.get.size > 0 && enabled.isDefined) {
-            val assignmentToUpdate = assignment.copy(title = title.get, exercises = exercises.get, enabled = enabled.get)
+            val assignmentToUpdate = assignment.copy(title = title.get, description = description,
+              exercises = exercises.get, enabled = enabled.get)
             val writeResult = Assignment.save(assignmentToUpdate)
             if (writeResult.getN > 0)
               Ok(Json.parse(Assignment.toCompactJson(assignmentToUpdate)))

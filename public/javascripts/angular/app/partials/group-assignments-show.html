@@ -10,13 +10,11 @@
             </div>
         </div>
         <div class="panel-body">
-            <p>{{assignment.description}}</p>
-
+            <div marked="assignment.description"></div>
             <div ng-repeat="exercise in assignment.exercises" class="excersise">
                 <h2>Ćwiczenie {{$index + 1}}</h2>
 
-                <p ng-bind-html="exercise.description"></p>
-
+                <div marked="exercise.description"></div>
                 <div ng-hide="$index == (assignment.exercises.length - 1)">
                     <hr>
                 </div>

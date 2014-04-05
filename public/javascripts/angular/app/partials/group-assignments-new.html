@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label>Wprowadzenie do zadania</label>
-                    <textarea ng-model="assignment.description" class="form-control" rows="7"
+                    <textarea data-provide="markdown" ng-model="assignment.description" class="form-control" rows="10"
                               placeholder="Pole opcjonalne, w którym możesz opisać dane zagadnienie."></textarea>
                 </div>
                 <hr>
@@ -30,16 +30,7 @@
 
                     <div class="form-group">
                         <label>Opis ćwiczenia</label>
-
-                        <div class="exercise-description-helpers">
-                            <a ng-click="addPreTagToExercise($event, $index)"
-                               class="btn btn-default btn-xs btn-pre">
-                                &lt;pre&gt;</a>
-                            <a ng-click="addCodeTagToExercise($event, $index)"
-                               class="btn btn-default btn-xs btn-code">
-                                &lt;code&gt;</a>
-                        </div>
-                        <textarea ng-model="exercise.description" class="form-control" rows="7"
+                        <textarea data-provide="markdown" ng-model="exercise.description" class="form-control" rows="10"
                                   required="true"></textarea>
                     </div>
                     <div class="form-group">

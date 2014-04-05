@@ -4,7 +4,7 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'ui.router',
     'ngTable',
     'ngUpload',
-    'ngSanitize',
+    'hc.marked',
     'customDirectives',
     'authServices',
     'groupControllers',
