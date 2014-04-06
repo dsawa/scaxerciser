@@ -24,6 +24,9 @@ POST     /api/groups/:groupId/assignments/:id/project   controllers.Assignments.
 PUT      /api/groups/:groupId/assignments/:id           controllers.Assignments.update(groupId: String, id: String)
 DELETE   /api/groups/:groupId/assignments/:id           controllers.Assignments.delete(groupId: String, id: String)
 
+# Solutions
+POST     /api/assignments/:assignmentId/solutions/submit  controllers.Solutions.submit(assignmentId: String)
+
 # Authentication
 GET       /login                        controllers.Application.login
 POST      /login                        controllers.Application.authenticate
