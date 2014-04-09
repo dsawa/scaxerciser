@@ -24,6 +24,14 @@ object DBConfig {
     Map("db" -> getStringFromConf("mongo.assignments.projects.db"))
   }
 
+  val solutions = {
+    Map("db" -> getStringFromConf("mongo.solutions.db"), "collection" -> getStringFromConf("mongo.solutions.collection"))
+  }
+
+  val solutionsProjects = {
+    Map("db" -> getStringFromConf("mongo.solutions.projects.db"))
+  }
+
   private def getStringFromConf(path: String, default: String = ""): String = {
     Play.configuration.getString(path) match {
       case Some(str) => str
