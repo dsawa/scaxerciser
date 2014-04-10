@@ -37,7 +37,7 @@ object Solutions extends Controller {
                       Solution.create(assignment, user, tmpProjectFile) match {
                         case Some(objectId) =>
                           Future {
-                            Solution.analyze(objectId)
+                            Solution.analyze(Solution.findOneById(objectId).get)
                           }
                           tmpProjectFile.delete()
                           Ok("Solution accepted. Your results should be available in short time.")

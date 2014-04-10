@@ -7,6 +7,8 @@ import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.gridfs.Imports._
 import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
+import play.api.libs.ws._
+import play.api.libs.json._
 import scaxerciser.context._
 
 case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId)
@@ -15,6 +17,7 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
   val solutionsCollection = MongoConnection()(DBConfig.solutions("db"))(DBConfig.solutions("collection"))
   val dao = new SalatDAO[Solution, ObjectId](collection = solutionsCollection) {}
   val gridfs = GridFS(solutionFilesDb)
+  val analyzeApiUrl = "http://localhost:3000/api"
 
   private lazy val solutionFilesDb = MongoClient(DBConfig.defaultHost, DBConfig.defaultPort)(DBConfig.solutionsProjects("db"))
 
@@ -29,10 +32,14 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
     }
   }
 
-  // TODO: Wysle request do appki zajmujacej sie testowaniem i zapisaniem wynikow
-  def analyze(id: ObjectId) {
-    Thread.sleep(5000)
-    println("Przetestowano " + id.toString)
+  def analyze(solution: Solution) {
+    val url = analyzeApiUrl + "/solutions/" + solution.id.toString + "/analyze"
+    val params = Json.obj(
+      "id" -> JsString(solution.id.toString),
+      "userId" -> JsString(solution.userId.toString),
+      "assignmentId" -> JsString(solution.assignmentId.toString)
+    )
+    WS.url(url).withRequestTimeout(10000).post(params)
   }
 
   private def insertFile(file: File, contentType: String): Option[AnyRef] = {
