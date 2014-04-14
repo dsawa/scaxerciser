@@ -159,7 +159,7 @@ assignmentsControllers.controller('GroupAssignmentsEditCtrl', ['$stateParams', '
       }, 300);
     };
 
-    $scope.$on('$viewContentLoaded', initializeMarkDownEditors);
+    $scope.$on('$viewContentLoaded', initializeMarkdownEditors);
 
     $scope.formAction = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
