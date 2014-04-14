@@ -28,7 +28,7 @@ object Solutions extends Controller {
                 val assignmentId = request.body.dataParts("assignmentId").head
                 Assignment.findOneById(new ObjectId(assignmentId)) match {
                   case Some(assignment) =>
-                    val projectFileOpt = request.body.file("projectFile")
+                    val projectFileOpt = request.body.file("solutionFile")
 
                     if (projectFileOpt.isDefined) {
                       val tmpProjectFile = new File(Play.application.path + "/tmp/" + projectFileOpt.get.filename)

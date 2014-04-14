@@ -24,6 +24,9 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
   def all(): List[Solution] = Solution.findAll().toList
 
   def create(assignment: Assignment, user: Account, file: File): Option[ObjectId] = {
+    // TODO: Można przemyśleć i dać ogranicznik jakiś. Narazie dla porządku jedno rozwiązanie usera na zadanie.
+    dao.remove(MongoDBObject("assignmentId" -> assignment.id, "userId" -> user.id))
+
     insertFile(file, contentType = "application/java-archive") match {
       case Some(potentialId) =>
         val solutionFileId = potentialId.asInstanceOf[ObjectId]
