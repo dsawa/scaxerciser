@@ -11,7 +11,7 @@ import play.api.libs.ws._
 import play.api.libs.json._
 import scaxerciser.context._
 
-case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId)
+case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId, result: Result = null)
 
 object Solution extends ModelCompanion[Solution, ObjectId] {
   val solutionsCollection = MongoConnection()(DBConfig.solutions("db"))(DBConfig.solutions("collection"))

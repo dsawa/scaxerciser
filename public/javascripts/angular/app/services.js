@@ -81,6 +81,31 @@ assignmentServices.factory('Assignment', ['$resource',
   }
 ]);
 
+
+// ----- Solution Services
+var solutionServices = angular.module('solutionServices', ['ngResource']);
+
+solutionServices.factory('AssignmentSolution', ['$resource',
+  function ($resource) {
+    return $resource('api/assignments/:assignmentId/solutions/:id', {}, {
+      query: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId'
+        },
+        isArray: true
+      },
+      show: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId',
+          id: '@id'
+        }
+      }
+    });
+  }
+]);
+
 // ----- User Services
 var userServices = angular.module('userServices', ['ngResource']);
 

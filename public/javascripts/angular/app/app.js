@@ -14,7 +14,8 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'userControllers',
     'userServices',
     'assignmentsControllers',
-    'assignmentServices'
+    'assignmentServices',
+    'solutionServices'
   ]),
   permission;
 

@@ -4,12 +4,14 @@ import java.io.File
 import play.api.Play
 import play.api.Play.current
 import play.api.mvc._
+import play.api.libs.json._
 import scala.concurrent.{Future, ExecutionContext}
 import ExecutionContext.Implicits.global
-import com.mongodb.casbah.Imports.ObjectId
+import com.mongodb.casbah.Imports._
+import jp.t2v.lab.play2.auth.AuthElement
 import models._
 
-object Solutions extends Controller {
+object Solutions extends Controller with AuthElement with AuthConfigImpl {
 
   def submit(id: String) = Action(parse.multipartFormData) {
     implicit request =>
@@ -56,6 +58,16 @@ object Solutions extends Controller {
             case None => Unauthorized
           }
       }.getOrElse(Unauthorized)
+  }
+
+  def show(assignmentId: String, id: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val currentUser = loggedIn
+      val query = MongoDBObject("assignmentId" -> new ObjectId(assignmentId), "_id" -> new ObjectId(id), "userId" -> currentUser.id)
+      Solution.findOne(query) match {
+        case Some(solution) => Ok(Json.parse(Solution.toCompactJson(solution)))
+        case None => NotFound("Solution " + id + " not found.")
+      }
   }
 
 }
