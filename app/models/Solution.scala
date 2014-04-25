@@ -11,7 +11,11 @@ import play.api.libs.ws._
 import play.api.libs.json._
 import scaxerciser.context._
 
-case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId, result: Result = null)
+case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId, result: Result = null) {
+
+  def assignment: Option[Assignment] = Assignment.findOneById(assignmentId)
+
+}
 
 object Solution extends ModelCompanion[Solution, ObjectId] {
   val solutionsCollection = MongoConnection()(DBConfig.solutions("db"))(DBConfig.solutions("collection"))
@@ -22,6 +26,10 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
   private lazy val solutionFilesDb = MongoClient(DBConfig.defaultHost, DBConfig.defaultPort)(DBConfig.solutionsProjects("db"))
 
   def all(): List[Solution] = Solution.findAll().toList
+
+  def all(user: Account, skip: Int = 0, limit: Int = 1000, sort: DBObject = MongoDBObject("_id" -> 1)): List[Solution] = {
+    dao.find(MongoDBObject("userId" -> user.id)).sort(sort).skip(skip).limit(limit).toList
+  }
 
   def create(assignment: Assignment, user: Account, file: File): Option[ObjectId] = {
     // TODO: Można przemyśleć i dać ogranicznik jakiś. Narazie dla porządku jedno rozwiązanie usera na zadanie.
