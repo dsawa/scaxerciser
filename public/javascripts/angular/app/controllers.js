@@ -220,8 +220,9 @@ assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '
   }
 ]);
 
-assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group', 'Assignment',
-  function ($stateParams, $scope, $state, $location, Group, Assignment) {
+assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
+  'Assignment', 'CurrentUserSolution', 'Auth',
+  function ($stateParams, $scope, $state, $location, Group, Assignment, CurrentUserSolution, Auth) {
     var params = {
       groupId: $stateParams.groupId,
       id: $stateParams.id
@@ -232,6 +233,20 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
     $scope.group = Group.show({id: $stateParams.groupId});
 
     $scope.assignment = Assignment.show(params);
+
+    if (Auth.getCurrentPermission().name === 'NormalUser') {
+      $scope.solution = CurrentUserSolution.show({assignmentId: $stateParams.id}, function (solution) {
+        var defineCssClassBasedOnMark = function(mark) {
+          if (mark < 50) $scope.isDanger = true;
+          else if (mark > 50 && mark < 80) $scope.isAverage = true;
+          else $scope.isSuccess = true;
+        };
+
+        if(solution.result !== null || typeof solution.result !== 'undefined' ) {
+          defineCssClassBasedOnMark(solution.result.mark)
+        }
+      });
+    }
 
     $scope.activateAssignment = function () {
       $.extend(true, $scope.assignment, params);

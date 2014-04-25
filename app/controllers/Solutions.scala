@@ -70,4 +70,14 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def showForCurrentUser(assignmentId: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val currentUser = loggedIn
+      val query = MongoDBObject("assignmentId" -> new ObjectId(assignmentId), "userId" -> currentUser.id)
+      Solution.findOne(query) match {
+        case Some(solution) => Ok(Solution.toNormalUserJson(solution))
+        case None => NotFound("Solution for assignment " + assignmentId + " and user " + currentUser.id.toString + "not found.")
+      }
+  }
+
 }

@@ -45,6 +45,23 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
     WS.url(url).withRequestTimeout(10000).post(params)
   }
 
+  def toNormalUserJson(solution: Solution): JsObject = {
+    Json.obj(
+      "assignmentId" -> JsString(solution.assignmentId.toString),
+      "userId" -> JsString(solution.userId.toString),
+      "result" -> {
+        if (solution.result == null) JsNull
+        else Json.obj(
+          "mark" -> JsNumber(solution.result.mark),
+          "testsDetails" -> Json.obj(
+            "testsSucceeded" -> JsNumber(solution.result.testsDetails.testsSucceeded),
+            "totalTestsCount" -> JsNumber(solution.result.testsDetails.totalTestsCount)
+          )
+        )
+      }
+    )
+  }
+
   private def insertFile(file: File, contentType: String): Option[AnyRef] = {
     gridfs(file) {
       f =>

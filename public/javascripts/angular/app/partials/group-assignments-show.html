@@ -5,7 +5,8 @@
             <div class="pull-right">
                 <a ui-sref="group-assignments-list({groupId: group._id.$oid})"
                    class="btn btn-default btn-xs">Pozostałe zadania</a>
-                <a has-permission="Administrator" ng-click="activateAssignment()" ng-hide="assignment.enabled" class="btn btn-success btn-xs">Aktywuj</a>
+                <a has-permission="Administrator" ng-click="activateAssignment()" ng-hide="assignment.enabled"
+                   class="btn btn-success btn-xs">Aktywuj</a>
                 <a has-permission="Administrator" ng-click="deleteAssignment()" class="btn btn-danger btn-xs">Usuń</a>
             </div>
         </div>
@@ -19,6 +20,28 @@
                     <hr>
                 </div>
             </div>
+            <hr>
+            <div has-permission="NormalUser" class="table-responsive" ng-show="solution.result !== null">
+                <table class="table results-table">
+                    <thead>
+                    <tr>
+                        <th>Zaliczonych testów</th>
+                        <th>Wszystkich testów</th>
+                        <th>Procent</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-class="{success: isSuccess, warning: isWarning, danger: isDanger}">
+                        <td>{{solution.result.testsDetails.testsSucceeded}}</td>
+                        <td>{{solution.result.testsDetails.totalTestsCount}}</td>
+                        <td>{{solution.result.mark}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p ng-show="solution.result === null">
+                Rozwiązanie nie zostało jeszcze przesłane lub jest w trakcie analizy.
+            </p>
         </div>
         <!-- /.panel-body -->
         <div class="panel-footer">

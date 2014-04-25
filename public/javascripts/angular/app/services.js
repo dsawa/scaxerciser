@@ -104,7 +104,25 @@ solutionServices.factory('AssignmentSolution', ['$resource',
       }
     });
   }
-]);
+]).factory('CurrentUserSolution', ['$resource',
+    function ($resource) {
+      return $resource('api/users/current/assignments/:assignmentId/solutions', {}, {
+        query: {
+          method: 'GET',
+          params: {
+            assignmentId: '@assignmentId'
+          },
+          isArray: true
+        },
+        show: {
+          method: 'GET',
+          params: {
+            assignmentId: '@assignmentId'
+          }
+        }
+      });
+    }
+  ]);
 
 // ----- User Services
 var userServices = angular.module('userServices', ['ngResource']);
@@ -149,6 +167,9 @@ var authServices = angular.module('authServices', []);
 authServices.factory('Auth', function ($rootScope) {
   var permission;
   return {
+    getCurrentPermission: function () {
+      return permission;
+    },
     setPermission: function (perm) {
       permission = perm;
     },

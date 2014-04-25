@@ -25,8 +25,11 @@ PUT      /api/groups/:groupId/assignments/:id           controllers.Assignments.
 DELETE   /api/groups/:groupId/assignments/:id           controllers.Assignments.delete(groupId: String, id: String)
 
 # Solutions
-GET      /api/assignments/:assignmentId/solutions/:id     controllers.Solutions.show(assignmentId: String, id: String)
-POST     /api/assignments/:assignmentId/solutions/submit  controllers.Solutions.submit(assignmentId: String)
+GET      /api/assignments/:assignmentId/solutions/:id             controllers.Solutions.show(assignmentId: String, id: String)
+POST     /api/assignments/:assignmentId/solutions/submit          controllers.Solutions.submit(assignmentId: String)
+
+GET      /api/users/current/assignments/:assignmentId/solutions   controllers.Solutions.showForCurrentUser(assignmentId: String)
+
 
 # Authentication
 GET       /login                        controllers.Application.login

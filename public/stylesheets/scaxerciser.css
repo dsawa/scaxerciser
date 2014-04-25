@@ -81,3 +81,8 @@ ul.download-files-edit {
 ul.download-files-edit li {
   padding: 7px 0 15px 0;
 }
+
+table.results-table th, td {
+  text-align: center;
+  width: 30%;
+}
