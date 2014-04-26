@@ -221,8 +221,8 @@ assignmentsControllers.controller('GroupAssignmentsListCtrl', ['$stateParams', '
 ]);
 
 assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
-  'Assignment', 'CurrentUserSolution', 'Auth',
-  function ($stateParams, $scope, $state, $location, Group, Assignment, CurrentUserSolution, Auth) {
+  'Assignment', 'CurrentUserAssignmentSolution', 'Auth',
+  function ($stateParams, $scope, $state, $location, Group, Assignment, CurrentUserAssignmentSolution, Auth) {
     var params = {
       groupId: $stateParams.groupId,
       id: $stateParams.id
@@ -235,7 +235,7 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
     $scope.assignment = Assignment.show(params);
 
     if (Auth.getCurrentPermission().name === 'NormalUser') {
-      $scope.solution = CurrentUserSolution.show({assignmentId: $stateParams.id}, function (solution) {
+      $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
         var defineCssClassBasedOnMark = function(mark) {
           if (mark < 50) $scope.isDanger = true;
           else if (mark > 50 && mark < 80) $scope.isAverage = true;
@@ -417,5 +417,31 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
         $scope.usersTable.reload();
       });
     };
+  }
+]);
+
+// ----- Solution Controllers
+var solutionControllers = angular.module('solutionControllers', []);
+
+solutionControllers.controller('CurrentUserSolutionsListCtrl', ['$scope', '$filter', 'ngTableParams', 'CurrentUserSolution',
+  function ($scope, $filter, ngTableParams, CurrentUserSolution) {
+    $scope.solutionsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {}
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        CurrentUserSolution.query({}, function (data) {
+          var solutions = data;
+
+          if (params.sorting()) solutions = $filter('orderBy')(solutions, params.orderBy());
+          if (params.filter()) solutions = $filter('filter')(solutions, params.filter());
+
+          params.total(solutions.length);
+          $defer.resolve(solutions.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
   }
 ]);

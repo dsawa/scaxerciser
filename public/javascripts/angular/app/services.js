@@ -104,7 +104,7 @@ solutionServices.factory('AssignmentSolution', ['$resource',
       }
     });
   }
-]).factory('CurrentUserSolution', ['$resource',
+]).factory('CurrentUserAssignmentSolution', ['$resource',
     function ($resource) {
       return $resource('api/users/current/assignments/:assignmentId/solutions', {}, {
         query: {
@@ -119,6 +119,16 @@ solutionServices.factory('AssignmentSolution', ['$resource',
           params: {
             assignmentId: '@assignmentId'
           }
+        }
+      });
+    }
+  ]).factory('CurrentUserSolution', ['$resource',
+    function ($resource) {
+      return $resource('api/users/current/solutions', {}, {
+        query: {
+          method: 'GET',
+          params: {},
+          isArray: true
         }
       });
     }

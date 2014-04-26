@@ -80,4 +80,11 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def index = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      val currentUser = loggedIn
+      val lastSolutions = Solution.all(currentUser, sort = MongoDBObject("_id" -> -1))
+      Ok(Solution.toNormalUserArrayJson(lastSolutions))
+  }
+
 }

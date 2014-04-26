@@ -55,7 +55,9 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
 
   def toNormalUserJson(solution: Solution): JsObject = {
     Json.obj(
+      "id" -> JsString(solution.id.toString),
       "assignmentId" -> JsString(solution.assignmentId.toString),
+      "assignmentTitle" -> JsString({if (solution.assignment.isDefined) solution.assignment.get.title else "" }),
       "userId" -> JsString(solution.userId.toString),
       "result" -> {
         if (solution.result == null) JsNull
@@ -68,6 +70,10 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
         )
       }
     )
+  }
+
+  def toNormalUserArrayJson(solutions: List[Solution]): JsArray = {
+    JsArray(solutions.map(solution => toNormalUserJson(solution)))
   }
 
   private def insertFile(file: File, contentType: String): Option[AnyRef] = {

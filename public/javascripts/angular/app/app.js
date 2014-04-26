@@ -15,7 +15,8 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'userServices',
     'assignmentsControllers',
     'assignmentServices',
-    'solutionServices'
+    'solutionServices',
+    'solutionControllers',
   ]),
   permission;
 
@@ -179,6 +180,16 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           '': {
             templateUrl: scaxerciserApp.partialsRoot + 'users-list.edit.html',
             controller: 'UserShortDetailCtrl'
+          }
+        }
+      })
+      .state('solutions-list', {
+        permission: 'NormalUser',
+        url: "/solutions",
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'solutions-list.html',
+            controller: 'CurrentUserSolutionsListCtrl'
           }
         }
       })
