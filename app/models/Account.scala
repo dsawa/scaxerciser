@@ -62,4 +62,6 @@ object Account extends ModelCompanion[Account, ObjectId] {
 
   def isAdmin(account: Account): Boolean = Permission.valueOf(account.permission) == Administrator
 
+  def isNormalUser(account: Account): Boolean = Permission.valueOf(account.permission) == NormalUser
+
 }
