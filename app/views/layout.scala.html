@@ -129,31 +129,32 @@
                         <li>
                             <a href="#" id="showAssignmentsList"><i class="fa fa-list fa-fw"></i> Pokaż</a>
                         </li>
-                        <!-- Modal -->
-                        <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog"
-                             aria-labelledby="groupSelectModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"
-                                                aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="groupSelectModalLabel">Wybierz grupę</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <input class="typeahead form-control" type="text"
-                                                   placeholder="Szukaj grupy" required="true">
-                                            <input type="hidden" id="modalNextAction" value="new">
-                                        </div>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                    } else {
+                    <a href="#" id="showAssignmentsList"><i class="fa fa-pencil fa-fw"></i> Zadania</a>
+                    }
+                    <!-- modal -->
+                    <div class="modal fade" id="groupSelectModal" tabindex="-1" role="dialog"
+                         aria-labelledby="groupSelectModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="groupSelectModalLabel">Wybierz grupę</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input class="typeahead form-control" type="text"
+                                               placeholder="Szukaj grupy" required="true">
+                                        <input type="hidden" id="modalNextAction" value="new">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </ul>
-                    <!-- /.nav-second-level -->
-                    } else {
-                    <a ui-sref="assignments-list"><i class="fa fa-pencil fa-fw"></i> Zadania</a>
-                    }
+                    </div>
+                    <!-- /modal -->
                 </li>
             </ul>
             <!-- /#side-menu -->
