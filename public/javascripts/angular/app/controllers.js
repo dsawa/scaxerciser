@@ -236,13 +236,13 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
 
     if (Auth.getCurrentPermission().name === 'NormalUser') {
       $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
-        var defineCssClassBasedOnMark = function(mark) {
+        var defineCssClassBasedOnMark = function (mark) {
           if (mark < 50) $scope.isDanger = true;
           else if (mark > 50 && mark < 80) $scope.isAverage = true;
           else $scope.isSuccess = true;
         };
 
-        if(solution.result !== null || typeof solution.result !== 'undefined' ) {
+        if (solution.result !== null || typeof solution.result !== 'undefined') {
           defineCssClassBasedOnMark(solution.result.mark)
         }
       });
@@ -425,8 +425,8 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
 // ----- Solution Controllers
 var solutionControllers = angular.module('solutionControllers', []);
 
-solutionControllers.controller('UserSolutionsListCtrl', ['$scope', '$stateParams', '$filter', 'ngTableParams', 'UserSolution',
-  function ($scope, $stateParams, $filter, ngTableParams, UserSolution) {
+solutionControllers.controller('UserSolutionsListCtrl', ['$scope', '$stateParams', '$state', '$filter', 'ngTableParams', 'UserSolution',
+  function ($scope, $stateParams, $state, $filter, ngTableParams, UserSolution) {
     $scope.solutionsTable = new ngTableParams({
       page: 1,
       count: 10,
@@ -434,7 +434,7 @@ solutionControllers.controller('UserSolutionsListCtrl', ['$scope', '$stateParams
     }, {
       total: 0,
       getData: function ($defer, params) {
-        UserSolution.query({ id: $stateParams.id }, function (data) {
+        UserSolution.query({ userId: $stateParams.userId }, function (data) {
           var solutions = data;
 
           if (params.sorting()) solutions = $filter('orderBy')(solutions, params.orderBy());
@@ -445,5 +445,35 @@ solutionControllers.controller('UserSolutionsListCtrl', ['$scope', '$stateParams
         });
       }
     });
+
+    $scope.goToSolutionDetails = function (userId, solutionId) {
+      $state.go('user-solutions-show', {userId: userId, id: solutionId});
+    }
+  }
+]);
+
+solutionControllers.controller('UserSolutionsDetailCtrl', ['$stateParams', '$scope', '$state', '$window', 'UserSolution',
+  'User', function ($stateParams, $scope, $state, $window, UserSolution, User) {
+    $scope.solution = UserSolution.show({
+      userId: $stateParams.userId,
+      id: $stateParams.id
+    }, function (solution) {
+
+      $scope.user = User.show({id: solution.userId['$oid']});
+
+      var defineCssClassBasedOnMark = function (mark) {
+        if (mark < 50) $scope.isDanger = true;
+        else if (mark > 50 && mark < 80) $scope.isAverage = true;
+        else $scope.isSuccess = true;
+      };
+
+      if (solution.result !== null || typeof solution.result !== 'undefined') {
+        defineCssClassBasedOnMark(solution.result.mark)
+      }
+    });
+
+    $scope.back = function () {
+      $window.history.back();
+    }
   }
 ]);

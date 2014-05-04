@@ -124,13 +124,21 @@ solutionServices.factory('AssignmentSolution', ['$resource',
     }
   ]).factory('UserSolution', ['$resource',
     function ($resource) {
-      return $resource('api/users/:id/solutions', {}, {
+      return $resource('api/users/:userId/solutions/:id', {}, {
         query: {
           method: 'GET',
           params: {
-            id: '@id'
+            userId: '@userId',
+            id: ''
           },
           isArray: true
+        },
+        show: {
+          method: 'GET',
+          params: {
+            userId: '@userId',
+            id: '@id'
+          }
         }
       });
     }

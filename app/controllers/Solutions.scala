@@ -80,6 +80,15 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def userSolution(userId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+    implicit request =>
+      val query = MongoDBObject("userId" -> new ObjectId(userId), "_id" -> new ObjectId(id))
+      Solution.findOne(query) match {
+        case Some(solution) => Ok(Json.parse(Solution.toCompactJson(solution)))
+        case None => NotFound("Solution " + id + " not found.")
+      }
+  }
+
   def userSolutions(userId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       Account.findOneById(new ObjectId(userId)) match {

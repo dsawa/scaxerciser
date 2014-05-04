@@ -1,0 +1,55 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Szczegóły rozwiązania zadania przez użytkownika {{user.email}}
+            <div class="pull-right">
+                <a ng-click="back()" class="btn btn-default btn-xs">Cofnij</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table results-table">
+                <thead>
+                <tr>
+                    <th>Ukończonych testów</th>
+                    <th>Zaliczonych testów</th>
+                    <th>Niezaliczonych testów</th>
+                    <th>Pominiętych testów</th>
+                    <th>Anulowanych testów</th>
+                    <th>Wszystkich testów</th>
+                    <th>Ukończonych zestawów</th>
+                    <th>Anulowanych zestawów</th>
+                    <th>Procent zaliczenia</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-class="{success: isSuccess, warning: isWarning, danger: isDanger}">
+                    <td>{{solution.result.testsDetails.testsCompleted}}</td>
+                    <td>{{solution.result.testsDetails.testsSucceeded}}</td>
+                    <td>{{solution.result.testsDetails.testsFailed}}</td>
+                    <td>{{solution.result.testsDetails.testsIgnored}}</td>
+                    <td>{{solution.result.testsDetails.testsCanceled}}</td>
+                    <td>{{solution.result.testsDetails.totalTestsCount}}</td>
+                    <td>{{solution.result.testsDetails.suitesCompleted}}</td>
+                    <td>{{solution.result.testsDetails.suitesAborted}}</td>
+                    <td>{{solution.result.mark}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <pre>{{solution.result.testsLogs}}</pre>
+        </div>
+        <!-- /.panel-body -->
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <a class="btn btn-default pull" href="{{projectLink}}" target="_blank"><i
+                            class="fa fa-cloud-download fa-fw"></i>
+                        Pobierz rozwiązanie</a>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-footer -->
+    </div>
+    <!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->

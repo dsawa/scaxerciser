@@ -28,7 +28,8 @@ DELETE   /api/groups/:groupId/assignments/:id           controllers.Assignments.
 GET      /api/assignments/:assignmentId/solutions/:id             controllers.Solutions.show(assignmentId: String, id: String)
 POST     /api/assignments/:assignmentId/solutions/submit          controllers.Solutions.submit(assignmentId: String)
 
-GET      /api/users/:id/solutions                                 controllers.Solutions.userSolutions(id: String)
+GET      /api/users/:userId/solutions                             controllers.Solutions.userSolutions(userId: String)
+GET      /api/users/:userId/solutions/:id                         controllers.Solutions.userSolution(userId: String, id: String)
 GET      /api/users/current/assignments/:assignmentId/solutions   controllers.Solutions.assignmentSolutions(assignmentId: String)
 
 # Authentication

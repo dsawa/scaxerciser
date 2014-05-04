@@ -185,7 +185,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       })
       .state('users-list.solutions', {
         permission: 'Administrator',
-        url: '/:id/solutions',
+        url: '/:userId/solutions',
         views: {
           '': {
             templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-list.html',
@@ -195,11 +195,21 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       })
       .state('user-solutions-list', {
         permission: 'NormalUser',
-        url: "/user/:id/solutions",
+        url: "/user/:userId/solutions",
         views: {
           'main': {
             templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-list.html',
             controller: 'UserSolutionsListCtrl'
+          }
+        }
+      })
+      .state('user-solutions-show', {
+        permission: 'Administrator',
+        url: "/users/:userId/solutions/:id",
+        views: {
+          'main': {
+            templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-show.html',
+            controller: 'UserSolutionsDetailCtrl'
           }
         }
       })
