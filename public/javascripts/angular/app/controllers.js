@@ -286,7 +286,9 @@ userControllers.controller('UserListCtrl', ['$scope', '$filter', '$q', 'ngTableP
       total: 0,
       getData: function ($defer, params) {
         User.query({}, function (data) {
-          var users = data;
+          var users = data.map(function (user) {
+            return user.permission === 'Administrator' ? user : $.extend(user, {permission: 'Uczestnik'});
+          });
 
           if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
           if (params.filter()) users = $filter('filter')(users, params.filter());
@@ -300,7 +302,7 @@ userControllers.controller('UserListCtrl', ['$scope', '$filter', '$q', 'ngTableP
     $scope.permissions = function (column) {
       var def = $q.defer();
       def.resolve([
-        { id: 'NormalUser', title: 'NormalUser' },
+        { id: 'Uczestnik', title: 'Uczestnik' },
         { id: 'Administrator', title: 'Administrator' }
       ]);
       return def;
