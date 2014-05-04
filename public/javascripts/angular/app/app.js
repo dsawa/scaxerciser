@@ -183,13 +183,13 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
-      .state('solutions-list', {
+      .state('user-solutions-list', {
         permission: 'NormalUser',
-        url: "/solutions",
+        url: "/user/:id/solutions",
         views: {
           'main': {
-            templateUrl: scaxerciserApp.partialsRoot + 'solutions-list.html',
-            controller: 'CurrentUserSolutionsListCtrl'
+            templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-list.html',
+            controller: 'UserSolutionsListCtrl'
           }
         }
       })

@@ -423,8 +423,8 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
 // ----- Solution Controllers
 var solutionControllers = angular.module('solutionControllers', []);
 
-solutionControllers.controller('CurrentUserSolutionsListCtrl', ['$scope', '$filter', 'ngTableParams', 'CurrentUserSolution',
-  function ($scope, $filter, ngTableParams, CurrentUserSolution) {
+solutionControllers.controller('UserSolutionsListCtrl', ['$scope', '$stateParams', '$filter', 'ngTableParams', 'UserSolution',
+  function ($scope, $stateParams, $filter, ngTableParams, UserSolution) {
     $scope.solutionsTable = new ngTableParams({
       page: 1,
       count: 10,
@@ -432,7 +432,7 @@ solutionControllers.controller('CurrentUserSolutionsListCtrl', ['$scope', '$filt
     }, {
       total: 0,
       getData: function ($defer, params) {
-        CurrentUserSolution.query({}, function (data) {
+        UserSolution.query({ id: $stateParams.id }, function (data) {
           var solutions = data;
 
           if (params.sorting()) solutions = $filter('orderBy')(solutions, params.orderBy());

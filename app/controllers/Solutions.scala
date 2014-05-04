@@ -70,7 +70,7 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def showForCurrentUser(assignmentId: String) = StackAction(AuthorityKey -> NormalUser) {
+  def assignmentSolutions(assignmentId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       val currentUser = loggedIn
       val query = MongoDBObject("assignmentId" -> new ObjectId(assignmentId), "userId" -> currentUser.id)
@@ -80,11 +80,20 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def index = StackAction(AuthorityKey -> NormalUser) {
+  def userSolutions(userId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
-      val currentUser = loggedIn
-      val lastSolutions = Solution.all(currentUser, sort = MongoDBObject("_id" -> -1))
-      Ok(Solution.toNormalUserArrayJson(lastSolutions))
+      Account.findOneById(new ObjectId(userId)) match {
+        case Some(user) =>
+          if (currentUserHasAccess(loggedIn, userId)) {
+            val lastSolutions = Solution.all(user, sort = MongoDBObject("_id" -> -1))
+            Ok(Solution.toNormalUserArrayJson(lastSolutions))
+          } else
+            BadRequest("Brak dostępu")
+        case None => NotFound("User " + userId + " not found.")
+      }
   }
+
+  private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
+    Permission.valueOf(currentUser.permission) == Administrator || currentUser.id.toString == paramId
 
 }
