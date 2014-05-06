@@ -80,7 +80,7 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def userSolution(userId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+  def userSolution(userId: String, id: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       val query = MongoDBObject("userId" -> new ObjectId(userId), "_id" -> new ObjectId(id))
       Solution.findOne(query) match {
@@ -103,6 +103,6 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
   }
 
   private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
-    Permission.valueOf(currentUser.permission) == Administrator || currentUser.id.toString == paramId
+    Account.isEducator(currentUser) || Account.isAdmin(currentUser) || currentUser.id.toString == paramId
 
 }

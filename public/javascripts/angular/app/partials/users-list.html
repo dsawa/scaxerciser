@@ -17,9 +17,9 @@
                         <td width="170" data-title="'Uprawnienia'" sortable="'permission'" filter="{ 'permission': 'select' }"
                             filter-data="permissions($column)">{{user.permission}}</td>
                         <td>
-                            <a has-permission="Administrator" ui-sref="users-list.solutions({userId: user._id.$oid})"
+                            <a has-permission="Educator" ui-sref="users-list.solutions({userId: user._id.$oid})"
                                class="btn btn-info btn-xs" ng-hide="user.permission === 'Administrator'">Wyniki</a>
-                            <a has-permission="Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
+                            <a has-permission="Educator,Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
                                class="btn btn-warning btn-xs">Edytuj</a>
                             <a has-permission="Administrator" ng-click="deleteUser(user._id.$oid)"
                                class="btn btn-danger btn-xs">Usuń</a>

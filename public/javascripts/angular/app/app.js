@@ -16,7 +16,7 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'assignmentsControllers',
     'assignmentServices',
     'solutionServices',
-    'solutionControllers',
+    'solutionControllers'
   ]),
   permission;
 
@@ -32,7 +32,9 @@ scaxerciserApp.partialsRoot = 'assets/javascripts/angular/app/partials/';
 scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
   function ($stateProvider, $urlRouterProvider, $httpProvider) {
     $httpProvider.responseInterceptors.push('securityInterceptor');
-    $urlRouterProvider.otherwise("/groups");
+    $urlRouterProvider.otherwise(function($injector, $location){
+      permission.name === 'Administrator' ? $location.path('users') : $location.path('groups')
+    });
     $stateProvider
       .state('unauthorized', {
         url: '/unauthorized',
@@ -52,6 +54,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
       })
       .state('groups-list', {
         url: "/groups",
+        permission: ['Educator', 'NormalUser'],
         views: {
           'main': {
             templateUrl: scaxerciserApp.partialsRoot + 'groups-list.html',
@@ -60,7 +63,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('groups-list.new', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/new',
         views: {
           '': {
@@ -70,7 +73,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('groups-list.edit', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/:groupId/edit',
         views: {
           '': {
@@ -80,7 +83,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/groups/:groupId/members',
         views: {
           'main': {
@@ -93,7 +96,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list.add', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/add',
         views: {
           '': {
@@ -103,7 +106,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/groups/:groupId/assignments/new',
         views: {
           'main': {
@@ -113,7 +116,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new.project', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/:id/project',
         views: {
           '': {
@@ -123,7 +126,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-edit', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/groups/:groupId/assignments/:id/edit',
         views: {
           'main': {
@@ -154,7 +157,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list', {
-        permission: 'Administrator',
+        permission: ['Administrator', 'Educator'],
         url: "/users",
         views: {
           'main': {
@@ -164,7 +167,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.new', {
-        permission: 'Administrator',
+        permission: ['Administrator', 'Educator'],
         url: '/new',
         views: {
           '': {
@@ -174,7 +177,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.edit', {
-        permission: 'Administrator',
+        permission: ['Administrator', 'Educator'],
         url: '/:id/edit',
         views: {
           '': {
@@ -184,7 +187,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.solutions', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: '/:userId/solutions',
         views: {
           '': {
@@ -194,7 +197,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-list', {
-        permission: 'NormalUser',
+        permission: ['NormalUser'],
         url: "/user/:userId/solutions",
         views: {
           'main': {
@@ -204,7 +207,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-show', {
-        permission: 'Administrator',
+        permission: ['Educator'],
         url: "/users/:userId/solutions/:id",
         views: {
           'main': {
