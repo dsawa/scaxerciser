@@ -110,7 +110,7 @@
                 <!--<li>-->
                     <!--<a href="/"><i class="fa fa-dashboard fa-fw"></i> Kokpit</a>-->
                 <!--</li>-->
-                @if(Account.isEducator(currentUser)) {
+                @if(Account.isEducator(currentUser) || Account.isNormalUser(currentUser)) {
                 <li>
                     <a ui-sref="groups-list"><i class="fa fa-group fa-fw"></i> Grupy</a>
                 </li>
