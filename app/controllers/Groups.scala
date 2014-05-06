@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, Assignment, NormalUser, Administrator}
+import models.{Group, Assignment, NormalUser, Educator, Administrator}
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -15,7 +15,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       Ok(Group.toCompactJSONArray(groups)).withHeaders("Content-Type" -> "application/json")
   }
 
-  def create = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def create = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {
         name =>
@@ -40,7 +40,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def update(id: String) = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def update(id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {
         newName =>
@@ -59,7 +59,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def delete(id: String) = StackAction(AuthorityKey -> Administrator) {
+  def delete(id: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       val groupId = new ObjectId(id)
       Group.findOneById(groupId) match {

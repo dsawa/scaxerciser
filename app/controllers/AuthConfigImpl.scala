@@ -36,6 +36,7 @@ trait AuthConfigImpl extends AuthConfig {
   def authorize(user: User, authority: Authority)(implicit ctx: ExecutionContext): Future[Boolean] = Future.successful {
     (Permission.valueOf(user.permission), authority) match {
       case (Administrator, _) => true
+      case (Educator, Educator) => true
       case (Educator, NormalUser) => true
       case (NormalUser, NormalUser) => true
       case _ => false

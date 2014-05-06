@@ -287,7 +287,12 @@ userControllers.controller('UserListCtrl', ['$scope', '$filter', '$q', 'ngTableP
       getData: function ($defer, params) {
         User.query({}, function (data) {
           var users = data.map(function (user) {
-            return user.permission === 'Administrator' ? user : $.extend(user, {permission: 'Uczestnik'});
+            if (user.permission === 'Educator')
+              return $.extend(user, {permission: 'Prowadzący'});
+            else if (user.permission === 'NormalUser')
+              return $.extend(user, {permission: 'Uczestnik'});
+            else
+              return user;
           });
 
           if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
@@ -302,8 +307,9 @@ userControllers.controller('UserListCtrl', ['$scope', '$filter', '$q', 'ngTableP
     $scope.permissions = function (column) {
       var def = $q.defer();
       def.resolve([
-        { id: 'Uczestnik', title: 'Uczestnik' },
-        { id: 'Administrator', title: 'Administrator' }
+        { id: 'Administrator', title: 'Administrator' },
+        { id: 'Prowadzący', title: 'Prowadzący' },
+        { id: 'Uczestnik', title: 'Uczestnik' }
       ]);
       return def;
     };

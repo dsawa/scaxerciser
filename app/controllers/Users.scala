@@ -12,7 +12,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
     Permission.valueOf(currentUser.permission) == Administrator || currentUser.id.toString == paramId
 
-  def index = StackAction(AuthorityKey -> Administrator) {
+  def index = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       val params = request.queryString.map { case (k, v) => k -> v.mkString }
       if (params.contains("filter")) {
@@ -99,7 +99,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       Ok(Json.obj("name" -> currentUser.permission))
   }
 
-  def groupMembers(groupId: String) = StackAction(AuthorityKey -> Administrator) {
+  def groupMembers(groupId: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
@@ -109,7 +109,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def addUserToGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+  def addUserToGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
@@ -124,7 +124,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def removeUserFromGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+  def removeUserFromGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>

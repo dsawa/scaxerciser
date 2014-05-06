@@ -86,25 +86,25 @@ assignmentServices.factory('Assignment', ['$resource',
 var solutionServices = angular.module('solutionServices', ['ngResource']);
 
 solutionServices.factory('AssignmentSolution', ['$resource',
-  function ($resource) {
-    return $resource('api/assignments/:assignmentId/solutions/:id', {}, {
-      query: {
-        method: 'GET',
-        params: {
-          assignmentId: '@assignmentId'
+    function ($resource) {
+      return $resource('api/assignments/:assignmentId/solutions/:id', {}, {
+        query: {
+          method: 'GET',
+          params: {
+            assignmentId: '@assignmentId'
+          },
+          isArray: true
         },
-        isArray: true
-      },
-      show: {
-        method: 'GET',
-        params: {
-          assignmentId: '@assignmentId',
-          id: '@id'
+        show: {
+          method: 'GET',
+          params: {
+            assignmentId: '@assignmentId',
+            id: '@id'
+          }
         }
-      }
-    });
-  }
-]).factory('CurrentUserAssignmentSolution', ['$resource',
+      });
+    }
+  ]).factory('CurrentUserAssignmentSolution', ['$resource',
     function ($resource) {
       return $resource('api/users/current/assignments/:assignmentId/solutions', {}, {
         query: {
@@ -194,7 +194,10 @@ authServices.factory('Auth', function ($rootScope) {
       permission = perm;
     },
     hasPermission: function (perm) {
-      return perm.trim() === permission.name;
+      if (Array.isArray(perm))
+        return perm.indexOf(permission.name) !== -1;
+      else
+        return perm.trim() === permission.name;
     }
   };
 });

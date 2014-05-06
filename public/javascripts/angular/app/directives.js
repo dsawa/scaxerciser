@@ -16,12 +16,10 @@ customDirectives.directive('passCheck', [
     function (Auth) {
       return {
         link: function (scope, element, attrs, ctrl) {
-          var value = attrs.hasPermission.trim();
-
-          if (typeof value !== "string") throw "hasPermission value must be String";
+          var permissions = attrs.hasPermission.trim().split(',').map(function (value) { return value.trim() });
 
           function toggleVisibilityBasedOnPermission() {
-            var hasPermission = Auth.hasPermission(value);
+            var hasPermission = Auth.hasPermission(permissions);
             hasPermission ? element.show() : element.hide();
           }
           toggleVisibilityBasedOnPermission();
