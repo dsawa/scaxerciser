@@ -326,8 +326,10 @@ userControllers.controller('UserCreationCtrl', ['$scope', '$state', '$location',
   function ($scope, $state, $location, User) {
     $scope.createUser = function () {
       User.create($scope.user, function () {
-        $state.transitionTo('users-reload');
-        $location.path('users');
+        $scope.usersTable.reload();
+        $scope.passRepeated = '';
+        $scope.user = {};
+        $.notify('Dodano użytkownika', 'success');
       });
     }
   }
@@ -340,8 +342,10 @@ userControllers.controller('UserShortDetailCtrl', ['$stateParams', '$scope', '$s
       params.id = $stateParams.id;
       if (params.password.length < 6) delete params.password;
       User.update(params, function () {
-        $state.transitionTo('users-reload');
-        $location.path('users');
+        $scope.usersTable.reload();
+        $scope.user.password = '';
+        $scope.passRepeated = '';
+        $.notify('Zaktualizowano użytkownika', 'success');
       });
     };
     $scope.user = User.show({
