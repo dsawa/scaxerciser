@@ -18,7 +18,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
     implicit request =>
       val currentUser: User = loggedIn
       val query = {
-        if (Permission.valueOf(currentUser.permission) == Administrator)
+        if (Account.isEducator(currentUser) || Account.isAdmin(currentUser))
           MongoDBObject("groupId" -> new ObjectId(groupId))
         else
           MongoDBObject("groupId" -> new ObjectId(groupId), "enabled" -> true)
@@ -27,7 +27,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       Ok(Json.toJson(assignments))
   }
 
-  def create(groupId: String) = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def create(groupId: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
@@ -59,7 +59,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def update(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> Administrator) {
+  def update(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
       val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
       Assignment.findOne(query) match {
@@ -86,7 +86,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def addProject(groupId: String, id: String) = StackAction(parse.multipartFormData, AuthorityKey -> Administrator) {
+  def addProject(groupId: String, id: String) = StackAction(parse.multipartFormData, AuthorityKey -> Educator) {
     implicit request =>
       val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
       Assignment.findOne(query) match {
@@ -137,7 +137,7 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def delete(groupId: String, id: String) = StackAction(AuthorityKey -> Administrator) {
+  def delete(groupId: String, id: String) = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
       Assignment.findOne(query) match {

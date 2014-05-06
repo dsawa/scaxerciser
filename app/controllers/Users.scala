@@ -10,7 +10,7 @@ import models._
 object Users extends Controller with AuthElement with AuthConfigImpl {
 
   private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
-    Permission.valueOf(currentUser.permission) == Administrator || currentUser.id.toString == paramId
+    Account.isEducator(currentUser) || Account.isAdmin(currentUser) || currentUser.id.toString == paramId
 
   def index = StackAction(AuthorityKey -> Educator) {
     implicit request =>
