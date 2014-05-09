@@ -17,7 +17,6 @@ case class Assignment(@Key("_id") id: ObjectId, title: String = "", description:
 
   val db = DBConfig.assignments("db")
   val collection = DBConfig.assignments("collection")
-  val foreignIdPropertyName = "groupId"
 
   def toDBObject = grater[Assignment].asDBObject(this)
 }
