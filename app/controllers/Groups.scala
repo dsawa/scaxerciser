@@ -21,7 +21,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
         name =>
           val currentUser: User = loggedIn
           val newGroup = new Group(new ObjectId, name)
-          val writeResult = currentUser.groups.create(newGroup)
+          val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
           if (writeResult.getN > 0)
             Ok(Json.parse(Group.toCompactJson(newGroup)))
           else
