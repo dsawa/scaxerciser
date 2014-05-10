@@ -12,10 +12,11 @@ class AccountSpec extends FunSpec with BeforeAndAfter with GivenWhenThen with Ma
 
   val testAccountIds = List(new ObjectId, new ObjectId)
   val groupId = new ObjectId
+  val groupOwnerId = new ObjectId
 
   before {
     Play.start(FakeApplication())
-    val group = Group(groupId, "Test Group")
+    val group = Group(groupId, "Test Group", groupOwnerId)
     val testUser = Account(testAccountIds.head, "testAdmin@test.com", "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId))
     val anotherTestUser = Account(testAccountIds.last, "testUser@test.com", "qwerty".bcrypt(generateSalt), "NormalUser")
     collection.insert(testUser.toDBObject)
@@ -175,7 +176,7 @@ class AccountSpec extends FunSpec with BeforeAndAfter with GivenWhenThen with Ma
       val group = Group.findOneById(groupId).get
 
       And("group doesn't contain info about him anymore")
-      group.accountIds should not contain admin.id
+      group.membersIds should not contain admin.id
     }
 
     it("should also remove user without being in any of groups") {

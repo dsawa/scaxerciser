@@ -10,11 +10,12 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
   lazy val collection = Group.groupsCollection
 
   val testGroupIds = List(new ObjectId, new ObjectId)
+  val ownerId = new ObjectId
 
   before {
     Play.start(FakeApplication())
-    val testGroup = Group(testGroupIds.head, "Test Group")
-    val anotherTestGroup = Group(testGroupIds.last, "Another test Group")
+    val testGroup = Group(testGroupIds.head, "Test Group", ownerId)
+    val anotherTestGroup = Group(testGroupIds.last, "Another test Group", ownerId)
     collection.insert(Group.toDBObject(testGroup))
     collection.insert(Group.toDBObject(anotherTestGroup))
   }
@@ -27,7 +28,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
   describe("Group.create") {
     it("should save new group in database") {
       val beforeCount = collection.count()
-      val newTestGroup = Group(new ObjectId, "New test group")
+      val newTestGroup = Group(new ObjectId, "New test group", ownerId)
 
       When("Group is being inserted in database")
       Group.create(newTestGroup)
@@ -43,7 +44,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
     }
 
     it("should return Option with new good ObjectId inside") {
-      val newTestGroup = Group(new ObjectId, "New test group")
+      val newTestGroup = Group(new ObjectId, "New test group", ownerId)
       val result = Group.create(newTestGroup)
 
       result.isDefined shouldBe true
@@ -81,14 +82,14 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
 
       count shouldEqual 1
       updatedGroup.id shouldEqual groupToUpdate.id
-      updatedGroup.accountIds shouldEqual groupToUpdate.accountIds
+      updatedGroup.membersIds shouldEqual groupToUpdate.membersIds
       updatedGroup.name should not equal groupToUpdate.name
       updatedGroup.name shouldEqual "Updated group"
     }
 
     it("should not upsert new document if Group with given id was not found") {
       val beforeCount = collection.count()
-      val completelyNewGroup = Group(new ObjectId, "Completely new group")
+      val completelyNewGroup = Group(new ObjectId, "Completely new group", ownerId)
       val wr = Group.updateAttributes(completelyNewGroup)
 
       wr.getN shouldEqual 0
