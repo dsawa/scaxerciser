@@ -82,7 +82,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
 
       count shouldEqual 1
       updatedGroup.id shouldEqual groupToUpdate.id
-      updatedGroup.membersIds shouldEqual groupToUpdate.membersIds
+      updatedGroup.accountIds shouldEqual groupToUpdate.accountIds
       updatedGroup.name should not equal groupToUpdate.name
       updatedGroup.name shouldEqual "Updated group"
     }

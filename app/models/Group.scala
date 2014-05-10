@@ -9,14 +9,14 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
-case class Group(@Key("_id") id: ObjectId, name: String, ownerId: ObjectId, membersIds: Set[ObjectId] = Set())
+case class Group(@Key("_id") id: ObjectId, name: String, ownerId: ObjectId, accountIds: Set[ObjectId] = Set())
   extends OneToMany with ManyToMany {
 
   val db = DBConfig.groups("db")
   val collection = DBConfig.groups("collection")
 
   lazy val members = new ManyToManyRelation[Group, Account](this,
-    Map("toDb" -> DBConfig.accounts("db"), "toCollection" -> DBConfig.accounts("collection"), "foreignIdsField" -> "membersIds"))
+    Map("toDb" -> DBConfig.accounts("db"), "toCollection" -> DBConfig.accounts("collection"), "foreignIdsField" -> "accountIds"))
 
   lazy val assignments = new OneToManyRelation[Group, Assignment](this,
     Map("toDb" -> DBConfig.assignments("db"), "toCollection" -> DBConfig.assignments("collection")))
@@ -35,7 +35,7 @@ object Group extends ModelCompanion[Group, ObjectId] {
   def updateAttributes(group: Group): WriteResult = {
     Group.update(
       q = MongoDBObject("_id" -> group.id),
-      o = MongoDBObject("$set" -> MongoDBObject("name" -> group.name, "membersIds" -> group.membersIds)),
+      o = MongoDBObject("$set" -> MongoDBObject("name" -> group.name, "accountIds" -> group.accountIds)),
       upsert = false, multi = false, wc = Group.dao.collection.writeConcern
     )
   }

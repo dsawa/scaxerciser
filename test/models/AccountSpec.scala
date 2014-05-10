@@ -176,7 +176,7 @@ class AccountSpec extends FunSpec with BeforeAndAfter with GivenWhenThen with Ma
       val group = Group.findOneById(groupId).get
 
       And("group doesn't contain info about him anymore")
-      group.membersIds should not contain admin.id
+      group.accountIds should not contain admin.id
     }
 
     it("should also remove user without being in any of groups") {
