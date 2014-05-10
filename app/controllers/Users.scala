@@ -103,8 +103,15 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
-          val members = group.members.find(MongoDBObject("permission" -> NormalUser.toString)).map(dbo => Account.toObject(dbo))
-          Ok(Account.toCompactJSONArray(members)).withHeaders("content-type" -> "application/json")
+          val params = request.queryString.map { case (k, v) => k -> v.mkString }
+          if (params.contains("filter")) {
+            val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
+            val members = group.members.find(query).map(dbo => Account.toObject(dbo))
+            Ok(Account.toCompactJSONArray(members)).withHeaders("content-type" -> "application/json")
+          } else {
+            val members = group.members.all.map(dbo => Account.toObject(dbo))
+            Ok(Account.toCompactJSONArray(members)).withHeaders("content-type" -> "application/json")
+          }
         case None => NotFound("Group " + groupId + " not found.")
       }
   }

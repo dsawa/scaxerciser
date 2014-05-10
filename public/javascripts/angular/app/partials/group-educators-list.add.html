@@ -1,0 +1,16 @@
+<div class="panel-footer">
+    <p class="help-block">Przydzielanie prowadzących do grupy: <strong>{{group.name}}</strong></p>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover table-bright" show-filter="true" ng-table="usersTable">
+            <tr ng-repeat="user in $data" id="{{user._id.$oid}}">
+                <td width="45">
+                    <a ng-click="addUserToGroup(group._id.$oid, user._id.$oid)" class="btn btn-success btn-xs">Przydziel</a>
+                </td>
+                <td data-title="'E-mail'" sortable="'email'" filter="{ 'email': 'text' }">{{user.email}}</td>
+            </tr>
+        </table>
+    </div>
+    <!-- /.table-responsive -->
+</div>
+<!-- /.panel-footer -->

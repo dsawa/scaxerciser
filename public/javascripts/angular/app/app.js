@@ -105,6 +105,29 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('group-educators-list', {
+        permission: ['Educator', 'Administrator'],
+        url: '/groups/:groupId/educators',
+        views: {
+          'main': {
+            template: '='
+          },
+          'additional': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-educators-list.html',
+            controller: 'GroupEducatorsListCtrl'
+          }
+        }
+      })
+      .state('group-educators-list.add', {
+        permission: ['Educator', 'Administrator'],
+        url: '/add',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'group-educators-list.add.html',
+            controller: 'GroupEducatorsAddingCtrl'
+          }
+        }
+      })
       .state('group-assignments-new', {
         permission: ['Educator'],
         url: '/groups/:groupId/assignments/new',

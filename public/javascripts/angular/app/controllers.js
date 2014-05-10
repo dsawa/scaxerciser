@@ -372,7 +372,14 @@ groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$sco
     }, {
       total: 0,
       getData: function ($defer, params) {
-        GroupMember.query({groupId: $stateParams.groupId}, function (data) {
+        var filter = { permission: 'NormalUser' };
+
+        GroupMember.query({
+          groupId: $stateParams.groupId,
+          filter: (function () {
+            return JSON.stringify(filter);
+          })()
+        }, function (data) {
           var members = data;
 
           if (params.sorting()) members = $filter('orderBy')(members, params.orderBy());
@@ -426,6 +433,85 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     $scope.addUserToGroup = function (groupId, userId) {
       GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
         $scope.membersTable.reload();
+        $scope.usersTable.reload();
+      });
+    };
+  }
+]);
+
+groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
+  'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
+    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.educatorsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        var filter = { permission: 'Educator' };
+
+        GroupMember.query({
+          groupId: $stateParams.groupId,
+          filter: (function () {
+            return JSON.stringify(filter);
+          })()
+        }, function (data) {
+          var educators = data;
+
+          if (params.sorting()) educators = $filter('orderBy')(educators, params.orderBy());
+          if (params.filter()) educators = $filter('filter')(educators, params.filter());
+
+          params.total(educators.length);
+          $defer.resolve(educators.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+
+    $scope.removeUserFromGroup = function (groupId, userId) {
+      GroupMember.removeFromGroup({groupId: groupId, id: userId}, function () {
+        $scope.educatorsTable.reload();
+        $rootScope.usersTable.reload();
+      });
+    }
+  }
+]);
+
+groupMemberControllers.controller('GroupEducatorsAddingCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'Group', 'GroupMember',
+  'User', 'ngTableParams', function ($stateParams, $scope, $rootScope, $filter, Group, GroupMember, User, ngTableParams) {
+    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.usersTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {
+        email: 'asc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'Educator' };
+
+        User.query({filter: (function () {
+          return JSON.stringify(filter);
+        })()}, function (data) {
+          var users = data;
+
+          if (params.sorting()) users = $filter('orderBy')(users, params.orderBy());
+          if (params.filter()) users = $filter('filter')(users, params.filter());
+
+          params.total(users.length);
+          $defer.resolve(users.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+
+          $rootScope.usersTable = $scope.usersTable;
+        });
+      }
+    });
+
+    $scope.addUserToGroup = function (groupId, userId) {
+      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+        $scope.educatorsTable.reload();
         $scope.usersTable.reload();
       });
     };
