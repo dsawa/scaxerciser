@@ -9,8 +9,7 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 
-case class Group(@Key("_id") id: ObjectId, name: String, ownerId: ObjectId, accountIds: Set[ObjectId] = Set())
-  extends OneToMany with ManyToMany {
+case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends OneToMany with ManyToMany {
 
   val db = DBConfig.groups("db")
   val collection = DBConfig.groups("collection")

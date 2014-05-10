@@ -35,8 +35,8 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
 
   before {
     Play.start(FakeApplication())
-    val testGroup_1 = Group(groupId_1, groupName_1, adminId)
-    val testGroup_2 = Group(groupId_2, groupName_2, adminId)
+    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminId))
+    val testGroup_2 = Group(groupId_2, groupName_2)
     val admin = Account(adminId, "testAdmin@test.com", "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId_1))
     val user = Account(userId, "testUser@test.com", "qwerty".bcrypt(generateSalt), "NormalUser")
     groupsCollection.insert(testGroup_1.toDBObject)
@@ -69,11 +69,9 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
       val content = contentAsJson(result).asInstanceOf[JsArray]
       val list = content.value.toList
 
-      list.size shouldEqual 2
+      list.size shouldEqual 1
       ((list.head \ "_id") \ "$oid").as[String] shouldEqual groupId_1.toString
       (list.head \ "name").as[String] shouldEqual groupName_1
-      ((list.last \ "_id") \ "$oid").as[String] shouldEqual groupId_2.toString
-      (list.last \ "name").as[String] shouldEqual groupName_2
     }
   }
 

@@ -30,8 +30,8 @@ class ManyToManyRelation[T <: ManyToMany, U <: ManyToMany](from: T, config: Map[
     toCollection.find(MongoDBObject(toForeignIdsFieldName -> from.id)).toList
   }
 
-  def find(query: MongoDBObject, skip: Int = 0, limit: Int = 1000, sort: DBObject = MongoDBObject("_id" -> 1)): List[DBObject] = {
-    toCollection.find(query ++ MongoDBObject(toForeignIdsFieldName -> from.id)).sort(sort).skip(skip).limit(limit).toList
+  def find(query: MongoDBObject): List[DBObject] = {
+    toCollection.find(query ++ MongoDBObject(toForeignIdsFieldName -> from.id)).toList
   }
 
   def count: Long = {

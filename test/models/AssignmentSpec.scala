@@ -11,7 +11,6 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
   lazy val groupsCollection = Group.groupsCollection
 
   val testGroupId = new ObjectId
-  val groupOwnerId = new ObjectId
   val assignmentId = new ObjectId
   val assignmentTitle = "Recursion"
   val assignmentDescription = "You need to understand recursion to do this"
@@ -20,7 +19,7 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
   before {
     Play.start(FakeApplication())
     val assignment = Assignment(assignmentId, assignmentTitle, assignmentDescription, assignmentExercises, testGroupId)
-    val testGroup = Group(testGroupId, "Test Group", groupOwnerId)
+    val testGroup = Group(testGroupId, "Test Group")
     assignmentsCollection.insert(Assignment.toDBObject(assignment))
     groupsCollection.insert(Group.toDBObject(testGroup))
   }
