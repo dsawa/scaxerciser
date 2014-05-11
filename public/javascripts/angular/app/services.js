@@ -5,7 +5,7 @@ var groupServices = angular.module('groupServices', ['ngResource']);
 
 groupServices.factory('Group', ['$resource',
   function ($resource) {
-    return $resource('api/groups/:id', {}, {
+    return $resource('api/groups/:id/:customAction', {}, {
       query: {
         method: 'GET',
         params: {},
@@ -31,6 +31,13 @@ groupServices.factory('Group', ['$resource',
         method: 'DELETE',
         params: {
           id: '@id'
+        }
+      },
+      stats: {
+        method: 'GET',
+        params: {
+          id: '@id',
+          customAction: 'stats'
         }
       }
     });

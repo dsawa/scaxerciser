@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, Assignment, NormalUser, Educator, Administrator}
+import models.{Group, Assignment, NormalUser, Educator}
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -36,6 +36,15 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       val objectId = new ObjectId(id)
       Group.findOneById(objectId) match {
         case Some(group) => Ok(Json.parse(Group.toCompactJson(group)))
+        case None => NotFound("Group " + id + " not found")
+      }
+  }
+
+  def stats(id: String) = StackAction(AuthorityKey -> Educator) {
+    implicit request =>
+      val objectId = new ObjectId(id)
+      Group.findOneById(objectId) match {
+        case Some(group) => Ok(Json.toJson(Group.statistics(group)))
         case None => NotFound("Group " + id + " not found")
       }
   }

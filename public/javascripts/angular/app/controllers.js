@@ -66,7 +66,7 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
 
 groupControllers.controller('GroupStatsCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
   function ($stateParams, $scope, $state, $location, Group) {
-    $scope.group = Group.show({
+    $scope.stats = Group.stats({
       id: $stateParams.groupId
     })
   }

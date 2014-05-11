@@ -1,13 +1,12 @@
 package models
 
-//import com.novus.salat.global._
-
 import scaxerciser.context._
 import com.mongodb.casbah.Imports._
 import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
+import models.statistics.{GroupStats, StatisticsCounter}
 
 case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends OneToMany with ManyToMany {
 
@@ -38,5 +37,7 @@ object Group extends ModelCompanion[Group, ObjectId] {
       upsert = false, multi = false, wc = Group.dao.collection.writeConcern
     )
   }
+
+  def statistics(group: Group): GroupStats = StatisticsCounter.calculateForGroup(group)
 
 }
