@@ -17,8 +17,8 @@
                         <td data-title="'Nazwa'" sortable="'name'" filter="{ 'name': 'text' }">{{group.name}}</td>
                         <td>
                             <a ui-sref="group-assignments-list({groupId: group._id.$oid})" class="btn btn-primary btn-xs">Zadania</a>
-                            <a has-permission="Educator,Administrator" ui-sref="group-educators-list({groupId: group._id.$oid})"
-                               class="btn btn-default btn-xs">Prowadzący</a>
+                            <a has-permission="Educator" ui-sref="groups-list.stats({groupId: group._id.$oid})" class="btn btn-success btn-xs">Statystyka</a>
+                            <a has-permission="Educator" ui-sref="group-educators-list({groupId: group._id.$oid})" class="btn btn-default btn-xs">Prowadzący</a>
                             <a has-permission="Educator" ui-sref="group-members-list({groupId: group._id.$oid})" class="btn btn-info btn-xs">Członkowie</a>
                             <a has-permission="Educator" ui-sref="groups-list.edit({groupId: group._id.$oid})" class="btn btn-warning btn-xs">Edytuj</a>
                             <a has-permission="Educator" ng-click="deleteGroup(group._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>

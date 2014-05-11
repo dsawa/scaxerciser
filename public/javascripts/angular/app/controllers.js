@@ -64,6 +64,14 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
+groupControllers.controller('GroupStatsCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
+  function ($stateParams, $scope, $state, $location, Group) {
+    $scope.group = Group.show({
+      id: $stateParams.groupId
+    })
+  }
+]);
+
 // ----- Assignments Controllers
 
 var assignmentsControllers = angular.module('assignmentsControllers', []);
