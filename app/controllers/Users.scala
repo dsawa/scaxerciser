@@ -15,14 +15,19 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def index = StackAction(AuthorityKey -> Educator) {
     implicit request =>
       val params = request.queryString.map { case (k, v) => k -> v.mkString }
-      if (params.contains("filter")) {
-        val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
-        val users = Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
-        Ok(Json.toJson(users))
-      } else {
-        val users = Account.all().map(u => Json.parse(Account.toCompactJson(u)))
-        Ok(Json.toJson(users))
+      val currentUser: User = loggedIn
+      val users = {
+        if (params.contains("filter")) {
+          val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
+          Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
+        } else if (Account.isEducator(currentUser)) {
+          val query = MongoDBObject("groupIds" -> MongoDBObject("$in" -> currentUser.groupIds))
+          Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
+        } else {
+          Account.all().map(u => Json.parse(Account.toCompactJson(u)))
+        }
       }
+      Ok(Json.toJson(users))
   }
 
   def create = StackAction(parse.json, AuthorityKey -> Administrator) {

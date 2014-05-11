@@ -1,7 +1,12 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <i class="fa fa-user fa-fw"></i> Wszyscy użytkownicy systemu
+            <div has-permission="Administrator">
+                <i class="fa fa-user fa-fw"></i> Wszyscy użytkownicy systemu
+            </div>
+            <div has-permission="Educator">
+                <i class="fa fa-user fa-fw"></i> Wszyscy użytkownicy powiązani z Twoimi grupami
+            </div>
             <div has-permission="Administrator" class="pull-right">
                 <div class="btn-group">
                     <a ui-sref="users-list.new" class="btn btn-default btn-xs">Dodaj</a>
