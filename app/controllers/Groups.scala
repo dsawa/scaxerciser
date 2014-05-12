@@ -49,6 +49,15 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def assignmentsStats(id: String) = StackAction(AuthorityKey -> Educator) {
+    implicit request =>
+      val objectId = new ObjectId(id)
+      Group.findOneById(objectId) match {
+        case Some(group) => Ok(Json.toJson(Assignment.statisticsForGroup(group)))
+        case None => NotFound("Group " + id + " not found")
+      }
+  }
+
   def update(id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
       (request.body \ "name").asOpt[String].map {

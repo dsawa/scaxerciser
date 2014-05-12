@@ -22,6 +22,10 @@ class OneToManyRelation[T <: OneToMany, U <: ManyToOne](from: T, config: Map[Str
     toCollection.find(MongoDBObject(toForeignIdFieldName -> from.id)).toList
   }
 
+  def distinct[Y <: Any](field: String): List[Y] = {
+    toCollection.distinct(field, MongoDBObject(toForeignIdFieldName -> from.id)).toList.map(r => r.asInstanceOf[Y])
+  }
+
   def destroyAll: WriteResult = {
     toCollection.remove(MongoDBObject(toForeignIdFieldName -> from.id))
   }

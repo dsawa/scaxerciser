@@ -64,9 +64,12 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
-groupControllers.controller('GroupStatsCtrl', ['$stateParams', '$scope', '$state', '$location', 'Group',
-  function ($stateParams, $scope, $state, $location, Group) {
-    $scope.stats = Group.stats({
+groupControllers.controller('GroupStatsCtrl', ['$stateParams', '$scope', '$state', '$location', 'GroupStats',
+  function ($stateParams, $scope, $state, $location, GroupStats) {
+    $scope.stats = GroupStats.stats({
+      id: $stateParams.groupId
+    });
+    $scope.assignmentsStats = GroupStats.assignmentsStats({
       id: $stateParams.groupId
     })
   }

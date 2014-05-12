@@ -4,45 +4,56 @@
 var groupServices = angular.module('groupServices', ['ngResource']);
 
 groupServices.factory('Group', ['$resource',
-  function ($resource) {
-    return $resource('api/groups/:id/:customAction', {}, {
-      query: {
-        method: 'GET',
-        params: {},
-        isArray: true
-      },
-      create: {
-        method: 'POST',
-        params: {}
-      },
-      show: {
-        method: 'GET',
-        params: {
-          id: '@id'
+    function ($resource) {
+      return $resource('api/groups/:id/:customAction', {}, {
+        query: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        },
+        create: {
+          method: 'POST',
+          params: {}
+        },
+        show: {
+          method: 'GET',
+          params: {
+            id: '@id'
+          }
+        },
+        update: {
+          method: 'PUT',
+          params: {
+            id: '@id'
+          }
+        },
+        delete: {
+          method: 'DELETE',
+          params: {
+            id: '@id'
+          }
         }
-      },
-      update: {
-        method: 'PUT',
-        params: {
-          id: '@id'
+      });
+    }
+  ]).factory('GroupStats', ['$resource',
+    function ($resource) {
+      return $resource('api/groups/:id/stats/:custom', {}, {
+        stats: {
+          method: 'GET',
+          params: {
+            id: '@id'
+          }
+        },
+        assignmentsStats: {
+          method: 'GET',
+          params: {
+            id: '@id',
+            custom: 'assignments'
+          }
         }
-      },
-      delete: {
-        method: 'DELETE',
-        params: {
-          id: '@id'
-        }
-      },
-      stats: {
-        method: 'GET',
-        params: {
-          id: '@id',
-          customAction: 'stats'
-        }
-      }
-    });
-  }
-]);
+      });
+    }
+  ]);
 
 // ----- Assignment Services
 var assignmentServices = angular.module('assignmentServices', ['ngResource']);
