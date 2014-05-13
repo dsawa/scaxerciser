@@ -1,7 +1,5 @@
 package models
 
-//import com.novus.salat.global._
-
 import java.io.File
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.gridfs.Imports._
@@ -10,6 +8,7 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import scaxerciser.context._
 import models.relations._
+import models.statistics.{AssignmentStats, StatisticsCounter}
 
 case class Assignment(@Key("_id") id: ObjectId, title: String = "", description: String, exercises: List[Exercise],
                       groupId: ObjectId, projectId: ObjectId = null, projectTestsId: ObjectId = null, enabled: Boolean = false)
@@ -86,6 +85,8 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
     })
     projectIds.foreach(projectId => gridfs.remove(projectId))
   }
+
+  def statisticsForGroup(group: Group): List[AssignmentStats] = StatisticsCounter.calculateAssignmentsStatsForGroup(group)
 
   private def addFile(file: File, contentType: String): Option[AnyRef] = {
     gridfs(file) {

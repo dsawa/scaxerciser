@@ -82,6 +82,16 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('groups-list.stats', {
+        permission: ['Educator'],
+        url: '/:groupId/stats',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'groups-list.stats.html',
+            controller: 'GroupStatsCtrl'
+          }
+        }
+      })
       .state('group-members-list', {
         permission: ['Educator'],
         url: '/groups/:groupId/members',

@@ -64,6 +64,37 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
+groupControllers.controller('GroupStatsCtrl', ['$scope', '$filter', 'ngTableParams','$stateParams', '$state', 'GroupStats',
+  function ($scope, $filter, ngTableParams, $stateParams, $state, GroupStats) {
+    $scope.stats = GroupStats.stats({
+      id: $stateParams.groupId
+    });
+
+    $scope.assignmentsStatsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {
+        avgMark: 'desc'
+      }
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        GroupStats.assignmentsStats({
+          id: $stateParams.groupId
+        }, function (data) {
+          var assignmentsStats = data;
+
+          if (params.sorting()) assignmentsStats = $filter('orderBy')(assignmentsStats, params.orderBy());
+          if (params.filter()) assignmentsStats = $filter('filter')(assignmentsStats, params.filter());
+
+          params.total(assignmentsStats.length);
+          $defer.resolve(assignmentsStats.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+  }
+]);
+
 // ----- Assignments Controllers
 
 var assignmentsControllers = angular.module('assignmentsControllers', []);
