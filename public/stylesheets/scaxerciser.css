@@ -86,3 +86,11 @@ table.results-table th, td {
   text-align: center;
   width: 30%;
 }
+
+table.centered-headers th {
+  text-align: center;
+}
+
+table.columns-4 th, td {
+  width: 25%;
+}

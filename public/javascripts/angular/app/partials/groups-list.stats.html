@@ -1,4 +1,46 @@
 <div class="panel-footer">
-
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <i class="fa fa-bar-chart-o fa-fw"></i> Statystyka dla grupy {{stats.name}}
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <h4 class="text-center">Ogólne informacje</h4>
+            <table class="table table-bordered centered-headers columns-4">
+                <thead>
+                <tr>
+                    <th>Użytkownicy w grupie</th>
+                    <th>Prowadzący</th>
+                    <th>Uczestnicy</th>
+                    <th>Zadania</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{stats.membersCount}}</td>
+                    <td>{{stats.educatorsCount}}</td>
+                    <td>{{stats.normalUsersCount}}</td>
+                    <td>{{stats.assignmentsCount}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <h4 class="text-center">Informacje o ocenach poszczególnych zadań</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="assignmentsStatsTable">
+                    <tr ng-repeat="stat in $data">
+                        <td data-title="'Nazwa'" sortable="'name'" filter="{ 'name': 'text' }">
+                            <a ui-sref="group-assignments-show({groupId: stats.groupId, id: stat.assignmentId})">{{stat.name}}</a>
+                        </td>
+                        <td data-title="'Średnia ocen'" sortable="'avgMark'">{{stat.avgMark}}</td>
+                        <td data-title="'Suma ocen'" sortable="'sumMark'">{{stat.sumMark}}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /.table-responsive -->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel-default -->
 </div>
 <!-- /.panel-footer -->

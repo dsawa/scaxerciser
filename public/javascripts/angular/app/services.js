@@ -49,7 +49,8 @@ groupServices.factory('Group', ['$resource',
           params: {
             id: '@id',
             custom: 'assignments'
-          }
+          },
+          isArray: true
         }
       });
     }
