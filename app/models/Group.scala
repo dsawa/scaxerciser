@@ -7,6 +7,7 @@ import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
 import models.statistics.{GroupStats, StatisticsCounter}
+import scaxerciser.config.DBConfig
 
 case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends OneToMany with ManyToMany {
 

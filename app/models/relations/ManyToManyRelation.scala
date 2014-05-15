@@ -1,7 +1,7 @@
 package models.relations
 
-import models.DBConfig
 import com.mongodb.casbah.Imports._
+import scaxerciser.config.DBConfig
 
 class ManyToManyRelation[T <: ManyToMany, U <: ManyToMany](from: T, config: Map[String, String]) {
   private val mongoClient = MongoClient(DBConfig.defaultHost, DBConfig.defaultPort)

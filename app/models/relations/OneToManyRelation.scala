@@ -1,7 +1,7 @@
 package models.relations
 
-import models.DBConfig
 import com.mongodb.casbah.Imports._
+import scaxerciser.config.DBConfig
 
 class OneToManyRelation[T <: OneToMany, U <: ManyToOne](from: T, config: Map[String, String]) {
 

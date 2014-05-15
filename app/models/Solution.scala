@@ -1,7 +1,5 @@
 package models
 
-//import com.novus.salat.global._
-
 import java.io.File
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.gridfs.Imports._
@@ -10,6 +8,7 @@ import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import play.api.libs.ws._
 import play.api.libs.json._
 import scaxerciser.context._
+import scaxerciser.config.DBConfig
 
 case class Solution(@Key("_id") id: ObjectId, assignmentId: ObjectId, userId: ObjectId, solutionFileId: ObjectId, result: Result = null) {
 
@@ -43,7 +42,7 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
     }
   }
 
-  def analyze(solution: Solution) {
+  def requestAnalyze(solution: Solution) {
     val url = analyzeApiUrl + "/solutions/" + solution.id.toString + "/analyze"
     val params = Json.obj(
       "id" -> JsString(solution.id.toString),

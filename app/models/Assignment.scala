@@ -9,6 +9,7 @@ import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import scaxerciser.context._
 import models.relations._
 import models.statistics.{AssignmentStats, StatisticsCounter}
+import scaxerciser.config.DBConfig
 
 case class Assignment(@Key("_id") id: ObjectId, title: String = "", description: String, exercises: List[Exercise],
                       groupId: ObjectId, projectId: ObjectId = null, projectTestsId: ObjectId = null, enabled: Boolean = false)
