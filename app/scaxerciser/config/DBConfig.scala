@@ -1,9 +1,6 @@
-package models
+package scaxerciser.config
 
-import play.api.Play
-import play.api.Play.current
-
-object DBConfig {
+object DBConfig extends ConfigReader {
 
   val defaultHost = getStringFromConf("mongo.connection.host", "localhost")
   val defaultPort = getIntFromConf("mongo.connection.port", 27017)
@@ -30,20 +27,6 @@ object DBConfig {
 
   val solutionsProjects = {
     Map("db" -> getStringFromConf("mongo.solutions.projects.db"))
-  }
-
-  private def getStringFromConf(path: String, default: String = ""): String = {
-    Play.configuration.getString(path) match {
-      case Some(str) => str
-      case None => default
-    }
-  }
-
-  private def getIntFromConf(path: String, default: Int = 0): Int = {
-    Play.configuration.getInt(path) match {
-      case Some(value) => value
-      case None => default
-    }
   }
 
 }

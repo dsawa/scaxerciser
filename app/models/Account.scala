@@ -8,6 +8,7 @@ import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.dao.{SalatDAO, ModelCompanion}
 import models.relations._
+import scaxerciser.config.DBConfig
 
 case class Account(@Key("_id") id: ObjectId, email: String, password: String, permission: String, groupIds: Set[ObjectId] = Set())
   extends ManyToMany {

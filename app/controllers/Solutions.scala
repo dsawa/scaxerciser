@@ -5,11 +5,10 @@ import play.api.Play
 import play.api.Play.current
 import play.api.mvc._
 import play.api.libs.json._
-import scala.concurrent.{Future, ExecutionContext}
-import ExecutionContext.Implicits.global
 import com.mongodb.casbah.Imports._
 import jp.t2v.lab.play2.auth.AuthElement
-import models._
+import models.{Solution, Assignment, Account, NormalUser, Educator}
+import models.rabbitmq.SolutionSender
 
 object Solutions extends Controller with AuthElement with AuthConfigImpl {
 
@@ -38,9 +37,7 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
 
                       Solution.create(assignment, user, tmpProjectFile) match {
                         case Some(objectId) =>
-                          Future {
-                            Solution.analyze(Solution.findOneById(objectId).get)
-                          }
+                          SolutionSender.sendToAnalyze(objectId.toString)
                           tmpProjectFile.delete()
                           Ok("Solution accepted. Your results should be available in short time.")
                         case None =>
