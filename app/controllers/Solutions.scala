@@ -7,8 +7,7 @@ import play.api.mvc._
 import play.api.libs.json._
 import com.mongodb.casbah.Imports._
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Solution, Assignment, Account, NormalUser, Educator}
-import models.rabbitmq.SolutionSender
+import models._
 
 object Solutions extends Controller with AuthElement with AuthConfigImpl {
 
@@ -37,7 +36,7 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
 
                       Solution.create(assignment, user, tmpProjectFile) match {
                         case Some(objectId) =>
-                          SolutionSender.sendToAnalyze(objectId.toString)
+                          SolutionSender.sendToAnalyze(objectId)
                           tmpProjectFile.delete()
                           Ok("Solution accepted. Your results should be available in short time.")
                         case None =>

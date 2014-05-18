@@ -1,4 +1,4 @@
-package models.rabbitmq
+package models
 
 import com.rabbitmq.client.{Connection, ConnectionFactory}
 import scaxerciser.config.MQConfig
