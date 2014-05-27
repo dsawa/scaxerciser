@@ -462,7 +462,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     });
 
     $scope.addUserToGroup = function (groupId, userId) {
-      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+      GroupMember.assignToGroup({groupId: groupId, id: userId, roleInGroup: "NormalUser"}, function () {
         $scope.membersTable.reload();
         $scope.usersTable.reload();
       });
@@ -541,7 +541,7 @@ groupMemberControllers.controller('GroupEducatorsAddingCtrl', ['$stateParams', '
     });
 
     $scope.addUserToGroup = function (groupId, userId) {
-      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+      GroupMember.assignToGroup({groupId: groupId, id: userId, roleInGroup: "Educator"}, function () {
         $scope.educatorsTable.reload();
         $scope.usersTable.reload();
       });

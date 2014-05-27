@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, Assignment, NormalUser, Educator, GroupRole}
+import models._
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -20,7 +20,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       (request.body \ "name").asOpt[String] match {
       case Some(name) =>
         val currentUser: User = loggedIn
-        val newGroup = new Group(new ObjectId, name, groupRoles = List(GroupRole(currentUser.id, Educator.toString)))
+        val newGroup = new Group(new ObjectId, name, groupRoles = Set(GroupRole(currentUser.id, Administrator.toString)))
         val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
         if (writeResult.getN > 0)
           Ok(Json.parse(Group.toCompactJson(newGroup)))
