@@ -234,6 +234,20 @@ groupMemberServices.factory('GroupMember', ['$resource',
         },
         isArray: true
       },
+      getEducators: {
+        method: 'GET',
+        params: {
+          id: 'educators'
+        },
+        isArray: true
+      },
+      getNormalUsers: {
+        method: 'GET',
+        params: {
+          id: 'normalusers'
+        },
+        isArray: true
+      },
       assignToGroup: {
         method: 'PUT',
         params: {

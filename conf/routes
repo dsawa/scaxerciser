@@ -48,5 +48,7 @@ PUT       /api/users/:id                controllers.Users.update(id: String)
 DELETE    /api/users/:id                controllers.Users.delete(id: String)
 
 GET      /api/groups/:groupId/members             controllers.Users.groupMembers(groupId: String)
+GET      /api/groups/:groupId/members/educators   controllers.Users.groupEducators(groupId: String)
+GET      /api/groups/:groupId/members/normalusers controllers.Users.groupNormalUsers(groupId: String)
 PUT      /api/groups/:groupId/members/:id/add     controllers.Users.addUserToGroup(groupId: String, id: String)
 DELETE   /api/groups/:groupId/members/:id/remove  controllers.Users.removeUserFromGroup(groupId: String, id: String)

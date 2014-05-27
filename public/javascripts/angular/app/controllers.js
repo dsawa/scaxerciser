@@ -403,13 +403,8 @@ groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$sco
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { permission: 'NormalUser' };
-
-        GroupMember.query({
-          groupId: $stateParams.groupId,
-          filter: (function () {
-            return JSON.stringify(filter);
-          })()
+        GroupMember.getNormalUsers({
+          groupId: $stateParams.groupId
         }, function (data) {
           var members = data;
 
@@ -489,13 +484,8 @@ groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$s
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { permission: 'Educator' };
-
-        GroupMember.query({
-          groupId: $stateParams.groupId,
-          filter: (function () {
-            return JSON.stringify(filter);
-          })()
+        GroupMember.getEducators({
+          groupId: $stateParams.groupId
         }, function (data) {
           var educators = data;
 

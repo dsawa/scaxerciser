@@ -14,7 +14,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
 
   def index = StackAction(AuthorityKey -> Educator) {
     implicit request =>
-      val params = request.queryString.map { case (k, v) => k -> v.mkString }
+      val params = request.queryString.map { case (k, v) => k -> v.mkString}
       val currentUser: User = loggedIn
       val users = {
         if (params.contains("filter")) {
@@ -108,7 +108,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
-          val params = request.queryString.map { case (k, v) => k -> v.mkString }
+          val params = request.queryString.map { case (k, v) => k -> v.mkString}
           if (params.contains("filter")) {
             val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
             val members = group.members.find(query).map(dbo => Account.toObject(dbo))
@@ -117,6 +117,30 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
             val members = group.members.all.map(dbo => Account.toObject(dbo))
             Ok(Account.toCompactJSONArray(members)).withHeaders("content-type" -> "application/json")
           }
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
+
+  def groupEducators(groupId: String) = StackAction(AuthorityKey -> Educator) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          val groupEducatorsIds = group.groupRoles.filter(gr => {
+            gr.roleInGroup == Educator.toString || gr.roleInGroup == Administrator.toString
+          }).map(gr => gr.accountId)
+          val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
+          Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
+
+  def groupNormalUsers(groupId: String) = StackAction(AuthorityKey -> Educator) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          val groupEducatorsIds = group.groupRoles.filter(gr => gr.roleInGroup == NormalUser.toString).map(gr => gr.accountId)
+          val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
+          Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
         case None => NotFound("Group " + groupId + " not found.")
       }
   }
@@ -134,7 +158,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
                   val updatedGroup = group.copy(accountIds = group.accountIds + user.id, groupRoles = newGroupRoles)
                   val updatedAccount = user.copy(groupIds = user.groupIds + group.id)
 
-                  if(Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
+                  if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
                     Ok(Json.parse(Account.toCompactJson(updatedAccount)))
                   else UnprocessableEntity("User " + id + " could not be added to group " + groupId)
                 case None => NotFound("User " + id + " not found.")
@@ -155,7 +179,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
               val updatedGroup = group.copy(accountIds = group.accountIds - user.id, groupRoles = newGroupRoles)
               val updatedAccount = user.copy(groupIds = user.groupIds - group.id)
 
-              if(Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
+              if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
                 Ok(Json.parse(Account.toCompactJson(updatedAccount)))
               else UnprocessableEntity("User " + id + " could not be removed to group " + groupId)
             case None => NotFound("User " + id + " not found.")
