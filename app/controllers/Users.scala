@@ -125,7 +125,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     implicit request =>
       (request.body \ "roleInGroup").asOpt[String] match {
         case Some(roleInGroupParam) =>
-          val roleInGroup = Permission.valueOf(roleInGroup).toString
+          val roleInGroup = Permission.valueOf(roleInGroupParam).toString
           Group.findOneById(new ObjectId(groupId)) match {
             case Some(group) =>
               Account.findOneById(new ObjectId(id)) match {
