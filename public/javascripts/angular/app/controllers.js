@@ -443,7 +443,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'NormalUser' };
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: { '$ne': 'Administrator' } };
 
         User.query({filter: (function () {
           return JSON.stringify(filter);
@@ -522,7 +522,7 @@ groupMemberControllers.controller('GroupEducatorsAddingCtrl', ['$stateParams', '
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'Educator' };
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: { '$ne': 'Administrator' } };
 
         User.query({filter: (function () {
           return JSON.stringify(filter);
