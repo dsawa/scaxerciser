@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, Assignment, NormalUser, Educator}
+import models.{Group, Assignment, NormalUser, Educator, GroupRole}
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -17,18 +17,17 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
 
   def create = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
-      (request.body \ "name").asOpt[String].map {
-        name =>
-          val currentUser: User = loggedIn
-          val newGroup = new Group(new ObjectId, name)
-          val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
-          if (writeResult.getN > 0)
-            Ok(Json.parse(Group.toCompactJson(newGroup)))
-          else
-            UnprocessableEntity("Group could not be created.")
-      }.getOrElse {
-        BadRequest("Missing parameter [name]")
-      }
+      (request.body \ "name").asOpt[String] match {
+      case Some(name) =>
+        val currentUser: User = loggedIn
+        val newGroup = new Group(new ObjectId, name, groupRoles = List(GroupRole(currentUser.id, Educator.toString)))
+        val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
+        if (writeResult.getN > 0)
+          Ok(Json.parse(Group.toCompactJson(newGroup)))
+        else
+          UnprocessableEntity("Group could not be created.")
+      case None => BadRequest("Missing parameter [name]")
+    }
   }
 
   def show(id: String) = StackAction(AuthorityKey -> NormalUser) {

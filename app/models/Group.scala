@@ -9,7 +9,8 @@ import models.relations._
 import models.statistics.{GroupStats, StatisticsCounter}
 import scaxerciser.config.DBConfig
 
-case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends OneToMany with ManyToMany {
+case class Group(@Key("_id") id: ObjectId, name: String, groupRoles: List[GroupRole], accountIds: Set[ObjectId] = Set())
+  extends OneToMany with ManyToMany {
 
   val db = DBConfig.groups("db")
   val collection = DBConfig.groups("collection")

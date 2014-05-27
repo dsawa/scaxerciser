@@ -5,8 +5,8 @@ version := "1.0-SNAPSHOT"
 scalacOptions ++= Seq("-feature")
 
 libraryDependencies ++= Seq(
-  "org.mongodb" %% "casbah" % "2.6.3",
-  "com.novus" %% "salat" % "1.9.5",
+  "org.mongodb" %% "casbah" % "2.7.1",
+  "com.novus" %% "salat" % "1.9.8",
   "commons-codec" % "commons-codec" % "1.6",
   "com.github.t3hnar" % "scala-bcrypt_2.10" % "2.3",
   "com.github.nscala-time" %% "nscala-time" % "1.0.0",
