@@ -59,8 +59,8 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
 
   def update(id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
-      (request.body \ "name").asOpt[String].map {
-        newName =>
+      (request.body \ "name").asOpt[String] match {
+        case Some(newName) =>
           Group.findOneById(new ObjectId(id)) match {
             case Some(group) =>
               val toUpdate = group.copy(name = newName)
@@ -71,8 +71,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
                 UnprocessableEntity("Group " + id + " could not be updated.")
             case None => NotFound("Group " + id + " not found")
           }
-      }.getOrElse {
-        BadRequest("Missing parameter [name]")
+        case None => BadRequest("Missing parameter [name]")
       }
   }
 
