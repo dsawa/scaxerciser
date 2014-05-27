@@ -472,7 +472,14 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
 
 groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
   'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
-    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.group = Group.show({id: $stateParams.groupId}, function (group) {
+      for(var i = 0; i < group.groupRoles.length; i += 1){
+        if (group.groupRoles[i].roleInGroup === 'Administrator') {
+          group.ownerId = group.groupRoles[i].accountId;
+          break;
+        }
+      }
+    });
     $scope.educatorsTable = new ngTableParams({
       page: 1,
       count: 10,
