@@ -135,7 +135,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
                   val updatedAccount = user.copy(groupIds = user.groupIds + group.id)
 
                   if(Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
-                    Ok(Json.parse(Account.toCompactJson(user)))
+                    Ok(Json.parse(Account.toCompactJson(updatedAccount)))
                   else UnprocessableEntity("User " + id + " could not be added to group " + groupId)
                 case None => NotFound("User " + id + " not found.")
               }
@@ -151,8 +151,12 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
         case Some(group) =>
           Account.findOneById(new ObjectId(id)) match {
             case Some(user) =>
-              val writeResult = group.members.remove(user)
-              if (writeResult.getN > 0) Ok(Json.parse(Account.toCompactJson(user)))
+              val newGroupRoles = group.groupRoles.filter(gr => gr.accountId != user.id)
+              val updatedGroup = group.copy(accountIds = group.accountIds - user.id, groupRoles = newGroupRoles)
+              val updatedAccount = user.copy(groupIds = user.groupIds - group.id)
+
+              if(Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
+                Ok(Json.parse(Account.toCompactJson(updatedAccount)))
               else UnprocessableEntity("User " + id + " could not be removed to group " + groupId)
             case None => NotFound("User " + id + " not found.")
           }
