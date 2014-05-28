@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             Edycja zadania: {{baseAssignmentTitle}}, z grupy: {{group.name}}
-            <div has-permission="Educator" class="pull-right">
+            <div has-permission-in-group="{permissions: ['Educator', 'Administrator'], groupRoles: group.groupRoles}" class="pull-right">
                 <a href="/assets/project-template.zip" target="_blank" class="btn btn-default btn-xs">
                     Pobierz szablon projektu
                 </a>

@@ -65,30 +65,36 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def update(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
+  def update(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> NormalUser) {
     implicit request =>
-      val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
-      Assignment.findOne(query) match {
-        case Some(assignment) =>
-          val title = (request.body \ "title").asOpt[String]
-          val description = (request.body \ "description").asOpt[String].getOrElse {
-            ""
-          }
-          val enabled = (request.body \ "enabled").asOpt[Boolean]
-          val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+            Assignment.findOne(query) match {
+              case Some(assignment) =>
+                val title = (request.body \ "title").asOpt[String]
+                val description = (request.body \ "description").asOpt[String].getOrElse {
+                  ""
+                }
+                val enabled = (request.body \ "enabled").asOpt[Boolean]
+                val exercises = (request.body \ "exercises").asOpt[List[Exercise]]
 
-          if (title.isDefined && exercises.isDefined && exercises.get.size > 0 && enabled.isDefined) {
-            val assignmentToUpdate = assignment.copy(title = title.get, description = description,
-              exercises = exercises.get, enabled = enabled.get)
-            val writeResult = Assignment.save(assignmentToUpdate)
-            if (writeResult.getN > 0)
-              Ok(Json.parse(Assignment.toCompactJson(assignmentToUpdate)))
-            else
-              UnprocessableEntity("Assignment could not be updated")
-          } else {
-            BadRequest("Required parameters [title, exercises, enabled]")
-          }
-        case None => NotFound("Assignment " + id + " not found in group " + groupId)
+                if (title.isDefined && exercises.isDefined && exercises.get.size > 0 && enabled.isDefined) {
+                  val assignmentToUpdate = assignment.copy(title = title.get, description = description,
+                    exercises = exercises.get, enabled = enabled.get)
+                  val writeResult = Assignment.save(assignmentToUpdate)
+                  if (writeResult.getN > 0)
+                    Ok(Json.parse(Assignment.toCompactJson(assignmentToUpdate)))
+                  else
+                    UnprocessableEntity("Assignment could not be updated")
+                } else {
+                  BadRequest("Required parameters [title, exercises, enabled]")
+                }
+              case None => NotFound("Assignment " + id + " not found in group " + groupId)
+            }
+          } else Forbidden("Brak dostępu")
+        case None => NotFound("Group " + groupId + " not found")
       }
   }
 
