@@ -6,6 +6,7 @@ import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
 import jp.t2v.lab.play2.auth.AuthElement
 import models._
+import ObjectIdExtension.objectIdFormat
 
 object Users extends Controller with AuthElement with AuthConfigImpl {
 
@@ -101,7 +102,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def detectPermission = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       val currentUser: User = loggedIn
-      Ok(Json.obj("name" -> currentUser.permission))
+      Ok(Json.obj("name" -> currentUser.permission, "accountId" -> currentUser.id))
   }
 
   def groupMembers(groupId: String) = StackAction(AuthorityKey -> Educator) {
