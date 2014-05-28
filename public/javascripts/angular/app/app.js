@@ -139,7 +139,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/assignments/new',
         views: {
           'main': {
@@ -149,7 +149,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new.project', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:id/project',
         views: {
           '': {
@@ -159,7 +159,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-edit', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/assignments/:id/edit',
         views: {
           'main': {
@@ -220,7 +220,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.solutions', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:userId/solutions',
         views: {
           '': {
@@ -240,7 +240,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-show', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: "/users/:userId/solutions/:id",
         views: {
           'main': {
