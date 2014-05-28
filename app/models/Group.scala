@@ -42,4 +42,10 @@ object Group extends ModelCompanion[Group, ObjectId] {
 
   def statistics(group: Group): GroupStats = StatisticsCounter.calculateForGroup(group)
 
+  def hasUserPermission(group: Group, user: Account, authorityKeys: List[Permission]): Boolean = {
+    group.groupRoles.find(gr => gr.accountId == user.id) match {
+      case Some(groupRole) => authorityKeys.exists(perm => perm == Permission.valueOf(groupRole.roleInGroup))
+      case None => false
+    }
+  }
 }

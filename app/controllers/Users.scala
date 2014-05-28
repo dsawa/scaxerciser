@@ -13,7 +13,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
     Account.isEducator(currentUser) || Account.isAdmin(currentUser) || currentUser.id.toString == paramId
 
-  def index = StackAction(AuthorityKey -> Educator) {
+  def index = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       val params = request.queryString.map { case (k, v) => k -> v.mkString}
       val currentUser: User = loggedIn
@@ -105,7 +105,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       Ok(Json.obj("name" -> currentUser.permission, "accountId" -> currentUser.id))
   }
 
-  def groupMembers(groupId: String) = StackAction(AuthorityKey -> Educator) {
+  def groupMembers(groupId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
@@ -122,69 +122,77 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def groupEducators(groupId: String) = StackAction(AuthorityKey -> Educator) {
+  def groupEducators(groupId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
-          val groupEducatorsIds = group.groupRoles.filter(gr => {
-            gr.roleInGroup == Educator.toString || gr.roleInGroup == Administrator.toString
-          }).map(gr => gr.accountId)
-          val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
-          Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            val groupEducatorsIds = group.groupRoles.filter(gr => {
+              gr.roleInGroup == Educator.toString || gr.roleInGroup == Administrator.toString
+            }).map(gr => gr.accountId)
+            val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
+            Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
+          } else Forbidden("Brak dostępu")
         case None => NotFound("Group " + groupId + " not found.")
       }
   }
 
-  def groupNormalUsers(groupId: String) = StackAction(AuthorityKey -> Educator) {
+  def groupNormalUsers(groupId: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
-          val groupEducatorsIds = group.groupRoles.filter(gr => gr.roleInGroup == NormalUser.toString).map(gr => gr.accountId)
-          val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
-          Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            val groupEducatorsIds = group.groupRoles.filter(gr => gr.roleInGroup == NormalUser.toString).map(gr => gr.accountId)
+            val educators = group.members.find(MongoDBObject("_id" -> MongoDBObject("$in" -> groupEducatorsIds))).map(dbo => Account.toObject(dbo))
+            Ok(Account.toCompactJSONArray(educators)).withHeaders("content-type" -> "application/json")
+          } else Forbidden("Brak dostępu")
         case None => NotFound("Group " + groupId + " not found.")
       }
   }
 
-  def addUserToGroup(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
+  def addUserToGroup(groupId: String, id: String) = StackAction(parse.json, AuthorityKey -> NormalUser) {
     implicit request =>
       (request.body \ "roleInGroup").asOpt[String] match {
         case Some(roleInGroupParam) =>
           val roleInGroup = Permission.valueOf(roleInGroupParam).toString
           Group.findOneById(new ObjectId(groupId)) match {
             case Some(group) =>
-              Account.findOneById(new ObjectId(id)) match {
-                case Some(user) =>
-                  val newGroupRoles = group.groupRoles.filter(gr => gr.accountId != user.id) + GroupRole(user.id, roleInGroup)
-                  val updatedGroup = group.copy(accountIds = group.accountIds + user.id, groupRoles = newGroupRoles)
-                  val updatedAccount = user.copy(groupIds = user.groupIds + group.id)
+              if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+                Account.findOneById(new ObjectId(id)) match {
+                  case Some(user) =>
+                    val newGroupRoles = group.groupRoles.filter(gr => gr.accountId != user.id) + GroupRole(user.id, roleInGroup)
+                    val updatedGroup = group.copy(accountIds = group.accountIds + user.id, groupRoles = newGroupRoles)
+                    val updatedAccount = user.copy(groupIds = user.groupIds + group.id)
 
-                  if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
-                    Ok(Json.parse(Account.toCompactJson(updatedAccount)))
-                  else UnprocessableEntity("User " + id + " could not be added to group " + groupId)
-                case None => NotFound("User " + id + " not found.")
-              }
+                    if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
+                      Ok(Json.parse(Account.toCompactJson(updatedAccount)))
+                    else UnprocessableEntity("User " + id + " could not be added to group " + groupId)
+                  case None => NotFound("User " + id + " not found.")
+                }
+              } else Forbidden("Brak dostępu")
             case None => NotFound("Group " + groupId + " not found.")
           }
         case None => BadRequest("Specify roleInGroup for user.")
       }
   }
 
-  def removeUserFromGroup(groupId: String, id: String) = StackAction(AuthorityKey -> Educator) {
+  def removeUserFromGroup(groupId: String, id: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       Group.findOneById(new ObjectId(groupId)) match {
         case Some(group) =>
-          Account.findOneById(new ObjectId(id)) match {
-            case Some(user) =>
-              val newGroupRoles = group.groupRoles.filter(gr => gr.accountId != user.id)
-              val updatedGroup = group.copy(accountIds = group.accountIds - user.id, groupRoles = newGroupRoles)
-              val updatedAccount = user.copy(groupIds = user.groupIds - group.id)
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            Account.findOneById(new ObjectId(id)) match {
+              case Some(user) =>
+                val newGroupRoles = group.groupRoles.filter(gr => gr.accountId != user.id)
+                val updatedGroup = group.copy(accountIds = group.accountIds - user.id, groupRoles = newGroupRoles)
+                val updatedAccount = user.copy(groupIds = user.groupIds - group.id)
 
-              if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
-                Ok(Json.parse(Account.toCompactJson(updatedAccount)))
-              else UnprocessableEntity("User " + id + " could not be removed to group " + groupId)
-            case None => NotFound("User " + id + " not found.")
-          }
+                if (Group.save(updatedGroup).getN > 0 && Account.save(updatedAccount).getN > 0)
+                  Ok(Json.parse(Account.toCompactJson(updatedAccount)))
+                else UnprocessableEntity("User " + id + " could not be removed to group " + groupId)
+              case None => NotFound("User " + id + " not found.")
+            }
+          } else Forbidden("Brak dostępu")
         case None => NotFound("Group " + groupId + " not found.")
       }
   }

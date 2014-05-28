@@ -3,8 +3,8 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <i class="fa fa-user fa-fw"></i> Członkowie grupy: {{group.name}}
-            <div has-permission="Educator" class="pull-right">
-                <div class="btn-group">
+            <div class="pull-right">
+                <div has-permission-in-group="{permissions: ['Educator', 'Administrator'], groupRoles: group.groupRoles}" class="btn-group">
                     <a ui-sref="group-members-list.add" class="btn btn-default btn-xs">Dodaj</a>
                 </div>
             </div>

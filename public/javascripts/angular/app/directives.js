@@ -54,7 +54,8 @@ customDirectives.directive('passCheck', [
             return false;
           }
 
-          toggleVisibilityBasedOnPermission();
+          if(typeof groupRoles !== "undefined")
+            toggleVisibilityBasedOnPermission();
         }
       };
     }]);

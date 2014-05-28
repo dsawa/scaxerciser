@@ -83,7 +83,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('groups-list.stats', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:groupId/stats',
         views: {
           '': {
@@ -93,7 +93,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/members',
         views: {
           'main': {
@@ -106,7 +106,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list.add', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/add',
         views: {
           '': {
@@ -116,7 +116,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-educators-list', {
-        permission: ['Educator', 'Administrator'],
+        permission: ['Educator', 'Administrator', 'NormalUser'],
         url: '/groups/:groupId/educators',
         views: {
           'main': {
@@ -129,7 +129,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-educators-list.add', {
-        permission: ['Educator', 'Administrator'],
+        permission: ['Educator', 'Administrator', 'NormalUser'],
         url: '/add',
         views: {
           '': {
