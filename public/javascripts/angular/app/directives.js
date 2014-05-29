@@ -31,8 +31,8 @@ customDirectives.directive('passCheck', [
         }
       };
     }])
-  .directive('checkPermissionInGroup', ['$q', 'Auth',
-    function ($q, Auth) {
+  .directive('checkPermissionInGroup', ['Auth',
+    function (Auth) {
       return {
         restrict: 'A',
         scope: {
@@ -40,9 +40,13 @@ customDirectives.directive('passCheck', [
           permissions: "@allowPermission"
         },
         link: function ($scope, $element, $attrs, ctrl) {
-          var permissionsThatAllow = $scope.permissions.trim().split(',').map(function (value) {
+          var permissionsThatAllow, toggleVisibilityBasedOnPermission;
+
+          permissionsThatAllow = $scope.permissions.trim().split(',').map(function (value) {
             return value.trim();
-          }), toggleVisibilityBasedOnPermission = function (group) {
+          });
+
+          toggleVisibilityBasedOnPermission = function (group) {
             var currentUserId = Auth.getCurrentPermission()['accountId'];
 
             for (var i = 0; i < group['groupRoles'].length; i += 1) {
@@ -57,8 +61,8 @@ customDirectives.directive('passCheck', [
             return false;
           };
 
-          $scope.$watch($attrs.groupToCheck, function (value) {
-            if(typeof value.$promise === 'undefined') {
+          $scope.$watch($attrs['groupToCheck'], function (value) {
+            if (typeof value.$promise === 'undefined') {
               toggleVisibilityBasedOnPermission(value);
             } else {
               value.$promise.then(function (group) {
@@ -69,5 +73,4 @@ customDirectives.directive('passCheck', [
         }
       };
     }
-  ])
-;
+  ]);
