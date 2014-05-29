@@ -5,10 +5,10 @@
             <div class="pull-right">
                 <a ui-sref="group-assignments-list({groupId: group._id.$oid})"
                    class="btn btn-default btn-xs">Pozostałe zadania</a>
-                <a has-permission-in-group="{permissions: ['Educator', 'Administrator'], groupRoles: group.groupRoles}"
+                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
                    ng-click="activateAssignment()" ng-hide="assignment.enabled"
                    class="btn btn-success btn-xs">Aktywuj</a>
-                <a has-permission-in-group="{permissions: ['Educator', 'Administrator'], groupRoles: group.groupRoles}"
+                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
                    ng-click="deleteAssignment()" class="btn btn-danger btn-xs">Usuń</a>
             </div>
         </div>

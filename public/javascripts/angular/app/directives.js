@@ -31,31 +31,43 @@ customDirectives.directive('passCheck', [
         }
       };
     }])
-  .directive('hasPermissionInGroup', ['Auth',
-    function (Auth) {
+  .directive('checkPermissionInGroup', ['$q', 'Auth',
+    function ($q, Auth) {
       return {
         restrict: 'A',
         scope: {
-          hasPermissionInGroup: '='
+          group: '=groupToCheck',
+          permissions: "@allowPermission"
         },
-        link: function (scope, element, attrs, ctrl) {
-          var groupRoles = scope.hasPermissionInGroup['groupRoles'], permissions = scope.hasPermissionInGroup['permissions'];
-
-          function toggleVisibilityBasedOnPermission() {
+        link: function ($scope, $element, $attrs, ctrl) {
+          var permissionsThatAllow = $scope.permissions.trim().split(',').map(function (value) {
+            return value.trim();
+          }), toggleVisibilityBasedOnPermission = function (group) {
             var currentUserId = Auth.getCurrentPermission()['accountId'];
 
-            for (var i = 0; i < groupRoles.length; i += 1) {
-              if (groupRoles[i]['accountId']['$oid'] === currentUserId && permissions.indexOf(groupRoles[i]['roleInGroup']) !== -1) {
-                element.show();
+            for (var i = 0; i < group['groupRoles'].length; i += 1) {
+              if (group['groupRoles'][i]['accountId']['$oid'] === currentUserId
+                && permissionsThatAllow.indexOf(group['groupRoles'][i]['roleInGroup']) !== -1) {
+
+                $element.show();
                 return true;
               }
             }
-            element.hide();
+            $element.hide();
             return false;
-          }
+          };
 
-          if(typeof groupRoles !== "undefined")
-            toggleVisibilityBasedOnPermission();
+          $scope.$watch($attrs.groupToCheck, function (value) {
+            if(typeof value.$promise === 'undefined') {
+              toggleVisibilityBasedOnPermission(value);
+            } else {
+              value.$promise.then(function (group) {
+                toggleVisibilityBasedOnPermission(group);
+              })
+            }
+          });
         }
       };
-    }]);
+    }
+  ])
+;
