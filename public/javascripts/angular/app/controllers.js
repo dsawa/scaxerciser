@@ -273,6 +273,8 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
           if (solution.result !== null || typeof solution.result !== 'undefined') {
             defineCssClassBasedOnMark(solution.result.mark)
           }
+        }, function(response) {
+          if(response.status === 404) $scope.solution = { result: null };
         });
       }
     });
