@@ -47,18 +47,7 @@ customDirectives.directive('passCheck', [
           });
 
           toggleVisibilityBasedOnPermission = function (group) {
-            var currentUserId = Auth.getCurrentPermission()['accountId'];
-
-            for (var i = 0; i < group['groupRoles'].length; i += 1) {
-              if (group['groupRoles'][i]['accountId']['$oid'] === currentUserId
-                && permissionsThatAllow.indexOf(group['groupRoles'][i]['roleInGroup']) !== -1) {
-
-                $element.show();
-                return true;
-              }
-            }
-            $element.hide();
-            return false;
+            Auth.hasPermissionInGroup(group, permissionsThatAllow) ? $element.show() : $element.hide();
           };
 
           $scope.$watch($attrs['groupToCheck'], function (value) {

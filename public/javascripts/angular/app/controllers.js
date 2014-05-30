@@ -64,7 +64,7 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
-groupControllers.controller('GroupStatsCtrl', ['$scope', '$filter', 'ngTableParams','$stateParams', '$state', 'GroupStats',
+groupControllers.controller('GroupStatsCtrl', ['$scope', '$filter', 'ngTableParams', '$stateParams', '$state', 'GroupStats',
   function ($scope, $filter, ngTableParams, $stateParams, $state, GroupStats) {
     $scope.stats = GroupStats.stats({
       id: $stateParams.groupId
@@ -261,23 +261,23 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
 
     $scope.projectLink = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
-    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.group = Group.show({id: $stateParams.groupId}, function (group) {
+      if (Auth.hasPermissionInGroup(group, ['NormalUser'])) {
+        $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
+          var defineCssClassBasedOnMark = function (mark) {
+            if (mark < 50) $scope.isDanger = true;
+            else if (mark > 50 && mark < 80) $scope.isAverage = true;
+            else $scope.isSuccess = true;
+          };
+
+          if (solution.result !== null || typeof solution.result !== 'undefined') {
+            defineCssClassBasedOnMark(solution.result.mark)
+          }
+        });
+      }
+    });
 
     $scope.assignment = Assignment.show(params);
-
-    if (Auth.getCurrentPermission().name === 'NormalUser') {
-      $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
-        var defineCssClassBasedOnMark = function (mark) {
-          if (mark < 50) $scope.isDanger = true;
-          else if (mark > 50 && mark < 80) $scope.isAverage = true;
-          else $scope.isSuccess = true;
-        };
-
-        if (solution.result !== null || typeof solution.result !== 'undefined') {
-          defineCssClassBasedOnMark(solution.result.mark)
-        }
-      });
-    }
 
     $scope.activateAssignment = function () {
       $.extend(true, $scope.assignment, params);
@@ -468,7 +468,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
 groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
   'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
     $scope.group = Group.show({id: $stateParams.groupId}, function (group) {
-      for(var i = 0; i < group.groupRoles.length; i += 1){
+      for (var i = 0; i < group.groupRoles.length; i += 1) {
         if (group.groupRoles[i].roleInGroup === 'Administrator') {
           group.ownerId = group.groupRoles[i].accountId;
           break;

@@ -4,57 +4,57 @@
 var groupServices = angular.module('groupServices', ['ngResource']);
 
 groupServices.factory('Group', ['$resource',
-    function ($resource) {
-      return $resource('api/groups/:id/:customAction', {}, {
-        query: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        },
-        create: {
-          method: 'POST',
-          params: {}
-        },
-        show: {
-          method: 'GET',
-          params: {
-            id: '@id'
-          }
-        },
-        update: {
-          method: 'PUT',
-          params: {
-            id: '@id'
-          }
-        },
-        delete: {
-          method: 'DELETE',
-          params: {
-            id: '@id'
-          }
+  function ($resource) {
+    return $resource('api/groups/:id/:customAction', {}, {
+      query: {
+        method: 'GET',
+        params: {},
+        isArray: true
+      },
+      create: {
+        method: 'POST',
+        params: {}
+      },
+      show: {
+        method: 'GET',
+        params: {
+          id: '@id'
         }
-      });
-    }
-  ]).factory('GroupStats', ['$resource',
-    function ($resource) {
-      return $resource('api/groups/:id/stats/:custom', {}, {
-        stats: {
-          method: 'GET',
-          params: {
-            id: '@id'
-          }
-        },
-        assignmentsStats: {
-          method: 'GET',
-          params: {
-            id: '@id',
-            custom: 'assignments'
-          },
-          isArray: true
+      },
+      update: {
+        method: 'PUT',
+        params: {
+          id: '@id'
         }
-      });
-    }
-  ]);
+      },
+      delete: {
+        method: 'DELETE',
+        params: {
+          id: '@id'
+        }
+      }
+    });
+  }
+]).factory('GroupStats', ['$resource',
+  function ($resource) {
+    return $resource('api/groups/:id/stats/:custom', {}, {
+      stats: {
+        method: 'GET',
+        params: {
+          id: '@id'
+        }
+      },
+      assignmentsStats: {
+        method: 'GET',
+        params: {
+          id: '@id',
+          custom: 'assignments'
+        },
+        isArray: true
+      }
+    });
+  }
+]);
 
 // ----- Assignment Services
 var assignmentServices = angular.module('assignmentServices', ['ngResource']);
@@ -105,63 +105,63 @@ assignmentServices.factory('Assignment', ['$resource',
 var solutionServices = angular.module('solutionServices', ['ngResource']);
 
 solutionServices.factory('AssignmentSolution', ['$resource',
-    function ($resource) {
-      return $resource('api/assignments/:assignmentId/solutions/:id', {}, {
-        query: {
-          method: 'GET',
-          params: {
-            assignmentId: '@assignmentId'
-          },
-          isArray: true
+  function ($resource) {
+    return $resource('api/assignments/:assignmentId/solutions/:id', {}, {
+      query: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId'
         },
-        show: {
-          method: 'GET',
-          params: {
-            assignmentId: '@assignmentId',
-            id: '@id'
-          }
+        isArray: true
+      },
+      show: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId',
+          id: '@id'
         }
-      });
-    }
-  ]).factory('CurrentUserAssignmentSolution', ['$resource',
-    function ($resource) {
-      return $resource('api/users/current/assignments/:assignmentId/solutions', {}, {
-        query: {
-          method: 'GET',
-          params: {
-            assignmentId: '@assignmentId'
-          },
-          isArray: true
+      }
+    });
+  }
+]).factory('CurrentUserAssignmentSolution', ['$resource',
+  function ($resource) {
+    return $resource('api/users/current/assignments/:assignmentId/solutions', {}, {
+      query: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId'
         },
-        show: {
-          method: 'GET',
-          params: {
-            assignmentId: '@assignmentId'
-          }
+        isArray: true
+      },
+      show: {
+        method: 'GET',
+        params: {
+          assignmentId: '@assignmentId'
         }
-      });
-    }
-  ]).factory('UserSolution', ['$resource',
-    function ($resource) {
-      return $resource('api/users/:userId/solutions/:id', {}, {
-        query: {
-          method: 'GET',
-          params: {
-            userId: '@userId',
-            id: ''
-          },
-          isArray: true
+      }
+    });
+  }
+]).factory('UserSolution', ['$resource',
+  function ($resource) {
+    return $resource('api/users/:userId/solutions/:id', {}, {
+      query: {
+        method: 'GET',
+        params: {
+          userId: '@userId',
+          id: ''
         },
-        show: {
-          method: 'GET',
-          params: {
-            userId: '@userId',
-            id: '@id'
-          }
+        isArray: true
+      },
+      show: {
+        method: 'GET',
+        params: {
+          userId: '@userId',
+          id: '@id'
         }
-      });
-    }
-  ]);
+      }
+    });
+  }
+]);
 
 // ----- User Services
 var userServices = angular.module('userServices', ['ngResource']);
@@ -217,6 +217,15 @@ authServices.factory('Auth', function ($rootScope) {
         return perm.indexOf(permission.name) !== -1;
       else
         return perm.trim() === permission.name;
+    },
+    hasPermissionInGroup: function (group, permissionsThatAllow) {
+      for (var i = 0; i < group['groupRoles'].length; i += 1) {
+        if (group['groupRoles'][i]['accountId']['$oid'] === permission['accountId']
+          && permissionsThatAllow.indexOf(group['groupRoles'][i]['roleInGroup']) !== -1) {
+          return true;
+        }
+      }
+      return false;
     }
   };
 });
