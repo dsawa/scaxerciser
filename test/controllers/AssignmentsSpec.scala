@@ -8,7 +8,11 @@ import jp.t2v.lab.play2.auth.test.Helpers._
 import org.scalatest.{FunSpec, Matchers, BeforeAndAfter}
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
-import models.{Account, Group, Assignment, Exercise}
+import models._
+import play.api.libs.json.JsArray
+import play.api.libs.json.JsString
+import scala.Some
+import play.api.test.FakeApplication
 
 class AssignmentsSpec extends FunSpec with Matchers with BeforeAndAfter {
 
@@ -35,13 +39,15 @@ class AssignmentsSpec extends FunSpec with Matchers with BeforeAndAfter {
   val assignmentTitle = "Recursion"
   val assignmentDescription = "You need to understand recursion to do this"
   val assignmentExercises = List(Exercise("Do function with tail recursion"))
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
+  val userNormalUserGroupRole = GroupRole(userId, "NormalUser")
 
   before {
     Play.start(FakeApplication())
     val admin = Account(adminId, adminEmail, "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId_1))
     val user = Account(userId, userEmail, userPassword, userPermission)
-    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminId))
-    val testGroup_2 = Group(groupId_2, groupName_2)
+    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminOwnerGroupRole, userNormalUserGroupRole), Set(adminId, userId))
+    val testGroup_2 = Group(groupId_2, groupName_2, Set(adminOwnerGroupRole), Set(adminId))
     val assignment = Assignment(assignmentId, assignmentTitle, assignmentDescription, assignmentExercises, groupId_1)
     accountsCollection.insert(admin.toDBObject)
     accountsCollection.insert(user.toDBObject)

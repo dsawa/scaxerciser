@@ -8,7 +8,7 @@ import jp.t2v.lab.play2.auth.test.Helpers._
 import org.scalatest.{FunSpec, Matchers, BeforeAndAfter}
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
-import models.{Group, Account}
+import models.{Group, Account, GroupRole}
 
 import org.scalatest.mock.MockitoSugar
 import org.mockito._
@@ -32,11 +32,13 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
   val groupName_2 = "Second test group"
   val adminId = new ObjectId
   val userId = new ObjectId
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
+  val userNormalUserGroupRole = GroupRole(userId, "NormalUser")
 
   before {
     Play.start(FakeApplication())
-    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminId))
-    val testGroup_2 = Group(groupId_2, groupName_2)
+    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminOwnerGroupRole, userNormalUserGroupRole), Set(adminId, userId))
+    val testGroup_2 = Group(groupId_2, groupName_2, Set(adminOwnerGroupRole), Set(adminId))
     val admin = Account(adminId, "testAdmin@test.com", "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId_1))
     val user = Account(userId, "testUser@test.com", "qwerty".bcrypt(generateSalt), "NormalUser")
     groupsCollection.insert(testGroup_1.toDBObject)
@@ -69,9 +71,11 @@ class GroupsSpec extends FunSpec with Matchers with BeforeAndAfter with MockitoS
       val content = contentAsJson(result).asInstanceOf[JsArray]
       val list = content.value.toList
 
-      list.size shouldEqual 1
+      list.size shouldEqual 2
       ((list.head \ "_id") \ "$oid").as[String] shouldEqual groupId_1.toString
       (list.head \ "name").as[String] shouldEqual groupName_1
+      ((list.last \ "_id") \ "$oid").as[String] shouldEqual groupId_2.toString
+      (list.last \ "name").as[String] shouldEqual groupName_2
     }
   }
 

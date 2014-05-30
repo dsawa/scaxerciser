@@ -10,11 +10,15 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
   lazy val collection = Group.groupsCollection
 
   val testGroupIds = List(new ObjectId, new ObjectId)
+  val adminId = new ObjectId
+  val userId = new ObjectId
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
+  val userNormalUserGroupRole = GroupRole(userId, "NormalUser")
 
   before {
     Play.start(FakeApplication())
-    val testGroup = Group(testGroupIds.head, "Test Group")
-    val anotherTestGroup = Group(testGroupIds.last, "Another test Group")
+    val testGroup = Group(testGroupIds.head, "Test Group", Set(adminOwnerGroupRole, userNormalUserGroupRole), Set(adminId, userId))
+    val anotherTestGroup = Group(testGroupIds.last, "Another test Group", Set(adminOwnerGroupRole), Set(adminId))
     collection.insert(Group.toDBObject(testGroup))
     collection.insert(Group.toDBObject(anotherTestGroup))
   }
@@ -27,7 +31,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
   describe("Group.create") {
     it("should save new group in database") {
       val beforeCount = collection.count()
-      val newTestGroup = Group(new ObjectId, "New test group")
+      val newTestGroup = Group(new ObjectId, "New test group", Set(adminOwnerGroupRole), Set(adminId))
 
       When("Group is being inserted in database")
       Group.create(newTestGroup)
@@ -43,7 +47,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
     }
 
     it("should return Option with new good ObjectId inside") {
-      val newTestGroup = Group(new ObjectId, "New test group")
+      val newTestGroup = Group(new ObjectId, "New test group", Set(adminOwnerGroupRole), Set(adminId))
       val result = Group.create(newTestGroup)
 
       result.isDefined shouldBe true
@@ -88,7 +92,7 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
 
     it("should not upsert new document if Group with given id was not found") {
       val beforeCount = collection.count()
-      val completelyNewGroup = Group(new ObjectId, "Completely new group")
+      val completelyNewGroup = Group(new ObjectId, "Completely new group", Set(adminOwnerGroupRole), Set(adminId))
       val wr = Group.updateAttributes(completelyNewGroup)
 
       wr.getN shouldEqual 0

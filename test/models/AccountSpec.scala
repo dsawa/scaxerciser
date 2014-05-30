@@ -12,10 +12,12 @@ class AccountSpec extends FunSpec with BeforeAndAfter with GivenWhenThen with Ma
 
   val testAccountIds = List(new ObjectId, new ObjectId)
   val groupId = new ObjectId
+  val adminId = new ObjectId
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
 
   before {
     Play.start(FakeApplication())
-    val group = Group(groupId, "Test Group")
+    val group = Group(groupId, "Test Group", Set(adminOwnerGroupRole), Set(adminId))
     val testUser = Account(testAccountIds.head, "testAdmin@test.com", "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId))
     val anotherTestUser = Account(testAccountIds.last, "testUser@test.com", "qwerty".bcrypt(generateSalt), "NormalUser")
     collection.insert(testUser.toDBObject)

@@ -15,11 +15,13 @@ class AssignmentSpec extends FunSpec with BeforeAndAfter with Matchers with Give
   val assignmentTitle = "Recursion"
   val assignmentDescription = "You need to understand recursion to do this"
   val assignmentExercises = List(Exercise("Do function with tail recursion"))
+  val adminId = new ObjectId
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
 
   before {
     Play.start(FakeApplication())
     val assignment = Assignment(assignmentId, assignmentTitle, assignmentDescription, assignmentExercises, testGroupId)
-    val testGroup = Group(testGroupId, "Test Group")
+    val testGroup = Group(testGroupId, "Test Group", Set(adminOwnerGroupRole), Set(adminId))
     assignmentsCollection.insert(Assignment.toDBObject(assignment))
     groupsCollection.insert(Group.toDBObject(testGroup))
   }
