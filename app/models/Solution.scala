@@ -53,11 +53,14 @@ object Solution extends ModelCompanion[Solution, ObjectId] {
   }
 
   def toNormalUserJson(solution: Solution): JsObject = {
+    val assignment = solution.assignment
+
     Json.obj(
       "id" -> JsString(solution.id.toString),
       "assignmentId" -> JsString(solution.assignmentId.toString),
-      "assignmentTitle" -> JsString({if (solution.assignment.isDefined) solution.assignment.get.title else "" }),
+      "assignmentTitle" -> JsString({if (assignment.isDefined) assignment.get.title else "" }),
       "userId" -> JsString(solution.userId.toString),
+      "groupId" -> JsString({if (assignment.isDefined) assignment.get.groupId.toString else "" }),
       "result" -> {
         if (solution.result == null) JsNull
         else Json.obj(

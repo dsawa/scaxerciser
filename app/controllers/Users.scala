@@ -22,7 +22,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
           val query = com.mongodb.util.JSON.parse(params("filter")).asInstanceOf[DBObject]
           Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
         } else if (Account.isEducator(currentUser)) {
-          val query = MongoDBObject("groupIds" -> MongoDBObject("$in" -> currentUser.groupIds))
+          val query = MongoDBObject("groupIds" -> MongoDBObject("$in" -> currentUser.groupIds), "_id" -> MongoDBObject("$ne" -> currentUser.id))
           Account.find(query).toList.map(u => Json.parse(Account.toCompactJson(u)))
         } else {
           Account.all().map(u => Json.parse(Account.toCompactJson(u)))

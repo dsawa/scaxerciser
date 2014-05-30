@@ -200,7 +200,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.new', {
-        permission: ['Administrator', 'Educator'],
+        permission: ['Administrator'],
         url: '/new',
         views: {
           '': {
@@ -230,7 +230,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-list', {
-        permission: ['NormalUser'],
+        permission: ['NormalUser', 'Educator'],
         url: "/user/:userId/solutions",
         views: {
           'main': {

@@ -5,12 +5,11 @@
         </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
-
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="solutionsTable">
                     <tr ng-repeat="solution in $data" id="{{solution.id}}">
                         <td data-title="'Zadanie'" sortable="'assignmentTitle'" filter="{ 'assignmentTitle': 'text' }">
-                            {{solution.assignmentTitle}}
+                            <a ui-sref="group-assignments-show({groupId: solution.groupId, id: solution.assignmentId})">{{solution.assignmentTitle}}</a>
                         </td>
                         <td data-title="'Zaliczonych testów'" sortable="'result.testsDetails.testsSucceeded'"
                             filter="{ 'result.testsDetails.testsSucceeded': 'text' }">
