@@ -169,6 +169,16 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
       status(result) shouldEqual OK
       contentType(result) shouldEqual Some("application/json")
       (contentAsJson(result) \ "name").as[String] shouldEqual "Administrator"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual adminId.toString
+    }
+
+    it("should respond with json containing info about valid permission for Educator") {
+      val result = Users.detectPermission()(FakeRequest(GET, routes.Users.detectPermission().url).withLoggedIn(config)(educatorId))
+
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+      (contentAsJson(result) \ "name").as[String] shouldEqual "Educator"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual educatorId.toString
     }
 
     it("should respond with json containing info about valid permission for NormalUser") {
@@ -177,6 +187,7 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
       status(result) shouldEqual OK
       contentType(result) shouldEqual Some("application/json")
       (contentAsJson(result) \ "name").as[String] shouldEqual "NormalUser"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual userId.toString
     }
   }
 
