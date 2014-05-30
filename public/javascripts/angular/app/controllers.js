@@ -270,7 +270,7 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
             else $scope.isSuccess = true;
           };
 
-          if (solution.result !== null || typeof solution.result !== 'undefined') {
+          if (solution.result !== null && typeof solution.result !== 'undefined') {
             defineCssClassBasedOnMark(solution.result.mark)
           }
         }, function(response) {
