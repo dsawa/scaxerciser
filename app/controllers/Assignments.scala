@@ -145,13 +145,38 @@ object Assignments extends Controller with AuthElement with AuthConfigImpl {
               val filename = gridfsdbfile.filename.getOrElse {
                 "project"
               }
-              val contentType = gridfsdbfile.contentType.getOrElse {
-                "text/plain"
-              }
+              val contentType = gridfsdbfile.contentType.getOrElse("text/plain")
+
               Ok.chunked(dataContent).withHeaders(CONTENT_DISPOSITION -> ("filename=" + filename)).as(contentType)
             case None => NotFound("Not found project for assignment with id " + id)
           }
         case None => NotFound("Assignment " + id + " not found in group " + groupId)
+      }
+  }
+
+  def getProjectTests(groupId: String, id: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            val query = MongoDBObject("groupId" -> new ObjectId(groupId), "_id" -> new ObjectId(id))
+            Assignment.findOne(query) match {
+              case Some(assignment) =>
+                Assignment.getProjectTests(assignment) match {
+                  case Some(gridfsdbfile) =>
+                    val dataContent = Enumerator.fromStream(gridfsdbfile.inputStream)
+                    val filename = gridfsdbfile.filename.getOrElse {
+                      "project"
+                    }
+                    val contentType = gridfsdbfile.contentType.getOrElse("application/java-archive")
+
+                    Ok.chunked(dataContent).withHeaders(CONTENT_DISPOSITION -> ("filename=" + filename)).as(contentType)
+                  case None => NotFound("Not found project for assignment with id " + id)
+                }
+              case None => NotFound("Assignment " + id + " not found in group " + groupId)
+            }
+          } else Forbidden("Brak dostępu")
+        case None => NotFound("Group " + groupId + " not found")
       }
   }
 

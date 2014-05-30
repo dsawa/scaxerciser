@@ -18,13 +18,14 @@ PUT       /api/groups/:id                     controllers.Groups.update(id: Stri
 DELETE    /api/groups/:id                     controllers.Groups.delete(id: String)
 
 # Assignments
-GET      /api/groups/:groupId/assignments               controllers.Assignments.index(groupId: String)
-GET      /api/groups/:groupId/assignments/:id           controllers.Assignments.show(groupId: String, id: String)
-GET      /api/groups/:groupId/assignments/:id/project   controllers.Assignments.getProject(groupId: String, id: String)
-POST     /api/groups/:groupId/assignments               controllers.Assignments.create(groupId: String)
-POST     /api/groups/:groupId/assignments/:id/project   controllers.Assignments.addProject(groupId: String, id: String)
-PUT      /api/groups/:groupId/assignments/:id           controllers.Assignments.update(groupId: String, id: String)
-DELETE   /api/groups/:groupId/assignments/:id           controllers.Assignments.delete(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments                     controllers.Assignments.index(groupId: String)
+GET      /api/groups/:groupId/assignments/:id                 controllers.Assignments.show(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments/:id/project         controllers.Assignments.getProject(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments/:id/project/tests   controllers.Assignments.getProjectTests(groupId: String, id: String)
+POST     /api/groups/:groupId/assignments                     controllers.Assignments.create(groupId: String)
+POST     /api/groups/:groupId/assignments/:id/project         controllers.Assignments.addProject(groupId: String, id: String)
+PUT      /api/groups/:groupId/assignments/:id                 controllers.Assignments.update(groupId: String, id: String)
+DELETE   /api/groups/:groupId/assignments/:id                 controllers.Assignments.delete(groupId: String, id: String)
 
 # Solutions
 GET      /api/assignments/:assignmentId/solutions/:id             controllers.Solutions.show(assignmentId: String, id: String)
