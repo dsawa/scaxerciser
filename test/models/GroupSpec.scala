@@ -5,10 +5,8 @@ import com.github.t3hnar.bcrypt._
 import play.api.Play
 import play.api.test.FakeApplication
 import org.scalatest.{FunSpec, Matchers, BeforeAndAfter, GivenWhenThen}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalacheck.{Gen, Arbitrary}
 
-class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhenThen with GeneratorDrivenPropertyChecks {
+class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhenThen {
 
   lazy val collection = Group.groupsCollection
 
@@ -110,14 +108,20 @@ class GroupSpec extends FunSpec with BeforeAndAfter with Matchers with GivenWhen
   describe("Group.hasPermission") {
     it("should return false when user is not even in group") {
       val expectedAnswer = false
+      val pass = "qwerry".bcrypt(generateSalt)
+      val owner = Account(new ObjectId, "email", pass, Administrator.toString)
+      val educator = Account(new ObjectId, "email", pass, Educator.toString)
+      val normalUser = Account(new ObjectId, "email", pass, NormalUser.toString)
 
-      implicit val account: Arbitrary[Account] = Arbitrary {
-        for {
-          email <- Gen.alphaStr
-          permission <- Gen.oneOf(Administrator, Educator, NormalUser)
-        } yield Account(new ObjectId, email, "qwerty".bcrypt(generateSalt), permission.toString)
-      }
-      forAll { account: Account => Group.hasUserPermission(testGroup, account, Permission.GroupEducators) should be(expectedAnswer)}
+      Group.hasUserPermission(testGroup, owner, Permission.GroupOwners) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, owner, Permission.GroupEducators) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, educator, Permission.GroupEducators) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, normalUser, Permission.GroupNormalUsers) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, owner, Permission.GroupNormalUsers) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, educator, Permission.GroupOwners) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, educator, Permission.GroupNormalUsers) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, normalUser, Permission.GroupOwners) should be (expectedAnswer)
+      Group.hasUserPermission(testGroup, normalUser, Permission.GroupEducators) should be (expectedAnswer)
     }
 
     it("should return false when user role in group is different than permissions to check") {
