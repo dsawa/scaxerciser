@@ -243,6 +243,15 @@ groupMemberServices.factory('GroupMember', ['$resource',
         },
         isArray: true
       },
+      solutions: {
+        method: 'GET',
+        params: {
+          customAction: 'solutions',
+          groupId: '@groupId',
+          id: '@id'
+        },
+        isArray: true
+      },
       getEducators: {
         method: 'GET',
         params: {

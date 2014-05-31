@@ -467,6 +467,33 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
   }
 ]);
 
+groupMemberControllers.controller('GroupMemberSolutionsListCtrl', ['$scope', '$stateParams', '$state', '$filter', 'ngTableParams', 'GroupMember',
+  function ($scope, $stateParams, $state, $filter, ngTableParams, GroupMember) {
+    $scope.solutionsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {}
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        GroupMember.solutions({ groupId: $stateParams.groupId, id: $stateParams.id }, function (data) {
+          var solutions = data;
+
+          if (params.sorting()) solutions = $filter('orderBy')(solutions, params.orderBy());
+          if (params.filter()) solutions = $filter('filter')(solutions, params.filter());
+
+          params.total(solutions.length);
+          $defer.resolve(solutions.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+
+    $scope.goToSolutionDetails = function (userId, solutionId) {
+      $state.go('user-solutions-show', {userId: userId, id: solutionId});
+    }
+  }
+]);
+
 groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
   'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
     $scope.group = Group.show({id: $stateParams.groupId}, function (group) {

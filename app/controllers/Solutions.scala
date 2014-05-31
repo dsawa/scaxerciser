@@ -98,6 +98,20 @@ object Solutions extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
+  def groupMemberSolutions(groupId: String, userId: String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request =>
+      Group.findOneById(new ObjectId(groupId)) match {
+        case Some(group) =>
+          if (Group.hasUserPermission(group, loggedIn, Permission.GroupEducators)) {
+            val assignmentIds = group.assignments.distinct[ObjectId]("_id")
+            val query = MongoDBObject("userId" -> new ObjectId(userId), "assignmentId" -> MongoDBObject("$in" -> assignmentIds))
+            val lastSolutions = Solution.find(query).sort(MongoDBObject("_id" -> -1)).toList
+            Ok(Solution.toNormalUserArrayJson(lastSolutions))
+          } else Forbidden("Brak dostępu")
+        case None => NotFound("Group " + groupId + " not found.")
+      }
+  }
+
   private def currentUserHasAccess(currentUser: Account, paramId: String): Boolean =
     Account.isEducator(currentUser) || Account.isAdmin(currentUser) || currentUser.id.toString == paramId
 

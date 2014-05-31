@@ -34,6 +34,7 @@ POST     /api/assignments/:assignmentId/solutions/submit          controllers.So
 GET      /api/users/:userId/solutions                             controllers.Solutions.userSolutions(userId: String)
 GET      /api/users/:userId/solutions/:id                         controllers.Solutions.userSolution(userId: String, id: String)
 GET      /api/users/current/assignments/:assignmentId/solutions   controllers.Solutions.assignmentSolutions(assignmentId: String)
+GET      /api/groups/:groupId/members/:id/solutions               controllers.Solutions.groupMemberSolutions(groupId: String, id: String)
 
 # Authentication
 GET       /login                        controllers.Application.login

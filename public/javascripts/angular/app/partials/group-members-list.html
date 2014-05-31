@@ -4,17 +4,23 @@
         <div class="panel-heading">
             <i class="fa fa-user fa-fw"></i> Członkowie grupy: {{group.name}}
             <div class="pull-right">
-                <div check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator" class="btn-group">
+                <div check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                     class="btn-group">
                     <a ui-sref="group-members-list.add" class="btn btn-default btn-xs">Dodaj</a>
                 </div>
             </div>
         </div>
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="membersTable">
+                <table class="table table-striped table-bordered table-hover" show-filter="true"
+                       ng-table="membersTable">
                     <tr ng-repeat="member in $data" id="{{member._id.$oid}}">
                         <td width="45">
-                            <a ng-click="removeUserFromGroup(group._id.$oid, member._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
+                            <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                               ui-sref="group-members-list.solutions({groupId: group._id.$oid, id: member._id.$oid})"
+                               class="btn btn-info btn-xs">Sprawdź wyniki</a>
+                            <a ng-click="removeUserFromGroup(group._id.$oid, member._id.$oid)"
+                               class="btn btn-danger btn-xs">Usuń z grupy</a>
                         </td>
                         <td data-title="'E-mail'" sortable="'email'" filter="{ 'email': 'text' }">{{member.email}}</td>
                     </tr>
