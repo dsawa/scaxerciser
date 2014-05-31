@@ -72,6 +72,10 @@ object Assignment extends ModelCompanion[Assignment, ObjectId] {
     gridfs.findOne(assignment.projectId)
   }
 
+  def getProjectTests(assignment: Assignment): Option[GridFSDBFile] = {
+    gridfs.findOne(assignment.projectTestsId)
+  }
+
   def removeProject(assignment: Assignment) {
     gridfs.remove(assignment.projectId)
   }

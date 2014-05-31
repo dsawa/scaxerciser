@@ -9,7 +9,8 @@ import models.relations._
 import models.statistics.{GroupStats, StatisticsCounter}
 import scaxerciser.config.DBConfig
 
-case class Group(@Key("_id") id: ObjectId, name: String, accountIds: Set[ObjectId] = Set()) extends OneToMany with ManyToMany {
+case class Group(@Key("_id") id: ObjectId, name: String, groupRoles: Set[GroupRole], accountIds: Set[ObjectId] = Set())
+  extends OneToMany with ManyToMany {
 
   val db = DBConfig.groups("db")
   val collection = DBConfig.groups("collection")
@@ -41,4 +42,10 @@ object Group extends ModelCompanion[Group, ObjectId] {
 
   def statistics(group: Group): GroupStats = StatisticsCounter.calculateForGroup(group)
 
+  def hasUserPermission(group: Group, user: Account, authorityKeys: List[Permission]): Boolean = {
+    group.groupRoles.find(gr => gr.accountId == user.id) match {
+      case Some(groupRole) => authorityKeys.exists(perm => perm == Permission.valueOf(groupRole.roleInGroup))
+      case None => false
+    }
+  }
 }

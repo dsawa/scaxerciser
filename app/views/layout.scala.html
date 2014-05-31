@@ -29,7 +29,7 @@
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-            @if(Account.isNormalUser(currentUser)) {
+            @if(Account.isNormalUser(currentUser) || Account.isEducator(currentUser)) {
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -76,11 +76,11 @@
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> Profil użytkownika</a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Ustawienia</a>
-                    </li>
-                    <li class="divider"></li>
+                    <!--<li><a href="#"><i class="fa fa-user fa-fw"></i> Profil użytkownika</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Ustawienia</a>-->
+                    <!--</li>-->
+                    <!--<li class="divider"></li>-->
                     <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Wyloguj</a>
                     </li>
                 </ul>
@@ -96,17 +96,17 @@
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav" id="side-menu">
-                <li class="sidebar-search">
-                    <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" placeholder="Szukaj...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                    <!-- /input-group -->
-                </li>
+                <!--<li class="sidebar-search">-->
+                    <!--<div class="input-group custom-search-form">-->
+                        <!--<input type="text" class="form-control" placeholder="Szukaj...">-->
+                            <!--<span class="input-group-btn">-->
+                                <!--<button class="btn btn-default" type="button">-->
+                                    <!--<i class="fa fa-search"></i>-->
+                                <!--</button>-->
+                            <!--</span>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; /input-group &ndash;&gt;-->
+                <!--</li>-->
                 <!--<li>-->
                     <!--<a href="/"><i class="fa fa-dashboard fa-fw"></i> Kokpit</a>-->
                 <!--</li>-->

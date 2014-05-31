@@ -4,7 +4,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import com.mongodb.casbah.Imports.ObjectId
 import jp.t2v.lab.play2.auth.AuthElement
-import models.{Group, Assignment, NormalUser, Educator}
+import models._
 
 object Groups extends Controller with AuthElement with AuthConfigImpl {
 
@@ -17,18 +17,17 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
 
   def create = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
-      (request.body \ "name").asOpt[String].map {
-        name =>
-          val currentUser: User = loggedIn
-          val newGroup = new Group(new ObjectId, name)
-          val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
-          if (writeResult.getN > 0)
-            Ok(Json.parse(Group.toCompactJson(newGroup)))
-          else
-            UnprocessableEntity("Group could not be created.")
-      }.getOrElse {
-        BadRequest("Missing parameter [name]")
-      }
+      (request.body \ "name").asOpt[String] match {
+      case Some(name) =>
+        val currentUser: User = loggedIn
+        val newGroup = new Group(new ObjectId, name, groupRoles = Set(GroupRole(currentUser.id, Administrator.toString)))
+        val writeResult = currentUser.groups.create(newGroup, objForeignIdsField = "accountIds")
+        if (writeResult.getN > 0)
+          Ok(Json.parse(Group.toCompactJson(newGroup)))
+        else
+          UnprocessableEntity("Group could not be created.")
+      case None => BadRequest("Missing parameter [name]")
+    }
   }
 
   def show(id: String) = StackAction(AuthorityKey -> NormalUser) {
@@ -40,28 +39,36 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
       }
   }
 
-  def stats(id: String) = StackAction(AuthorityKey -> Educator) {
+  def stats(id: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       val objectId = new ObjectId(id)
       Group.findOneById(objectId) match {
-        case Some(group) => Ok(Json.toJson(Group.statistics(group)))
+        case Some(group) =>
+          if(Group.hasUserPermission(group, loggedIn, Permission.GroupEducators))
+            Ok(Json.toJson(Group.statistics(group)))
+          else
+            Forbidden("Brak dostępu")
         case None => NotFound("Group " + id + " not found")
       }
   }
 
-  def assignmentsStats(id: String) = StackAction(AuthorityKey -> Educator) {
+  def assignmentsStats(id: String) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
       val objectId = new ObjectId(id)
       Group.findOneById(objectId) match {
-        case Some(group) => Ok(Json.toJson(Assignment.statisticsForGroup(group)))
+        case Some(group) =>
+          if(Group.hasUserPermission(group, loggedIn, Permission.GroupEducators))
+            Ok(Json.toJson(Assignment.statisticsForGroup(group)))
+          else
+            Forbidden("Brak dostępu")
         case None => NotFound("Group " + id + " not found")
       }
   }
 
   def update(id: String) = StackAction(parse.json, AuthorityKey -> Educator) {
     implicit request =>
-      (request.body \ "name").asOpt[String].map {
-        newName =>
+      (request.body \ "name").asOpt[String] match {
+        case Some(newName) =>
           Group.findOneById(new ObjectId(id)) match {
             case Some(group) =>
               val toUpdate = group.copy(name = newName)
@@ -72,8 +79,7 @@ object Groups extends Controller with AuthElement with AuthConfigImpl {
                 UnprocessableEntity("Group " + id + " could not be updated.")
             case None => NotFound("Group " + id + " not found")
           }
-      }.getOrElse {
-        BadRequest("Missing parameter [name]")
+        case None => BadRequest("Missing parameter [name]")
       }
   }
 

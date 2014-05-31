@@ -8,7 +8,7 @@ import jp.t2v.lab.play2.auth.test.Helpers._
 import org.scalatest.{FunSpec, Matchers, BeforeAndAfter}
 import com.github.t3hnar.bcrypt._
 import com.mongodb.casbah.Imports._
-import models.{Group, Account}
+import models.{GroupRole, Group, Account}
 
 class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
 
@@ -26,18 +26,25 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
   val groupName_2 = "Second test group"
   val adminId = new ObjectId
   val adminEmail = "testAdmin@test.com"
+  val educatorId = new ObjectId
+  val educatorEmail = "testEducator@test.com"
   val userId = new ObjectId
   val userEmail = "testUser@test.com"
   val userPassword = "qwerty".bcrypt(generateSalt)
   val userPermission = "NormalUser"
+  val adminOwnerGroupRole = GroupRole(adminId, "Administrator")
+  val educatorEducatorGroupRole = GroupRole(educatorId, "Educator")
+  val userNormalUserGroupRole = GroupRole(userId, "NormalUser")
 
   before {
     Play.start(FakeApplication())
-    val admin = Account(adminId, adminEmail, "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId_1))
-    val user = Account(userId, userEmail, userPassword, userPermission)
-    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminId))
-    val testGroup_2 = Group(groupId_2, groupName_2)
+    val admin = Account(adminId, adminEmail, "qwerty".bcrypt(generateSalt), "Administrator", Set(groupId_1, groupId_1))
+    val educator = Account(educatorId, educatorEmail, "qwerty".bcrypt(generateSalt), "Educator", Set(groupId_1))
+    val user = Account(userId, userEmail, userPassword, userPermission, Set(groupId_1))
+    val testGroup_1 = Group(groupId_1, groupName_1, Set(adminOwnerGroupRole, educatorEducatorGroupRole, userNormalUserGroupRole), Set(adminId, educatorId, userId))
+    val testGroup_2 = Group(groupId_2, groupName_2, Set(adminOwnerGroupRole), Set(adminId))
     accountsCollection.insert(admin.toDBObject)
+    accountsCollection.insert(educator.toDBObject)
     accountsCollection.insert(user.toDBObject)
     groupsCollection.insert(testGroup_1.toDBObject)
     groupsCollection.insert(testGroup_2.toDBObject)
@@ -57,15 +64,26 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
       redirectLocation(result) shouldEqual Some("/login")
     }
 
-    it("should respond with forbidden when user is not an admin") {
-      val result = Users.index()(FakeRequest(GET, routes.Users.index().url).withLoggedIn(config)(userId))
+    it("should return json with full users list when admin") {
+      val result = Users.index()(FakeRequest(GET, routes.Users.index().url).withLoggedIn(config)(adminId))
 
-      status(result) shouldEqual FORBIDDEN
-      contentType(result) shouldEqual Some("text/plain")
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+
+      val content = contentAsJson(result).asInstanceOf[JsArray]
+      val list = content.value.toList
+
+      list.size shouldEqual 3
+      list.exists(jsVal => (jsVal \ "email").as[String] == adminEmail) shouldEqual true
+      list.exists(jsVal => ((jsVal \ "_id") \ "$oid").as[String] == adminId.toString) shouldEqual true
+      list.exists(jsVal => (jsVal \ "email").as[String] == educatorEmail) shouldEqual true
+      list.exists(jsVal => ((jsVal \ "_id") \ "$oid").as[String] == educatorId.toString) shouldEqual true
+      list.exists(jsVal => (jsVal \ "email").as[String] == userEmail) shouldEqual true
+      list.exists(jsVal => ((jsVal \ "_id") \ "$oid").as[String] == userId.toString) shouldEqual true
     }
 
-    it("should return json with users list") {
-      val result = Users.index()(FakeRequest(GET, routes.Users.index().url).withLoggedIn(config)(adminId))
+    it("should return json with users connected with educator groups when educator") {
+      val result = Users.index()(FakeRequest(GET, routes.Users.index().url).withLoggedIn(config)(educatorId))
 
       status(result) shouldEqual OK
       contentType(result) shouldEqual Some("application/json")
@@ -151,6 +169,16 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
       status(result) shouldEqual OK
       contentType(result) shouldEqual Some("application/json")
       (contentAsJson(result) \ "name").as[String] shouldEqual "Administrator"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual adminId.toString
+    }
+
+    it("should respond with json containing info about valid permission for Educator") {
+      val result = Users.detectPermission()(FakeRequest(GET, routes.Users.detectPermission().url).withLoggedIn(config)(educatorId))
+
+      status(result) shouldEqual OK
+      contentType(result) shouldEqual Some("application/json")
+      (contentAsJson(result) \ "name").as[String] shouldEqual "Educator"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual educatorId.toString
     }
 
     it("should respond with json containing info about valid permission for NormalUser") {
@@ -159,6 +187,7 @@ class UsersSpec extends FunSpec with Matchers with BeforeAndAfter {
       status(result) shouldEqual OK
       contentType(result) shouldEqual Some("application/json")
       (contentAsJson(result) \ "name").as[String] shouldEqual "NormalUser"
+      (contentAsJson(result) \ "accountId").as[String] shouldEqual userId.toString
     }
   }
 

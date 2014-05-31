@@ -18,13 +18,14 @@ PUT       /api/groups/:id                     controllers.Groups.update(id: Stri
 DELETE    /api/groups/:id                     controllers.Groups.delete(id: String)
 
 # Assignments
-GET      /api/groups/:groupId/assignments               controllers.Assignments.index(groupId: String)
-GET      /api/groups/:groupId/assignments/:id           controllers.Assignments.show(groupId: String, id: String)
-GET      /api/groups/:groupId/assignments/:id/project   controllers.Assignments.getProject(groupId: String, id: String)
-POST     /api/groups/:groupId/assignments               controllers.Assignments.create(groupId: String)
-POST     /api/groups/:groupId/assignments/:id/project   controllers.Assignments.addProject(groupId: String, id: String)
-PUT      /api/groups/:groupId/assignments/:id           controllers.Assignments.update(groupId: String, id: String)
-DELETE   /api/groups/:groupId/assignments/:id           controllers.Assignments.delete(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments                     controllers.Assignments.index(groupId: String)
+GET      /api/groups/:groupId/assignments/:id                 controllers.Assignments.show(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments/:id/project         controllers.Assignments.getProject(groupId: String, id: String)
+GET      /api/groups/:groupId/assignments/:id/project/tests   controllers.Assignments.getProjectTests(groupId: String, id: String)
+POST     /api/groups/:groupId/assignments                     controllers.Assignments.create(groupId: String)
+POST     /api/groups/:groupId/assignments/:id/project         controllers.Assignments.addProject(groupId: String, id: String)
+PUT      /api/groups/:groupId/assignments/:id                 controllers.Assignments.update(groupId: String, id: String)
+DELETE   /api/groups/:groupId/assignments/:id                 controllers.Assignments.delete(groupId: String, id: String)
 
 # Solutions
 GET      /api/assignments/:assignmentId/solutions/:id             controllers.Solutions.show(assignmentId: String, id: String)
@@ -33,6 +34,7 @@ POST     /api/assignments/:assignmentId/solutions/submit          controllers.So
 GET      /api/users/:userId/solutions                             controllers.Solutions.userSolutions(userId: String)
 GET      /api/users/:userId/solutions/:id                         controllers.Solutions.userSolution(userId: String, id: String)
 GET      /api/users/current/assignments/:assignmentId/solutions   controllers.Solutions.assignmentSolutions(assignmentId: String)
+GET      /api/groups/:groupId/members/:id/solutions               controllers.Solutions.groupMemberSolutions(groupId: String, id: String)
 
 # Authentication
 GET       /login                        controllers.Application.login
@@ -48,5 +50,7 @@ PUT       /api/users/:id                controllers.Users.update(id: String)
 DELETE    /api/users/:id                controllers.Users.delete(id: String)
 
 GET      /api/groups/:groupId/members             controllers.Users.groupMembers(groupId: String)
+GET      /api/groups/:groupId/members/educators   controllers.Users.groupEducators(groupId: String)
+GET      /api/groups/:groupId/members/normalusers controllers.Users.groupNormalUsers(groupId: String)
 PUT      /api/groups/:groupId/members/:id/add     controllers.Users.addUserToGroup(groupId: String, id: String)
 DELETE   /api/groups/:groupId/members/:id/remove  controllers.Users.removeUserFromGroup(groupId: String, id: String)

@@ -10,8 +10,8 @@ object StatisticsCounter {
       groupId = group.id.toString,
       name = group.name,
       membersCount = group.accountIds.size,
-      normalUsersCount = Account.count(MongoDBObject("groupIds" -> group.id, "permission" -> NormalUser.toString)),
-      educatorsCount = Account.count(MongoDBObject("groupIds" -> group.id, "permission" -> Educator.toString)),
+      normalUsersCount = group.groupRoles.filter(gr => gr.roleInGroup == NormalUser.toString).size,
+      educatorsCount = group.groupRoles.filterNot(gr => gr.roleInGroup == NormalUser.toString).size,
       assignmentsCount = Assignment.count(MongoDBObject("groupId" -> group.id))
     )
   }

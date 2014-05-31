@@ -64,7 +64,7 @@ groupControllers.controller('GroupCreationCtrl', ['$scope', '$state', '$location
   }
 ]);
 
-groupControllers.controller('GroupStatsCtrl', ['$scope', '$filter', 'ngTableParams','$stateParams', '$state', 'GroupStats',
+groupControllers.controller('GroupStatsCtrl', ['$scope', '$filter', 'ngTableParams', '$stateParams', '$state', 'GroupStats',
   function ($scope, $filter, ngTableParams, $stateParams, $state, GroupStats) {
     $scope.stats = GroupStats.stats({
       id: $stateParams.groupId
@@ -261,23 +261,25 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
 
     $scope.projectLink = '/api/groups/' + $stateParams.groupId + '/assignments/' + $stateParams.id + '/project';
 
-    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.group = Group.show({id: $stateParams.groupId}, function (group) {
+      if (Auth.hasPermissionInGroup(group, ['NormalUser'])) {
+        $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
+          var defineCssClassBasedOnMark = function (mark) {
+            if (mark < 50) $scope.isDanger = true;
+            else if (mark > 50 && mark < 80) $scope.isAverage = true;
+            else $scope.isSuccess = true;
+          };
+
+          if (solution.result !== null && typeof solution.result !== 'undefined') {
+            defineCssClassBasedOnMark(solution.result.mark)
+          }
+        }, function(response) {
+          if(response.status === 404) $scope.solution = { result: null };
+        });
+      }
+    });
 
     $scope.assignment = Assignment.show(params);
-
-    if (Auth.getCurrentPermission().name === 'NormalUser') {
-      $scope.solution = CurrentUserAssignmentSolution.show({assignmentId: $stateParams.id}, function (solution) {
-        var defineCssClassBasedOnMark = function (mark) {
-          if (mark < 50) $scope.isDanger = true;
-          else if (mark > 50 && mark < 80) $scope.isAverage = true;
-          else $scope.isSuccess = true;
-        };
-
-        if (solution.result !== null || typeof solution.result !== 'undefined') {
-          defineCssClassBasedOnMark(solution.result.mark)
-        }
-      });
-    }
 
     $scope.activateAssignment = function () {
       $.extend(true, $scope.assignment, params);
@@ -403,13 +405,8 @@ groupMemberControllers.controller('GroupMembersListCtrl', ['$stateParams', '$sco
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { permission: 'NormalUser' };
-
-        GroupMember.query({
-          groupId: $stateParams.groupId,
-          filter: (function () {
-            return JSON.stringify(filter);
-          })()
+        GroupMember.getNormalUsers({
+          groupId: $stateParams.groupId
         }, function (data) {
           var members = data;
 
@@ -443,7 +440,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'NormalUser' };
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: { '$ne': 'Administrator' } };
 
         User.query({filter: (function () {
           return JSON.stringify(filter);
@@ -462,7 +459,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
     });
 
     $scope.addUserToGroup = function (groupId, userId) {
-      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+      GroupMember.assignToGroup({groupId: groupId, id: userId, roleInGroup: "NormalUser"}, function () {
         $scope.membersTable.reload();
         $scope.usersTable.reload();
       });
@@ -470,9 +467,43 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
   }
 ]);
 
+groupMemberControllers.controller('GroupMemberSolutionsListCtrl', ['$scope', '$stateParams', '$state', '$filter', 'ngTableParams', 'GroupMember',
+  function ($scope, $stateParams, $state, $filter, ngTableParams, GroupMember) {
+    $scope.solutionsTable = new ngTableParams({
+      page: 1,
+      count: 10,
+      sorting: {}
+    }, {
+      total: 0,
+      getData: function ($defer, params) {
+        GroupMember.solutions({ groupId: $stateParams.groupId, id: $stateParams.id }, function (data) {
+          var solutions = data;
+
+          if (params.sorting()) solutions = $filter('orderBy')(solutions, params.orderBy());
+          if (params.filter()) solutions = $filter('filter')(solutions, params.filter());
+
+          params.total(solutions.length);
+          $defer.resolve(solutions.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        });
+      }
+    });
+
+    $scope.goToSolutionDetails = function (userId, solutionId) {
+      $state.go('user-solutions-show', {userId: userId, id: solutionId});
+    }
+  }
+]);
+
 groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$scope', '$rootScope', '$filter', 'ngTableParams',
   'Group', 'GroupMember', function ($stateParams, $scope, $rootScope, $filter, ngTableParams, Group, GroupMember) {
-    $scope.group = Group.show({id: $stateParams.groupId});
+    $scope.group = Group.show({id: $stateParams.groupId}, function (group) {
+      for (var i = 0; i < group.groupRoles.length; i += 1) {
+        if (group.groupRoles[i].roleInGroup === 'Administrator') {
+          group.ownerId = group.groupRoles[i].accountId;
+          break;
+        }
+      }
+    });
     $scope.educatorsTable = new ngTableParams({
       page: 1,
       count: 10,
@@ -482,13 +513,8 @@ groupMemberControllers.controller('GroupEducatorsListCtrl', ['$stateParams', '$s
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { permission: 'Educator' };
-
-        GroupMember.query({
-          groupId: $stateParams.groupId,
-          filter: (function () {
-            return JSON.stringify(filter);
-          })()
+        GroupMember.getEducators({
+          groupId: $stateParams.groupId
         }, function (data) {
           var educators = data;
 
@@ -522,7 +548,7 @@ groupMemberControllers.controller('GroupEducatorsAddingCtrl', ['$stateParams', '
     }, {
       total: 0,
       getData: function ($defer, params) {
-        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: 'Educator' };
+        var filter = { groupIds: { '$ne': { '$oid': $stateParams.groupId } }, permission: { '$ne': 'Administrator' } };
 
         User.query({filter: (function () {
           return JSON.stringify(filter);
@@ -541,7 +567,7 @@ groupMemberControllers.controller('GroupEducatorsAddingCtrl', ['$stateParams', '
     });
 
     $scope.addUserToGroup = function (groupId, userId) {
-      GroupMember.assignToGroup({groupId: groupId, id: userId}, function () {
+      GroupMember.assignToGroup({groupId: groupId, id: userId, roleInGroup: "Educator"}, function () {
         $scope.educatorsTable.reload();
         $scope.usersTable.reload();
       });

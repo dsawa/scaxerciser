@@ -83,7 +83,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('groups-list.stats', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:groupId/stats',
         views: {
           '': {
@@ -93,7 +93,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/members',
         views: {
           'main': {
@@ -106,7 +106,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-members-list.add', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/add',
         views: {
           '': {
@@ -115,8 +115,18 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
           }
         }
       })
+      .state('group-members-list.solutions', {
+        permission: ['Educator', 'NormalUser'],
+        url: '/:id/solutions',
+        views: {
+          '': {
+            templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-list.html',
+            controller: 'GroupMemberSolutionsListCtrl'
+          }
+        }
+      })
       .state('group-educators-list', {
-        permission: ['Educator', 'Administrator'],
+        permission: ['Educator', 'Administrator', 'NormalUser'],
         url: '/groups/:groupId/educators',
         views: {
           'main': {
@@ -129,7 +139,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-educators-list.add', {
-        permission: ['Educator', 'Administrator'],
+        permission: ['Educator', 'Administrator', 'NormalUser'],
         url: '/add',
         views: {
           '': {
@@ -139,7 +149,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/assignments/new',
         views: {
           'main': {
@@ -149,7 +159,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-new.project', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:id/project',
         views: {
           '': {
@@ -159,7 +169,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('group-assignments-edit', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/groups/:groupId/assignments/:id/edit',
         views: {
           'main': {
@@ -200,7 +210,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.new', {
-        permission: ['Administrator', 'Educator'],
+        permission: ['Administrator'],
         url: '/new',
         views: {
           '': {
@@ -220,7 +230,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('users-list.solutions', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: '/:userId/solutions',
         views: {
           '': {
@@ -230,7 +240,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-list', {
-        permission: ['NormalUser'],
+        permission: ['NormalUser', 'Educator'],
         url: "/user/:userId/solutions",
         views: {
           'main': {
@@ -240,7 +250,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         }
       })
       .state('user-solutions-show', {
-        permission: ['Educator'],
+        permission: ['Educator', 'NormalUser'],
         url: "/users/:userId/solutions/:id",
         views: {
           'main': {
