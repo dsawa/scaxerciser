@@ -7,6 +7,7 @@ var scaxerciserApp = angular.module('scaxerciserApp', [
     'hc.marked',
     'customDirectives',
     'authServices',
+    'wsServices',
     'groupControllers',
     'groupServices',
     'groupMemberControllers',
@@ -121,7 +122,7 @@ scaxerciserApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
         views: {
           '': {
             templateUrl: scaxerciserApp.partialsRoot + 'user-solutions-list.html',
-            controller: 'GroupMemberSolutionsListCtrl'
+            controller: 'GroupMembersSolutionsListCtrl'
           }
         }
       })
@@ -275,10 +276,10 @@ scaxerciserApp.provider('securityInterceptor', function () {
   };
 });
 
-scaxerciserApp.run(['$rootScope', '$state', 'Auth',
-  function ($rootScope, $state, Auth) {
+scaxerciserApp.run(['$rootScope', '$state', 'Auth', 'WS',
+  function ($rootScope, $state, Auth, WS) {
     Auth.setPermission(permission);
-
+    WS.initialize();
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
       if (typeof toState.permission !== "undefined" && !Auth.hasPermission(toState.permission)) {
         event.preventDefault();

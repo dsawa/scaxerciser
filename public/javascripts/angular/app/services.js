@@ -230,6 +230,27 @@ authServices.factory('Auth', function ($rootScope) {
   };
 });
 
+// ------ WebSocket Service
+var wsServices = angular.module('wsServices', ['ng']);
+
+wsServices.factory('WS', ['$rootScope', '$http',
+  function ($rootScope, $http) {
+    return {
+      initialize: function () {
+        $http({method: 'GET', url: '/wsUrl'}).success(function (data) {
+          $rootScope.socket = new WebSocket(data['wsUrl']);
+          $rootScope.socket.onmessage = function (msg) {
+            $rootScope.$apply(function() {
+              console.log("Odebrano: ");
+              console.log(msg)
+            });
+          }
+        });
+      }
+    }
+  }
+]);
+
 // ----- GroupMember services
 var groupMemberServices = angular.module('groupMemberServices', ['ngResource']);
 
