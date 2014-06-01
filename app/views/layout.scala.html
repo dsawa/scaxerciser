@@ -34,23 +34,34 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-tasks">
+                <ul id="solution-results-preview" class="dropdown-menu dropdown-tasks">
                     @Solution.all(currentUser, 0, 5, com.mongodb.casbah.Imports.DBObject("_id" -> -1)).map { solution =>
                         @defining(solution.assignment) { assignment =>
                             @defining({ if(solution.result == null) 0 else solution.result.mark }) { mark =>
-                            <li>
+                            <li id="@solution.id.toString">
                                 <a ui-sref="group-assignments-show({groupId: '@assignment.get.groupId.toString', id: '@assignment.get.id.toString'})">
                                 <div>
                                     <p>
                                         <strong>@assignment.get.title</strong>
                                         <span class="pull-right text-muted">@mark.round %</span>
                                     </p>
-
-                                    <div class="progress progress-striped active">
-                                            <div class="progress-bar progress-bar-success" role="progressbar"
+                                        <div class="progress progress-striped active">
+                                            @defining({
+                                                if(mark.round < 50) {
+                                                    "danger"
+                                                } else if(mark.round > 50 && mark.round < 70) {
+                                                    "warning"
+                                                } else if(mark.round > 70 && mark.round < 90) {
+                                                    "info"
+                                                } else {
+                                                    "success"
+                                                }
+                                            }) { cssClass =>
+                                            <div class="progress-bar progress-bar-@cssClass" role="progressbar"
                                                  aria-valuenow="@mark.round"
                                                  aria-valuemin="0" aria-valuemax="100" style="width: @mark.round%">
                                             </div>
+                                            }
                                         </div>
                                     </div>
                                 </a>

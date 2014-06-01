@@ -237,15 +237,67 @@ wsServices.factory('WS', ['$rootScope', '$http',
   function ($rootScope, $http) {
     return {
       initialize: function () {
-        $http({method: 'GET', url: '/wsUrl'}).success(function (data) {
-          $rootScope.socket = new WebSocket(data['wsUrl']);
-          $rootScope.socket.onmessage = function (msg) {
-            $rootScope.$apply(function() {
-              console.log("Odebrano: ");
-              console.log(msg)
-            });
+        var appendSolutionToPreviewList, startWS;
+
+        appendSolutionToPreviewList = function (solution) {
+          var listElement, link, linkContent, solutionInfo, progressBar, divider, actualLi,
+            defineCssClass = function (mark) {
+              if (mark < 50) {
+                return "danger";
+              } else if (mark > 50 && mark < 70) {
+                return "warning";
+              } else if (mark > 70 && mark < 90) {
+                return "info";
+              } else {
+                return "success";
+              }
+            };
+
+          actualLi = angular.element('li#' + solution.id);
+
+          if (actualLi.length === 1) {
+            actualLi.next().remove();
+            actualLi.remove();
           }
-        });
+
+          divider = angular.element('<li class="divider"></li>');
+          listElement = angular.element('<li></li>');
+
+          link = angular.element('<a ui-sref="group-assignments-show({groupId: "' + solution.groupId + '", ' +
+            'id: "' + solution.assignmentId + '"})" href="#/groups/' + solution.groupId + '/assignments/' +
+            solution.assignmentId + '"></a>');
+
+          linkContent = angular.element('<div></div>');
+
+          solutionInfo = angular.element('<p><strong>' + solution.assignmentTitle + '</strong>' +
+            '<span class="pull-right text-muted">' + solution.result.mark + '%</span></p>');
+
+          progressBar = angular.element('<div class="progress progress-striped active">' +
+            '<div class="progress-bar progress-bar-' + defineCssClass(solution.result.mark) + '" ' +
+            'role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ' + solution.result.mark + '%">' +
+            '</div></div>');
+
+          linkContent.append(solutionInfo);
+          linkContent.append(progressBar);
+          link.append(linkContent);
+          listElement.append(link);
+          angular.element('ul#solution-results-preview').prepend(divider).prepend(listElement);
+        };
+
+        startWS = function () {
+          $http({method: 'GET', url: '/wsUrl'}).success(function (data) {
+            $rootScope.socket = new WebSocket(data['wsUrl']);
+            $rootScope.socket.onmessage = function (msg) {
+              $rootScope.$apply(function () {
+                var solutionData = JSON.parse(msg.data);
+                appendSolutionToPreviewList(solutionData);
+                $.notify("Oceniono Twoje rozwiązanie zadania " + solutionData.assignmentTitle, "success");
+              });
+            }
+          });
+        };
+
+        startWS();
       }
     }
   }
