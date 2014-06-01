@@ -291,7 +291,7 @@ wsServices.factory('WS', ['$rootScope', '$http',
               $rootScope.$apply(function () {
                 var solutionData = JSON.parse(msg.data);
                 appendSolutionToPreviewList(solutionData);
-                $.notify("Oceniono Twoje rozwiązanie zadania " + solutionData.assignmentTitle, "success");
+                $.notify("Oceniono Twoje rozwiązanie zadania " + solutionData.assignmentTitle, "info");
               });
             }
           });
