@@ -57,5 +57,5 @@ GET      /api/groups/:groupId/members/normalusers controllers.Users.groupNormalU
 PUT      /api/groups/:groupId/members/:id/add     controllers.Users.addUserToGroup(groupId: String, id: String)
 DELETE   /api/groups/:groupId/members/:id/remove  controllers.Users.removeUserFromGroup(groupId: String, id: String)
 
-GET     /start                      controllers.Application.start
-GET     /stop                       controllers.Application.stop
+# Api
+GET     /api/solutions/:id/notify   controllers.Api.notifyAboutResult(id: String)

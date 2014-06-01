@@ -3,28 +3,20 @@ package controllers
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
-import scala.concurrent.ExecutionContext
 import jp.t2v.lab.play2.auth._
-import models.Account
-
 import play.api.libs.json._
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.iteratee.Enumerator
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import akka.actor.Props
 import akka.pattern.ask
 import akka.util.Timeout
-import actors._
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.json.JsValue
+import actors.{SolutionNotifier, StartSocket, SocketClosed}
+import models.Account
 
 object Application extends Controller with AuthenticationElement with LoginLogout with AuthConfigImpl {
-
-  val timerActor = Akka.system.actorOf(Props[TimerActor])
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(Account.authenticate)(_.map(u => (u.email, "")))
@@ -47,21 +39,6 @@ object Application extends Controller with AuthenticationElement with LoginLogou
         formWithErrors => Future.successful(BadRequest(views.html.login(formWithErrors))),
         user => gotoLoginSucceeded(user.get.id)
       )
-  }
-
-  def start = StackAction {
-    implicit request =>
-      val user: User = loggedIn
-      timerActor ! Start(user.id.toString)
-      Ok("")
-  }
-
-
-  def stop = StackAction {
-    implicit request =>
-      val user: User = loggedIn
-      timerActor ! Stop(user.id.toString)
-      Ok("")
   }
 
   def index = StackAction {
@@ -94,17 +71,13 @@ object Application extends Controller with AuthenticationElement with LoginLogou
   private def initWebSocket(userId: String) = {
     implicit val timeout = Timeout(5 seconds)
 
-    // using the ask pattern of akka,
-    // get the enumerator for that user
-    (timerActor ? StartSocket(userId)) map {
+    // enumerator dla danego użytkownika
+    (SolutionNotifier.getActor ? StartSocket(userId)) map {
       enumerator =>
-
-        // create a Itreatee which ignore the input and
-        // and send a SocketClosed message to the actor when
-        // connection is closed from the client
+        // SocketClosed kiedy połączenie zakończone ze strony klienta
         (Iteratee.ignore[JsValue] map {
           _ =>
-            timerActor ! SocketClosed(userId)
+            SolutionNotifier.getActor ! SocketClosed(userId)
         }, enumerator.asInstanceOf[Enumerator[JsValue]])
     }
   }
