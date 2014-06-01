@@ -22,13 +22,13 @@ trait AuthConfigImpl extends AuthConfig {
     Future.successful(Account.findOneById(id))
 
   def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Application.index))
+    Future.successful(Redirect(routes.Application.index()))
 
   def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Application.login))
+    Future.successful(Redirect(routes.Application.login()).withNewSession)
 
   def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Application.login))
+    Future.successful(Redirect(routes.Application.login()))
 
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
     Future.successful(Forbidden("Brak dostępu"))

@@ -467,7 +467,7 @@ groupMemberControllers.controller('GroupMembersAddingCtrl', ['$stateParams', '$s
   }
 ]);
 
-groupMemberControllers.controller('GroupMemberSolutionsListCtrl', ['$scope', '$stateParams', '$state', '$filter', 'ngTableParams', 'GroupMember',
+groupMemberControllers.controller('GroupMembersSolutionsListCtrl', ['$scope', '$stateParams', '$state', '$filter', 'ngTableParams', 'GroupMember',
   function ($scope, $stateParams, $state, $filter, ngTableParams, GroupMember) {
     $scope.solutionsTable = new ngTableParams({
       page: 1,
