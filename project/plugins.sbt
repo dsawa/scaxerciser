@@ -7,8 +7,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 resolvers += "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.1")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.3")
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.2.0")
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
