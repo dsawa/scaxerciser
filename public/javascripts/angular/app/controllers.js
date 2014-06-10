@@ -293,6 +293,18 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
       })
     };
 
+    $scope.dactivateAssignment = function () {
+      $.extend(true, $scope.assignment, params);
+      $scope.assignment.enabled = false;
+
+      Assignment.update($scope.assignment, function () {
+        $.notify('Dezaktywowano zadanie', "success");
+      }, function (errorResponse) {
+        $scope.assignment.enabled = true;
+        $.notify(errorResponse.data, "error")
+      })
+    };
+
     $scope.deleteAssignment = function () {
       Assignment.delete(params, function () {
         $state.go('groups-list');

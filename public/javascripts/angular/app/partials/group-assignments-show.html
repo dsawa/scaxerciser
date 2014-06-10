@@ -9,6 +9,9 @@
                    ng-click="activateAssignment()" ng-hide="assignment.enabled"
                    class="btn btn-success btn-xs">Aktywuj</a>
                 <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                   ng-click="dactivateAssignment()" ng-show="assignment.enabled"
+                   class="btn btn-warning btn-xs">Dezaktywuj</a>
+                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
                    ng-click="deleteAssignment()" class="btn btn-danger btn-xs">Usuń</a>
             </div>
         </div>
