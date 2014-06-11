@@ -16,7 +16,7 @@ class ApiSpec extends FunSpec with Matchers with BeforeAndAfter {
   val solutionId = new ObjectId
   val verifiedSolutionId = new ObjectId
   val badSolutionId = new ObjectId
-  val token = APIConfig.ScaxerciserAnalyzeToken
+  val token = "testToken"
 
   before {
     Play.start(FakeApplication())
