@@ -7,7 +7,6 @@ import com.mongodb.casbah.Imports._
 import play.api.test.Helpers._
 import play.api.test.FakeApplication
 import models.{Solution, Result, TestsDetails}
-import scaxerciser.config.APIConfig
 
 class ApiSpec extends FunSpec with Matchers with BeforeAndAfter {
 
