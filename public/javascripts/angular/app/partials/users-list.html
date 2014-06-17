@@ -1,15 +1,15 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div has-permission="Administrator" class="pull-right">
+            <div data-has-permission="Administrator" class="pull-right">
                 <div class="btn-group">
                     <a ui-sref="users-list.new" class="btn btn-default btn-xs">Dodaj</a>
                 </div>
             </div>
-            <div has-permission="Administrator">
+            <div data-has-permission="Administrator">
                 <i class="fa fa-user fa-fw"></i> Wszyscy użytkownicy systemu
             </div>
-            <div has-permission="Educator">
+            <div data-has-permission="Educator">
                 <i class="fa fa-user fa-fw"></i> Wszyscy użytkownicy powiązani z Twoimi grupami
             </div>
         </div>
@@ -22,11 +22,11 @@
                         <td width="170" data-title="'Uprawnienia'" sortable="'permission'" filter="{ 'permission': 'select' }"
                             filter-data="permissions($column)">{{user.permission}}</td>
                         <td>
-                            <a has-permission="Educator" ui-sref="users-list.solutions({userId: user._id.$oid})"
+                            <a data-has-permission="Educator" ui-sref="users-list.solutions({userId: user._id.$oid})"
                                class="btn btn-info btn-xs" ng-hide="user.permission === 'Administrator' || user.permission === 'Prowadzący'">Sprzwdź wszystkie wyniki</a>
-                            <a has-permission="Educator,Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
+                            <a data-has-permission="Educator,Administrator" ui-sref="users-list.edit({id: user._id.$oid})"
                                class="btn btn-warning btn-xs">Edytuj</a>
-                            <a has-permission="Administrator" ng-click="deleteUser(user._id.$oid)"
+                            <a data-has-permission="Administrator" ng-click="deleteUser(user._id.$oid)"
                                class="btn btn-danger btn-xs">Usuń</a>
                         </td>
                     </tr>
