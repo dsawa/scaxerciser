@@ -35,8 +35,8 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
   + conf/application.conf - najbardziej ogólne ustawienia. Będą stosowane we wszystkich środowiskach.
   + conf/application.dev.conf - ustawienia środowiska deweloperskiego.
   + conf/application.prod.conf - ustawienia środowiska produkcyjnego.
-  + conf/application.test.conf - ustawienia środowiska testowego. <br>
-  Opis poszczególnych ustawień:
+  + conf/application.test.conf - ustawienia środowiska testowego.
+  + Opis poszczególnych ustawień:
     - `mongo.connection.host="inf.ug.edu.pl"` - nazwa maszyny, na której uruchomiony jest MongoDB.
     - `mongo.connection.port=27017` - numer portu
     - `mongo.accounts.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami użytkowników.
@@ -50,9 +50,10 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
     - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
     - `mongo.solutions.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań
 4. Konfiguracja połączenia z RabbitMQ. <br>
-  Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4. Opis poszczególnych ustawień znajduje się poniżej.
-    - `rabbitmq.host=inf.ug.edu.pl` - nazwa maszyny, na której uruchomiony jest RabbitMQ
-    - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
+  Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4. <br>
+  Opis poszczególnych ustawień:
+    + `rabbitmq.host=inf.ug.edu.pl` - nazwa maszyny, na której uruchomiony jest RabbitMQ
+    + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
 6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
 7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
