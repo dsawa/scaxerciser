@@ -1,5 +1,5 @@
 Scaxerciser
-==
+===
 Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi operacjami związanymi z tworzeniem zadań, grup, czy zarządzaniem użytkownikami i ich rozwiązaniami. Udostępnia interfejs w postaci dynamicznej strony internetowej. 
 
 **Aplikacja jest częścią pracy magisterskiej:**
@@ -28,8 +28,12 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
 
 **Kroki prowadzące do uruchomienia aplikacji**
 
-1. `git clone git@github.com:dsawa/scaxerciser.git`
-2. `cd scaxerciser`
+1. ```git clone git@github.com:dsawa/scaxerciser.git```
+	##### 
+
+2. ```cd scaxerciser```
+	##### 
+
 3. Konfiguracja połączenia z MongoDB.
   ##### Pliki konfiguracyjne
   Ustawienia połączenia znajdują się w różnych plikach, określające konfiguracje dla środowisk uruchomieniowych.
@@ -51,13 +55,18 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
   - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań
   - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
   - `mongo.solutions.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań
+
 4. Konfiguracja połączenia z RabbitMQ. <br>
   Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4. <br>
   Opis poszczególnych ustawień:
     + `rabbitmq.host=inf.ug.edu.pl` - nazwa maszyny, na której uruchomiony jest RabbitMQ
     + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
+	##### 
+
 6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
+	##### 
+
 7. Do rozpoczęcia pracy należy zalogować się na konto administratora. <br>
   Domyślne dane logowania to:
     + użytkownik: admin
