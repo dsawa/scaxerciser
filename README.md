@@ -15,48 +15,47 @@ Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi
 + [MongoDB 2.6.1](http://www.mongodb.org/downloads)
 + [RabbitMQ Server 3.3.1](https://www.rabbitmq.com/download.html)
 
-Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne zależności. Także inną wersję Scali (2.10.3), którą wykorzystuje Play. Na podanych powyżej numerach wersji kolejnych narzędzi system został przetestowany. Zaleca się zachowanie spójności między poszczególnymi elementami systemu tj. Scaxerciser_analyze i szablonem projektów.
+Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne zależności. Także inną wersję Scali (2.10.3), którą wykorzystuje Play. System został przetestowany ma podanych powyżej numerach wersji. Zaleca się, aby wersje wymaganych narzędzi były takie same dla aplikacji testującej.
 
-System opiera się o dwie aplikacje. Do poprawnej komunikacji pomiędzy aplikacją zarządzającą, a testującą rozwiązania ([scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)) wymagana jest jedna instancja RabbitMQ.
+System opiera się na dwóch aplikacjach. Do poprawnej komunikacji pomiędzy aplikacją zarządzającą, a testującą rozwiązania ([scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)) wymagana jest jedna instancja RabbitMQ.
 
 ### Uruchomienie
 
 **Uwaga**:
 Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwer RabbitMQ i MongoDB.
 
+Na potrzeby instrukcji prowadzącej do uruchomienia aplikacji, przyjmijmy, że nazwa maszyny, na której chcemy ją zainstalować to `serwer.edu`.
+
 **Kroki do uruchomienia aplikacji**
 
 1. `git clone git@github.com:dsawa/scaxerciser.git`
 2. `cd scaxerciser`
-3. Przygotowanie projektu pod IntelliJ IDEA lub eclipse
-  + IntelliJ: `play gen-idea`
-  + Eclipse: `play eclipse`
-4. Konfiguracja połączenia z MongoDB. <br>
+3. Konfiguracja połączenia z MongoDB. <br>
   Ustawienia połączenia znajdują się w różnych plikach, określające konfiguracje dla środowisk uruchomieniowych:
   + conf/application.conf - najbardziej ogólne ustawienia. Będą stosowane we wszystkich środowiskach.
   + conf/application.dev.conf - ustawienia środowiska deweloperskiego.
   + conf/application.prod.conf - ustawienia środowiska produkcyjnego.
   + conf/application.test.conf - ustawienia środowiska testowego. <br>
   Opis poszczególnych ustawień:
-    - `mongo.connection.host="localhost"` - nazwa hosta
-    - `mongo.connection.port=27017` - port
-    - `mongo.accounts.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami użytkowników.
+    - `mongo.connection.host="localhost"` - nazwa maszyny, na której uruchomiony jest MongoDB.
+    - `mongo.connection.port=27017` - numer portu
+    - `mongo.accounts.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami użytkowników.
     - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników.
-    - `mongo.groups.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami grup.
+    - `mongo.groups.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami grup.
     - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup.
-    - `mongo.assignments.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami zadań.
+    - `mongo.assignments.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami zadań.
     - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań.
-    - `mongo.assignments.projects.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami projektów SBT zadań.
-    - `mongo.solutions.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami rozwiązań.
+    - `mongo.assignments.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT zadań.
+    - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań.
     - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań.
-    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza, w której jest kolekcja z dokumentami projektów SBT rozwiązań.
-5. Konfiguracja połączenia z RabbitMQ. <br>
+    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań.
+4. Konfiguracja połączenia z RabbitMQ. <br>
   Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4.
   Opis poszczególnych ustawień:
-    - `rabbitmq.host=localhost` - nazwa hosta.
+    - `rabbitmq.host=localhost` - nazwa maszyny, na której uruchomiony jest RabbitMQ.
     - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań.
-6. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Dla środowiska deweloperskiego, w katalogu użytkownika, poleceniem: `play run` 
-7. Aplikacja jest dostępna pod adresem `http://localhost:9000/` w przeglądarce.
-8. Należy sie zalogować na konto administratora, aby rozpocząć pracę. Domyślny administrator:
+5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
+6. Aplikacja będzie dostępna domyślnie pod adresem `serwer.edu:9000`
+7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
   + Login: admin@example.com
   + Hasło: admin
