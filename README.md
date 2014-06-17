@@ -57,5 +57,5 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
 6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
 7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
-  + Użytkownik: admin
-  + Hasło: admin
+  + użytkownik: admin
+  + hasło: admin
