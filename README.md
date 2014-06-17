@@ -22,7 +22,7 @@ System opiera się na dwóch aplikacjach. Do poprawnej komunikacji pomiędzy apl
 ### Uruchomienie
 
 **Uwaga**:
-Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwer RabbitMQ i MongoDB.
+Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwery RabbitMQ i MongoDB.
 
 Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chcemy uruchomić aplikację to `inf.ug.edu.pl`.
 
@@ -63,7 +63,7 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
     + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 
 5. Konfiguracja klucza dostępu dla aplikacji testującej. <br>
-   Ustawienie to znajduje się w tych samych plikach, co we wcześniejszych punktach. Taki sam klucz powinien znaleźć się w ustawieniach aplikacji testującej. <br> Dzięki niemu, aplikacja testująca może wysłać powiadomienie o ocenionym rozwiązaniu.
+   Ustawienie to znajduje się w tych samych plikach, co we wcześniejszych punktach. Taki sam klucz powinien znaleźć się w ustawieniach aplikacji testującej. <br> Dzięki niemu możliwe jest wysyłanie powiadomienia o ocenionym rozwiązaniu przez autoryzowanego klienta.
    `scaxerciser.api.scaxerciser_analyze.token="1/fa6d425d8666b8f128befbccb8693c592hqA5c3c"`
 
 6. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
