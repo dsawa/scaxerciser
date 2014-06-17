@@ -30,25 +30,27 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
 
 1. `git clone git@github.com:dsawa/scaxerciser.git`
 2. `cd scaxerciser`
-3. Konfiguracja połączenia z MongoDB. <br>
-  Ustawienia połączenia znajdują się w różnych plikach, określające konfiguracje dla środowisk uruchomieniowych:
+3. Konfiguracja połączenia z MongoDB.
+  ##### Pliki konfiguracyjne
+  Ustawienia połączenia znajdują się w różnych plikach, określające konfiguracje dla środowisk uruchomieniowych.
   + conf/application.conf - najbardziej ogólne ustawienia. Będą stosowane we wszystkich środowiskach.
   + conf/application.dev.conf - ustawienia środowiska deweloperskiego.
   + conf/application.prod.conf - ustawienia środowiska produkcyjnego.
   + conf/application.test.conf - ustawienia środowiska testowego.
-  + Opis poszczególnych ustawień:
-    - `mongo.connection.host="inf.ug.edu.pl"` - nazwa maszyny, na której uruchomiony jest MongoDB.
-    - `mongo.connection.port=27017` - numer portu
-    - `mongo.accounts.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami użytkowników.
-    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników
-    - `mongo.groups.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami grup
-    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup
-    - `mongo.assignments.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami zadań.
-    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań
-    - `mongo.assignments.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT zadań
-    - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań
-    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
-    - `mongo.solutions.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań
+  
+  ##### Opis poszczególnych ustawień:
+  - `mongo.connection.host="inf.ug.edu.pl"` - nazwa maszyny, na której uruchomiony jest MongoDB.
+  - `mongo.connection.port=27017` - numer portu
+  - `mongo.accounts.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami użytkowników.
+  - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników
+  - `mongo.groups.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami grup
+  - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup
+  - `mongo.assignments.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami zadań.
+  - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań
+  - `mongo.assignments.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT zadań
+  - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań
+  - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
+  - `mongo.solutions.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań
 4. Konfiguracja połączenia z RabbitMQ. <br>
   Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4. <br>
   Opis poszczególnych ustawień:
@@ -56,6 +58,7 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
     + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
 6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
-7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
-  + użytkownik: admin
-  + hasło: admin
+7. Do rozpoczęcia pracy należy zalogować się na konto administratora. <br>
+  Domyślne dane logowania to:
+    + użytkownik: admin
+    + hasło: admin
