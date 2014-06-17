@@ -63,7 +63,7 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
     + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 
 5. Konfiguracja klucza dostępu dla aplikacji testującej. <br>
-   Ustawienie to znajduje się w tych samych plikach, co we wcześniejszych punktach. Taki sam klucz powinien znaleźć się w aplikacji testującej. Dzięki niemu, aplikacja testująca może wysłać powiadomienie o ocenionym rozwiązaniu.
+   Ustawienie to znajduje się w tych samych plikach, co we wcześniejszych punktach. Taki sam klucz powinien znaleźć się w ustawieniach aplikacji testującej. <br> Dzięki niemu, aplikacja testująca może wysłać powiadomienie o ocenionym rozwiązaniu.
    `scaxerciser.api.scaxerciser_analyze.token="1/fa6d425d8666b8f128befbccb8693c592hqA5c3c"`
 
 6. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
