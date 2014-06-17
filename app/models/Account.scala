@@ -26,6 +26,8 @@ object Account extends ModelCompanion[Account, ObjectId] {
   val accountsCollection = MongoConnection()(DBConfig.accounts("db"))(DBConfig.accounts("collection"))
   val dao = new SalatDAO[Account, ObjectId](collection = accountsCollection) {}
 
+  accountsCollection.ensureIndex(DBObject("email" -> 1), "user_email", unique = true)
+
   def all(): List[Account] = Account.findAll().toList
 
   def create(newAccount: Account): Option[ObjectId] = Account.insert(newAccount)

@@ -9,7 +9,7 @@ object Global extends GlobalSettings {
 
   override def onStart(app: Application) {
     if (app.mode.toString.toLowerCase != "test" && Account.all().isEmpty) {
-      val adminEmail = "admin@example.com"
+      val adminEmail = "admin"
       val adminPassword = "admin".bcrypt(generateSalt)
       val adminPermission = Administrator.toString
       val adminAccount = new Account(new ObjectId, adminEmail, adminPassword, adminPermission)

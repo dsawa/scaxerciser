@@ -72,7 +72,7 @@ class ApplicationSpec extends FunSpec with Matchers with BeforeAndAfter {
 
       content should include("Błędny login lub hasło")
       content should include regex """<form.*method=\"post\".*action=\"\/login\".*""".r
-      content should include regex """<input.*name=\"email\".*type=\"email\".*""".r
+      content should include regex """<input.*name=\"email\".*type=\"text\".*""".r
       content should include regex """<input.*name=\"password\".*type=\"password\".*""".r
       content should include("Zaloguj")
     }
@@ -90,7 +90,7 @@ class ApplicationSpec extends FunSpec with Matchers with BeforeAndAfter {
       val content = contentAsString(result)
 
       content should include regex """<form.*method=\"post\".*action=\"\/login\".*""".r
-      content should include regex """<input.*name=\"email\".*type=\"email\".*""".r
+      content should include regex """<input.*name=\"email\".*type=\"text\".*""".r
       content should include regex """<input.*name=\"password\".*type=\"password\".*""".r
       content should include("Zaloguj")
     }

@@ -18,7 +18,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover" show-filter="true" ng-table="usersTable">
                     <tr ng-repeat="user in $data" id="{{user._id.$oid}}">
-                        <td data-title="'E-mail'" sortable="'email'" filter="{ 'email': 'text' }">{{user.email}}</td>
+                        <td data-title="'Login'" sortable="'email'" filter="{ 'email': 'text' }">{{user.email}}</td>
                         <td width="170" data-title="'Uprawnienia'" sortable="'permission'" filter="{ 'permission': 'select' }"
                             filter-data="permissions($column)">{{user.permission}}</td>
                         <td>

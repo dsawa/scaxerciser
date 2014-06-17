@@ -17,7 +17,7 @@
                             <a ng-hide="group.ownerId.$oid === educator._id.$oid"
                                ng-click="removeUserFromGroup(group._id.$oid, educator._id.$oid)" class="btn btn-danger btn-xs">Usuń</a>
                         </td>
-                        <td data-title="'E-mail'" sortable="'email'" filter="{ 'email': 'text' }">
+                        <td data-title="'Login'" sortable="'email'" filter="{ 'email': 'text' }">
                             {{educator.email}} <span ng-show="group.ownerId.$oid === educator._id.$oid"> (Założyciel)</span>
                         </td>
                     </tr>

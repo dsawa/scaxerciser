@@ -19,7 +19,7 @@ import models.Account
 object Application extends Controller with AuthenticationElement with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
-    mapping("email" -> email, "password" -> text)(Account.authenticate)(_.map(u => (u.email, "")))
+    mapping("email" -> text, "password" -> text)(Account.authenticate)(_.map(u => (u.email, "")))
       .verifying("Błędny login lub hasło", result => result.isDefined)
   }
 
