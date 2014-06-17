@@ -40,18 +40,23 @@ Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwer Rab
   Opis poszczególnych ustawień:
     - `mongo.connection.host="localhost"` - nazwa hosta
     - `mongo.connection.port=27017` - port
-    - `mongo.accounts.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami użytkowników
-    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników
-    - `mongo.groups.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami grup
-    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup
-    - `mongo.assignments.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami zadań
-    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań
-    - `mongo.assignments.projects.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami projektów SBT zadań
-    - `mongo.solutions.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami rozwiązań
-    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
-    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza, w której jest kolekcja z dokumentami projektów SBT rozwiązań
-5. `run` lub `play run` jeśli wyszliśmy wcześniej z konsoli Play Framework 
-6. `http://localhost:9000/` w przeglądarce
-7. Domyślny administrator: 
+    - `mongo.accounts.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami użytkowników.
+    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników.
+    - `mongo.groups.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami grup.
+    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup.
+    - `mongo.assignments.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami zadań.
+    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań.
+    - `mongo.assignments.projects.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami projektów SBT zadań.
+    - `mongo.solutions.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami rozwiązań.
+    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań.
+    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza, w której jest kolekcja z dokumentami projektów SBT rozwiązań.
+5. Konfiguracja połączenia z RabbitMQ. <br>
+  Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4.
+  Opis poszczególnych ustawień:
+    - `rabbitmq.host=localhost` - nazwa hosta.
+    - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań.
+6. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Dla środowiska deweloperskiego, w katalogu użytkownika, poleceniem: `play run` 
+7. Aplikacja jest dostępna pod adresem `http://localhost:9000/` w przeglądarce.
+8. Należy sie zalogować na konto administratora, aby rozpocząć pracę. Domyślny administrator:
   + Login: admin@example.com
   + Hasło: admin
