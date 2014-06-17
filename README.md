@@ -61,13 +61,18 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
   Opis poszczególnych ustawień:
     + `rabbitmq.host=inf.ug.edu.pl` - nazwa maszyny, na której uruchomiony jest RabbitMQ
     + `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
-5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
+
+5. Konfiguracja klucza dostępu dla aplikacji testującej. <br>
+   Ustawienie to znajduje się w tych samych plikach, co we wcześniejszych punktach. Taki sam klucz powinien znaleźć się w aplikacji testującej. Dzięki niemu, aplikacja testująca może wysłać powiadomienie o ocenionym rozwiązaniu.
+   `scaxerciser.api.scaxerciser_analyze.token="1/fa6d425d8666b8f128befbccb8693c592hqA5c3c"`
+
+6. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
 	##### 
 
-6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
+7. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
 	##### 
 
-7. Do rozpoczęcia pracy należy zalogować się na konto administratora. <br>
+8. Do rozpoczęcia pracy należy zalogować się na konto administratora. <br>
   Domyślne dane logowania to:
     + użytkownik: admin
     + hasło: admin
