@@ -7,9 +7,7 @@ Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi
 + Szablony projektów SBT dla Scaxercisera: [project-template](https://github.com/dsawa/project-template)
 + Aplikacja analizująca rozwiązania: [scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)
 
-## Instalacja
-
-#### Wymagania
+### Wymagania
 + [Oracle JDK - Java 7 lub 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 + [SBT 0.13.5](http://www.scala-sbt.org/download.html)
 + [Scala 2.11.1](http://www.scala-lang.org/download/)
@@ -19,7 +17,9 @@ Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi
 
 Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne zależności. Także inną wersje Scali (2.10.3), na której ta wersja Play'a działa. Na podanych powyżej numerach wersji kolejnych narzędzi system został przetestowany. Zaleca się zachowanie spójności między poszczególnymi elementami systemu tj. Scaxerciser_analyze i szablonem projektów.
 
-#### Uruchomienie
+System opiera się o dwie aplikacje. Do poprawnej komunikacji pomiędzy aplikacją zarządzającą, a testującą rozwiązania ([scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)) wymagana jest jedna instancja RabbitMQ.
+
+### Uruchomienie
 1. `git clone git@github.com:dsawa/scaxerciser.git`
 2. `cd scaxerciser`
 3. `play`
