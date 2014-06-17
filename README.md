@@ -20,19 +20,38 @@ Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne 
 System opiera się o dwie aplikacje. Do poprawnej komunikacji pomiędzy aplikacją zarządzającą, a testującą rozwiązania ([scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)) wymagana jest jedna instancja RabbitMQ.
 
 ### Uruchomienie
+
+**Uwaga**:
+Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwer RabbitMQ i MongoDB.
+
+**Kroki do uruchomienia aplikacji**
+
 1. `git clone git@github.com:dsawa/scaxerciser.git`
 2. `cd scaxerciser`
-3. `play`
-4. Przygotować projekt pod IntelliJ IDEA lub eclipse
-  + IntelliJ: `gen-idea`
-  + eclipse: `eclipse`
-5. Skonfigurować połączenie z MongoDB i RabbitMQ w plikach: <br>
-  (w środowisku deweloperskim ustawienia domyślne sprawdzają się dobrze)
-  + app/application.conf
-  + app/application.dev.conf
-  + app/application.prod.conf
-6. `run` lub `play run` jeśli wyszliśmy wcześniej z konsoli Play Framework 
-7. `http://localhost:9000/` w przeglądarce
-8. Domyślny administrator: 
+3. Przygotowanie projektu pod IntelliJ IDEA lub eclipse
+  + IntelliJ: `play gen-idea`
+  + Eclipse: `play eclipse`
+4. Konfiguracja połączenia z MongoDB. <br>
+  Ustawienia połączenia znajdują się w różnych plikach, określające konfiguracje dla środowisk uruchomieniowych:
+  + conf/application.conf - najbardziej ogólne ustawienia. Będą stosowane we wszystkich środowiskach.
+  + conf/application.dev.conf - ustawienia środowiska deweloperskiego.
+  + conf/application.prod.conf - ustawienia środowiska produkcyjnego.
+  + conf/application.test.conf - ustawienia środowiska testowego. <br>
+  Opis poszczególnych ustawień:
+    - `mongo.connection.host="localhost"` - nazwa hosta
+    - `mongo.connection.port=27017` - port
+    - `mongo.accounts.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami użytkowników
+    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników
+    - `mongo.groups.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami grup
+    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup
+    - `mongo.assignments.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami zadań
+    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań
+    - `mongo.assignments.projects.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami projektów SBT zadań
+    - `mongo.solutions.db="scaxerciser"` - baza, w której jest kolekcja z dokumentami rozwiązań
+    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
+    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza, w której jest kolekcja z dokumentami projektów SBT rozwiązań
+5. `run` lub `play run` jeśli wyszliśmy wcześniej z konsoli Play Framework 
+6. `http://localhost:9000/` w przeglądarce
+7. Domyślny administrator: 
   + Login: admin@example.com
   + Hasło: admin
