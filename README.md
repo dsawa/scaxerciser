@@ -37,23 +37,22 @@ Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chc
   + conf/application.prod.conf - ustawienia środowiska produkcyjnego.
   + conf/application.test.conf - ustawienia środowiska testowego. <br>
   Opis poszczególnych ustawień:
-    - `mongo.connection.host="localhost"` - nazwa maszyny, na której uruchomiony jest MongoDB.
+    - `mongo.connection.host="inf.ug.edu.pl"` - nazwa maszyny, na której uruchomiony jest MongoDB.
     - `mongo.connection.port=27017` - numer portu
     - `mongo.accounts.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami użytkowników.
-    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników.
-    - `mongo.groups.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami grup.
-    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup.
+    - `mongo.accounts.collection="users"` - nazwa kolekcji z dokumentami użytkowników
+    - `mongo.groups.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami grup
+    - `mongo.groups.collection="groups"` - nazwa kolekcji z dokumentami grup
     - `mongo.assignments.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami zadań.
-    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań.
-    - `mongo.assignments.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT zadań.
-    - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań.
-    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań.
-    - `mongo.solutions.projects.db="scaxerciser_dev"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań.
+    - `mongo.assignments.collection="assignments"` - nazwa kolekcji z dokumentami zadań
+    - `mongo.assignments.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT zadań
+    - `mongo.solutions.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami rozwiązań
+    - `mongo.solutions.collection="solutions"` - nazwa kolekcji z dokumentami rozwiązań
+    - `mongo.solutions.projects.db="scaxerciser"` - baza zawierająca kolekcję z dokumentami projektów SBT rozwiązań
 4. Konfiguracja połączenia z RabbitMQ. <br>
-  Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4.
-  Opis poszczególnych ustawień:
-    - `rabbitmq.host=localhost` - nazwa maszyny, na której uruchomiony jest RabbitMQ.
-    - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań.
+  Ustawienia połączenia znajdują się w tych samych plikach, o których wspomina punkt 4. Opis poszczególnych ustawień znajduje się poniżej.
+    - `rabbitmq.host=inf.ug.edu.pl` - nazwa maszyny, na której uruchomiony jest RabbitMQ
+    - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
 6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
 7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
