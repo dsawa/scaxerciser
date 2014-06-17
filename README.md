@@ -15,7 +15,7 @@ Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi
 + [MongoDB 2.6.1](http://www.mongodb.org/downloads)
 + [RabbitMQ Server 3.3.1](https://www.rabbitmq.com/download.html)
 
-Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne zależności. Także inną wersje Scali (2.10.3), na której ta wersja Play'a działa. Na podanych powyżej numerach wersji kolejnych narzędzi system został przetestowany. Zaleca się zachowanie spójności między poszczególnymi elementami systemu tj. Scaxerciser_analyze i szablonem projektów.
+Play Framework, na którym działa aplikacja ściągnie automatycznie potrzebne zależności. Także inną wersję Scali (2.10.3), którą wykorzystuje Play. Na podanych powyżej numerach wersji kolejnych narzędzi system został przetestowany. Zaleca się zachowanie spójności między poszczególnymi elementami systemu tj. Scaxerciser_analyze i szablonem projektów.
 
 System opiera się o dwie aplikacje. Do poprawnej komunikacji pomiędzy aplikacją zarządzającą, a testującą rozwiązania ([scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)) wymagana jest jedna instancja RabbitMQ.
 
