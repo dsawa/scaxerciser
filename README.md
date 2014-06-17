@@ -24,9 +24,9 @@ System opiera się na dwóch aplikacjach. Do poprawnej komunikacji pomiędzy apl
 **Uwaga**:
 Po zainstalowaniu wszystkich wymaganych narzędzi, należy uruchomić serwer RabbitMQ i MongoDB.
 
-Na potrzeby instrukcji prowadzącej do uruchomienia aplikacji, przyjmijmy, że nazwa maszyny, na której chcemy ją zainstalować to `serwer.edu`.
+Na potrzeby niniejszej instrukcji, przyjmijmy, że nazwa maszyny, na której chcemy uruchomić aplikację to `inf.ug.edu.pl`.
 
-**Kroki do uruchomienia aplikacji**
+**Kroki prowadzące do uruchomienia aplikacji**
 
 1. `git clone git@github.com:dsawa/scaxerciser.git`
 2. `cd scaxerciser`
@@ -55,7 +55,7 @@ Na potrzeby instrukcji prowadzącej do uruchomienia aplikacji, przyjmijmy, że n
     - `rabbitmq.host=localhost` - nazwa maszyny, na której uruchomiony jest RabbitMQ.
     - `rabbitmq.solutions.queue=solutions_queue` - nazwa kolejki rozwiązań.
 5. Po uzupełnieniu odpowiednich pól konfiguracyjnych można uruchomić aplikację. Odpowiada za to polecenie `play run`. 
-6. Aplikacja będzie dostępna domyślnie pod adresem `serwer.edu:9000`
+6. Aplikacja będzie dostępna domyślnie pod adresem `inf.ug.edu.pl:9000`
 7. Do rozpoczęcia pracy należy zalogować się na konto administratora. Domyślne dane logowania to:
-  + Login: admin@example.com
+  + Użytkownik: admin
   + Hasło: admin
