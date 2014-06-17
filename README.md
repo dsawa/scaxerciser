@@ -1,10 +1,11 @@
-## Projekt do pracy magisterskiej
+Scaxerciser
+==
+Aplikacja zarządzająca systemu weryfikacji kodu Scala. Zajmuje się wszystkimi operacjami związanymi z tworzeniem zadań, grup, czy zarządzaniem użytkownikami i ich rozwiązaniami. Udostępnia interfejs w postaci dynamicznej strony internetowej. 
 
-Praca magisterska [master-thesis](https://github.com/dsawa/master-thesis)
-
-Szablony projektów SBT dla Scaxercisera: [project-template](https://github.com/dsawa/project-template)
-
-Aplikacja analizująca rozwiązania: [scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)
+**Aplikacja jest częścią pracy magisterskiej:**
++ Praca magisterska [master-thesis](https://github.com/dsawa/master-thesis)
++ Szablony projektów SBT dla Scaxercisera: [project-template](https://github.com/dsawa/project-template)
++ Aplikacja analizująca rozwiązania: [scaxerciser_analyze](https://github.com/dsawa/scaxerciser_analyze)
 
 ## Instalacja
 
