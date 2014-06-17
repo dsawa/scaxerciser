@@ -3,7 +3,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <i class="fa fa-pencil fa-fw"></i> Zadania z grupy: {{group.name}}
-            <div check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator" class="pull-right">
+            <div data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator" class="pull-right">
                 <div class="btn-group">
                     <a ui-sref="group-assignments-new({groupId: group._id.$oid})"
                        class="btn btn-default btn-xs">Dodaj</a>
@@ -20,9 +20,9 @@
                                href="#assignment-{{assignment._id.$oid}}">
                                 {{assignment.title}}
                             </a>
-                            <span check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                            <span data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                                   ng-if="assignment.enabled" class="label label-success pull-right">Aktywne</span>
-                            <span check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                            <span data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                                   ng-if="!assignment.enabled" class="label label-danger pull-right">Nieaktywne</span>
                         </h4>
                     </div>
@@ -38,10 +38,10 @@
                                class="btn btn-outline btn-default btn-block">Pokaż szczegóły</a>
                             <!--</li>-->
                             <!--<li>-->
-                            <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                            <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                                ui-sref="group-assignments-edit({groupId: group._id.$oid, id: assignment._id.$oid})"
                                class="btn btn-outline btn-warning btn-block">Edytuj</a>
-                            <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                            <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                                ng-click="deleteAssignment(group._id.$oid, assignment._id.$oid)"
                                class="btn btn-outline btn-danger btn-block">Usuń</a>
                             <!--</li>-->

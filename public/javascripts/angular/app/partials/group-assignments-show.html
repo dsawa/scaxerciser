@@ -5,13 +5,13 @@
             <div class="pull-right">
                 <a ui-sref="group-assignments-list({groupId: group._id.$oid})"
                    class="btn btn-default btn-xs">Pozostałe zadania</a>
-                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                    ng-click="activateAssignment()" ng-hide="assignment.enabled"
                    class="btn btn-success btn-xs">Aktywuj</a>
-                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                    ng-click="dactivateAssignment()" ng-show="assignment.enabled"
                    class="btn btn-warning btn-xs">Dezaktywuj</a>
-                <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                    ng-click="deleteAssignment()" class="btn btn-danger btn-xs">Usuń</a>
             </div>
         </div>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <hr>
-            <div check-permission-in-group group-to-check="group" allow-permission="NormalUser" class="table-responsive" ng-show="solution.result !== null">
+            <div data-check-permission-in-group data-group-to-check="group" data-allow-permission="NormalUser" class="table-responsive" ng-show="solution.result !== null">
                 <table class="table results-table">
                     <thead>
                     <tr>

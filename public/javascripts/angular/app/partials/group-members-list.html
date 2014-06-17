@@ -4,7 +4,7 @@
         <div class="panel-heading">
             <i class="fa fa-user fa-fw"></i> Członkowie grupy: {{group.name}}
             <div class="pull-right">
-                <div check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                <div data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                      class="btn-group">
                     <a ui-sref="group-members-list.add" class="btn btn-default btn-xs">Dodaj</a>
                 </div>
@@ -16,7 +16,7 @@
                        ng-table="membersTable">
                     <tr ng-repeat="member in $data" id="{{member._id.$oid}}">
                         <td width="45">
-                            <a check-permission-in-group group-to-check="group" allow-permission="Administrator,Educator"
+                            <a data-check-permission-in-group data-group-to-check="group" data-allow-permission="Administrator,Educator"
                                ui-sref="group-members-list.solutions({groupId: group._id.$oid, id: member._id.$oid})"
                                class="btn btn-info btn-xs">Sprawdź wyniki</a>
                             <a ng-click="removeUserFromGroup(group._id.$oid, member._id.$oid)"
