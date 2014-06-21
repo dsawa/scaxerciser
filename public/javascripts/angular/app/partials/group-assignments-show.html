@@ -21,6 +21,7 @@
                 <h2>Ćwiczenie {{$index + 1}}</h2>
 
                 <div marked="exercise.description"></div>
+                <p ng-show="exercise.hint !== ''" class=""><strong>Podpowiedź: </strong>{{exercise.hint}}</p>
                 <div ng-hide="$index == (assignment.exercises.length - 1)">
                     <hr>
                 </div>
