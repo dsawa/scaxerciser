@@ -27,7 +27,8 @@
                 </div>
             </div>
             <hr>
-            <div data-check-permission-in-group data-group-to-check="group" data-allow-permission="NormalUser" class="table-responsive" ng-show="solution.result !== null">
+            <div data-check-permission-in-group data-group-to-check="group" data-allow-permission="NormalUser"
+                 class="table-responsive" ng-show="solution !== null && solution.result !== null">
                 <table class="table results-table">
                     <thead>
                     <tr>
@@ -45,8 +46,11 @@
                     </tbody>
                 </table>
             </div>
-            <p ng-show="solution.result === null">
-                Rozwiązanie nie zostało jeszcze przesłane lub jest w trakcie analizy.
+            <p ng-show="solution === null" class="alert alert-info">
+                <strong>Rozwiązanie nie zostało jeszcze przesłane.</strong>
+            </p>
+            <p ng-show="solution.result === null" class="alert alert-info">
+                <strong>Rozwiązanie jest w trakcie procesu analizującego.</strong>
             </p>
         </div>
         <!-- /.panel-body -->

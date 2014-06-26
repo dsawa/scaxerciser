@@ -274,7 +274,7 @@ assignmentsControllers.controller('GroupAssignmentsDetailCtrl', ['$stateParams',
             defineCssClassBasedOnMark(solution.result.mark)
           }
         }, function(response) {
-          if(response.status === 404) $scope.solution = { result: null };
+          if(response.status === 404) $scope.solution = null;
         });
       }
     });
